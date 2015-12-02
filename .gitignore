@@ -1,0 +1,8 @@
+*.jpg
+*.png
+*.pdb
+Logs/
+Properties/
+obj/
+Debug/
+*.suo
