@@ -33,7 +33,7 @@ namespace VerifyCodes
     /// 6、bool      drawRect;//是否显示分割框              【需灰度图】
     /// 7、int[,]    regions;//坐标型二位图片像素信息       【需二值化后】
     /// </summary>
-    class VerifyCode
+     public class VerifyCode
     {
         public VerifyCode(Bitmap bgm)
         {
@@ -54,6 +54,12 @@ namespace VerifyCodes
             //this.SrcBmpShow = (Bitmap)bgm.Clone();
             this.userBmp = (Bitmap)bgm.Clone();
             //this.userBmpShow = (Bitmap)bgm.Clone();
+            //700,250
+            int wmul = 1;
+            int hmul = 1;
+            wmul =700/ srcBmp.Width;
+            //hmul =250/
+            UserShowMul = wmul;
         }
 
         #region 变量
@@ -61,39 +67,117 @@ namespace VerifyCodes
         /// 原始备份图片
         /// </summary>
         private Bitmap srcBmp = null;
-    
+
+
+        private Bitmap srcBmpShow = null;
+        private Bitmap userBmpShow = null;
+
         public Bitmap SrcBmpShow
         {
             get
             {
-                srcShowMul = srcShowMul > 0 ? srcShowMul : 1;
-                return getBig (srcBmp ,srcShowMul );
+                if (srcshowMulChanged)
+                {
+                    SrcShowMul = SrcShowMul > 0 ? SrcShowMul : 1;
+                    srcBmpShow = getBig(srcBmp, SrcShowMul);
+                    srcshowMulChanged = false;
+                }
+
+                return srcBmpShow;
             }
         }
 
+        /// <summary>
+        /// 返回最新的图片
+        /// </summary>
         public Bitmap UserBmpShow
         {
             get
             {
-                userShowMul = userShowMul > 0 ? userShowMul : 1;
-                Bitmap bmp = getBig(userBmp, userShowMul);
-       
-                if(drawRect)
+                //userMapShow中存放的是当前图像
+                //需要更新的情况和程度是
+                //改变放大比例---内容不变，大小改变，矩框改变
+                //内容改变-----矩框改变
+                
+                //if (rectsChanged || usershowMulChanged)
+                //{
+                //    UserShowMul = UserShowMul > 0 ? UserShowMul : 1;
+                //    userBmpShow  = getBig(userBmp, UserShowMul);
+                //    usershowMulChanged = false;
+                //    rectsChanged = false;
+                //}
+                if (usershowMulChanged || rectsChanged || rects == null)
                 {
-                    if (rectsChanged||rects ==null )
+                    rects = getRegions();
+                    
+                    UserShowMul = UserShowMul > 0 ? UserShowMul : 1;
+                    userBmpShow = getBig(userBmp, UserShowMul);
+
+                    usershowMulChanged = false;
+                    rectsChanged = false;
+                }
+
+
+                if (drawRect)
+                {
+                    if (rects.Length == 0)
                     {
                         rects = getRegions();
                     }
+                    Bitmap bmp = (Bitmap)userBmpShow.Clone();
                     Graphics gbmp = Graphics.FromImage(bmp);
-                    int mul = userShowMul;
+                    int mul = UserShowMul;
                     for (int i = 0; i < rects.Length; i++)
                     {
                         gbmp.DrawRectangle(new Pen(Color.Blue), rects[i].X * mul, rects[i].Y * mul, rects[i].Width * mul + mul - 1, rects[i].Height * mul + mul - 1);
                     }
+                    return bmp;
                 }
-                return bmp ;
+                //700,250
+                //180  h:  50 
+                //1800 H:
+                //500
+                Console.WriteLine(srcBmp .Width +"  h:  "+srcBmp .Height +" \n  "+userBmpShow .Width +" H:  "+userBmpShow .Height );
+                return userBmpShow  ;
             }
         }
+
+        public int SrcShowMul
+        {
+            get
+            {
+                return srcShowMul;
+            }
+
+            set
+            {
+                if(srcShowMul !=value)
+                {
+                    srcshowMulChanged = true ;
+                }
+                srcShowMul = value;
+            }
+        }
+
+        public int UserShowMul
+        {
+            get
+            {
+                return userShowMul;
+            }
+
+            set
+            {if(userShowMul !=value)
+                {
+                    usershowMulChanged = true;
+                }
+                userShowMul = value;
+            }
+        }
+
+        private bool srcshowMulChanged = true ;
+
+        private bool usershowMulChanged = true;
 
         /// <summary>
         /// 自动分割信息
@@ -110,16 +194,18 @@ namespace VerifyCodes
         /// </summary>
         private Bitmap userBmp = null;
 
-     
+
 
         /// <summary>
         /// 原始显示比例
         /// </summary>
-        public  int srcShowMul = 1;
+        private int srcShowMul = 1;
+
+
         /// <summary>
         /// 操作显示比例
         /// </summary>
-        public int userShowMul = 10;
+        private int userShowMul = 10;
 
         /// <summary>
         /// 显示分割框
@@ -281,10 +367,11 @@ namespace VerifyCodes
                             if (userBmp.GetPixel(i - 1, j + 1).R < dgGrayValue) nearDots++;
                             if (userBmp.GetPixel(i, j + 1).R < dgGrayValue) nearDots++;
                             if (userBmp.GetPixel(i + 1, j + 1).R < dgGrayValue) nearDots++;
+                            if (nearDots < MaxNearPoints)
+                                userBmp.SetPixel(i, j, Color.FromArgb(255, 255, 255));   //去掉单点 && 粗细小3邻边点
+
                         }
 
-                        if (nearDots < MaxNearPoints)
-                            userBmp.SetPixel(i, j, Color.FromArgb(255, 255, 255));   //去掉单点 && 粗细小3邻边点
                     }
                     else  //背景
                         userBmp.SetPixel(i, j, Color.FromArgb(255, 255, 255));
@@ -373,12 +460,19 @@ namespace VerifyCodes
         /// <returns></returns>
         public RectangleF[] getRegions()
         {
-            List<List<Point>> regions = new List<List<Point>>();
+            List<List<Point>> list_regions = new List<List<Point>>();
             List<RectangleF> list_bt = new List<RectangleF>();
             Bitmap img = (Bitmap)this.userBmp.Clone();
             this.regions = new int[img.Width, img.Height];
-            regions = new List<List<Point>>();
+            list_regions = new List<List<Point>>();
             int tag = 1;
+            for (int i = 0; i < img.Width; i++)
+            {
+                for (int j = 0; j < img.Height; j++)
+                {
+                    regions[i, j] = 0;
+                }
+            }
             for (var x = 0; x < img.Width; x++)
             {
                 for (var y = 0; y < img.Height; y++)
@@ -386,12 +480,12 @@ namespace VerifyCodes
                     Color c;
                     if (((c = img.GetPixel(x, y)) == Color.FromArgb(0, 0, 0)) && this.regions[x, y] == 0)
                     {
-                        regions.Add(getneib(img, new Point(x, y), tag));
+                        list_regions.Add(getneib(img, new Point(x, y), tag));
                         tag++;
                     }
                 }
             }
-            foreach (List<Point> item in regions)
+            foreach (List<Point> item in list_regions)
             {
                 Point left, right;
                 left = item[0];
@@ -447,6 +541,7 @@ namespace VerifyCodes
         public void reSet()
         {
             this.userBmp = (Bitmap)srcBmp .Clone();
+            rectsChanged = true;
         }
 
 
@@ -529,9 +624,42 @@ namespace VerifyCodes
         /// <param name="img">源图</param>
         /// <param name="mul">倍数</param>
         /// <returns></returns>
-        private Bitmap getBig( Bitmap img, int mul)
-        {       
+        private Bitmap getBig( Bitmap img, int mul=-1)
+        {
+            if (mul == -1)
+            {
+                //700,250
+                int wmul = 1;
+                int hmul = 1;
+                wmul = 700 / img.Width;
+                hmul = 250 / img.Height;
+                mul = wmul > hmul ? hmul : wmul;
+            }
             Bitmap bigimg = new Bitmap(img.Width * mul, img.Height * mul);
+            for (int i = 0; i < img.Width; i++)
+            {
+                for (int j = 0; j < img.Height; j++)
+                {
+                    Color s = img.GetPixel(i, j);
+                    int x = i * mul;
+                    int y = j * mul;
+                    for (int ii = 0; ii < mul; ii++)
+                    {
+                        for (int jj = 0; jj < mul; jj++)
+                        {
+                            bigimg.SetPixel(x + ii, y + jj, s);
+                        }
+                    }
+                }
+            }
+            return bigimg;
+        }
+
+
+        private Bitmap getSmall(Bitmap img, int mul)
+        {
+            //180;70-----9060
+            Bitmap bigimg = new Bitmap(img.Width / mul, img.Height / mul);
             for (int i = 0; i < img.Width; i++)
             {
                 for (int j = 0; j < img.Height; j++)
