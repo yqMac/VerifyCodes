@@ -163,20 +163,20 @@ namespace VerifyCodes
         /// <param name="bmp"></param>
         /// <param name="type">1单R，2单G,3单B</param>
         /// <returns></returns>
-        public static Bitmap getClrBmp(Bitmap bmp,int type)
+        public static Bitmap getClrBmp(Bitmap bmp, int type)
         {
-            Color c ;
+            Color c;
             int tmpint = -1;
-            for (int i = 0; i < bmp.Width  ; i++)
+            for (int i = 0; i < bmp.Width; i++)
             {
-                for (int j = 0; j < bmp.Height ; j++)
+                for (int j = 0; j < bmp.Height; j++)
                 {
-                    c = bmp.GetPixel(i,j );
+                    c = bmp.GetPixel(i, j);
                     if (type == 1) tmpint = c.R;
                     else if (type == 2) tmpint = c.G;
                     else if (type == 3) tmpint = c.B;
                     else return bmp;
-                    bmp.SetPixel(i, j, Color.FromArgb(tmpint ,tmpint ,tmpint ));
+                    bmp.SetPixel(i, j, Color.FromArgb(tmpint, tmpint, tmpint));
                 }
             }
 
@@ -498,24 +498,24 @@ namespace VerifyCodes
             int width = bmp.Width;
             int height = bmp.Height;
             Color c;
-            bool[,] b = new bool[width,height];
-            for (int i = 0; i < width ; i++)
+            bool[,] b = new bool[width, height];
+            for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
-                    c = bmp.GetPixel(i,j );
-                    b[i, j] = c.R == 0;          
+                    c = bmp.GetPixel(i, j);
+                    b[i, j] = c.R == 0;
                 }
             }
 
             b = ZhangSuenThinning(b);
-            for (int i = 0; i < width ; i++)
+            for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
                     int conint = b[i, j] ? 0 : 255;
-                    c = Color.FromArgb(conint ,conint ,conint );
-                    bmp.SetPixel(i,j,c );
+                    c = Color.FromArgb(conint, conint, conint);
+                    bmp.SetPixel(i, j, c);
                 }
             }
             return bmp;
@@ -528,13 +528,13 @@ namespace VerifyCodes
             bool[,] temp = s;
             bool even = true;
 
-            for (int a = 1; a < s.GetLength (0) - 1; a++)
+            for (int a = 1; a < s.GetLength(0) - 1; a++)
             {
-                for (int b = 1; b < s.GetLength (1) - 1; b++)
+                for (int b = 1; b < s.GetLength(1) - 1; b++)
                 {
                     if (SuenThinningAlg(a, b, temp, even))
                     {
-                        temp[a,b] = false;
+                        temp[a, b] = false;
                     }
                     even = !even;
                 }
@@ -544,14 +544,14 @@ namespace VerifyCodes
         }
         static bool SuenThinningAlg(int x, int y, bool[,] s, bool even)
         {
-            bool p2 = s[x,y - 1];
-            bool p3 = s[x + 1,y - 1];
-            bool p4 = s[x + 1,y];
-            bool p5 = s[x + 1,y + 1];
-            bool p6 = s[x,y + 1];
-            bool p7 = s[x - 1,y + 1];
-            bool p8 = s[x - 1,y];
-            bool p9 = s[x - 1,y - 1];
+            bool p2 = s[x, y - 1];
+            bool p3 = s[x + 1, y - 1];
+            bool p4 = s[x + 1, y];
+            bool p5 = s[x + 1, y + 1];
+            bool p6 = s[x, y + 1];
+            bool p7 = s[x - 1, y + 1];
+            bool p8 = s[x - 1, y];
+            bool p9 = s[x - 1, y - 1];
 
 
             int bp1 = NumberOfNonZeroNeighbors(x, y, s);
@@ -587,14 +587,14 @@ namespace VerifyCodes
         }
         static int NumberOfZeroToOneTransitionFromP9(int x, int y, bool[,] s)
         {
-            bool p2 = s[x,y - 1];
-            bool p3 = s[x + 1,y - 1];
-            bool p4 = s[x + 1,y];
-            bool p5 = s[x + 1,y + 1];
-            bool p6 = s[x,y + 1];
-            bool p7 = s[x - 1,y + 1];
-            bool p8 = s[x - 1,y];
-            bool p9 = s[x - 1,y - 1];
+            bool p2 = s[x, y - 1];
+            bool p3 = s[x + 1, y - 1];
+            bool p4 = s[x + 1, y];
+            bool p5 = s[x + 1, y + 1];
+            bool p6 = s[x, y + 1];
+            bool p7 = s[x - 1, y + 1];
+            bool p8 = s[x - 1, y];
+            bool p9 = s[x - 1, y - 1];
 
             int A = Convert.ToInt32((p2 == false && p3 == true)) + Convert.ToInt32((p3 == false && p4 == true)) +
                      Convert.ToInt32((p4 == false && p5 == true)) + Convert.ToInt32((p5 == false && p6 == true)) +
@@ -605,21 +605,21 @@ namespace VerifyCodes
         static int NumberOfNonZeroNeighbors(int x, int y, bool[,] s)
         {
             int count = 0;
-            if (s[x - 1,y])
+            if (s[x - 1, y])
                 count++;
-            if (s[x - 1,y + 1])
+            if (s[x - 1, y + 1])
                 count++;
-            if (s[x - 1,y - 1])
+            if (s[x - 1, y - 1])
                 count++;
-            if (s[x,y + 1])
+            if (s[x, y + 1])
                 count++;
-            if (s[x,y - 1])
+            if (s[x, y - 1])
                 count++;
-            if (s[x + 1,y])
+            if (s[x + 1, y])
                 count++;
-            if (s[x + 1,y + 1])
+            if (s[x + 1, y + 1])
                 count++;
-            if (s[x + 1,y - 1])
+            if (s[x + 1, y - 1])
                 count++;
             return count;
         }
@@ -630,16 +630,16 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        public static Bitmap  getErosin(Bitmap bmp)
+        public static Bitmap getErosin(Bitmap bmp)
         {
             int width = bmp.Width;
             int height = bmp.Height;
-            bool[,] b = getbmpbin(bmp );
-            bool allt=true ;
+            bool[,] b = getbmpbin(bmp);
+            bool allt = true;
             int tmpx, tmpy;
 
             //腐蚀运算
-            for (int i = 0; i < width ; i++)
+            for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
@@ -648,26 +648,26 @@ namespace VerifyCodes
                         allt = true;
                         tmpx = i - 1; tmpy = j - 1;
                         if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
-                        tmpx = i - 1; tmpy = j ;
+                        tmpx = i - 1; tmpy = j;
                         if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
                         tmpx = i - 1; tmpy = j + 1;
                         if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
-                        tmpx = i ; tmpy = j - 1;
+                        tmpx = i; tmpy = j - 1;
                         if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
-                        tmpx = i ; tmpy = j + 1;
+                        tmpx = i; tmpy = j + 1;
                         if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
                         tmpx = i + 1; tmpy = j - 1;
                         if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
-                        tmpx = i + 1; tmpy = j ;
+                        tmpx = i + 1; tmpy = j;
                         if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
                         tmpx = i + 1; tmpy = j + 1;
                         if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
 
-                        b[i, j] = allt;                  
+                        b[i, j] = allt;
                     }
                 }
             }
-            bmp =getBinToBmp(bmp,b);
+            bmp = getBinToBmp(bmp, b);
             return bmp;
         }
 
@@ -691,7 +691,7 @@ namespace VerifyCodes
                 {
                     if (!b[i, j])
                     {
-                        allt = false ;
+                        allt = false;
                         tmpx = i - 1; tmpy = j - 1;
                         if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
                         tmpx = i - 1; tmpy = j;
@@ -723,10 +723,10 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        public static Bitmap getOpen(Bitmap  bmp)
+        public static Bitmap getOpen(Bitmap bmp)
         {
-            bmp = getErosin(bmp );
-            bmp = getSwell(bmp );
+            bmp = getErosin(bmp);
+            bmp = getSwell(bmp);
 
             return bmp;
         }
@@ -740,7 +740,7 @@ namespace VerifyCodes
         {
             bmp = getSwell(bmp);
             bmp = getErosin(bmp);
-            
+
 
             return bmp;
         }
@@ -979,8 +979,130 @@ namespace VerifyCodes
 
         #endregion 滤镜
 
+        #region HU不变矩
+        //#################################################################################//
+        //public static  double[] M = new double[7];        //HU不变矩
+
+         /// <summary>
+         /// 获取二值化图像的体征吗
+         /// </summary>
+         /// <param name="img"></param>
+         /// <returns></returns>
+        public static  double [] HuMoment(Bitmap  img)
+        { 
+              double[] M = new double[7];
+            PointBitmap pbp = new PointBitmap(img );
+            pbp.LockBits();
+
+            int bmpWidth = pbp.Width ;
+            int bmpHeight = pbp.Height ;
+            int bmpStep = pbp.Depth ;
+            //int bmpChannels = img->nChannels;
+            //uchar* pBmpBuf = (uchar*)img->imageData;
+
+            double m00 = 0, m11 = 0, m20 = 0, m02 = 0, m30 = 0, m03 = 0, m12 = 0, m21 = 0;  //中心矩 
+            double x0 = 0, y0 = 0;    //计算中心距时所使用的临时变量（x-x'） 
+            double u20 = 0, u02 = 0, u11 = 0, u30 = 0, u03 = 0, u12 = 0, u21 = 0;//规范化后的中心矩
+                                                                                 //double M[7];    //HU不变矩 
+            double t1 = 0, t2 = 0, t3 = 0, t4 = 0, t5 = 0;//临时变量， 
+                                                          //double Center_x=0,Center_y=0;//重心 
+            int Center_x = 0, Center_y = 0;//重心 
+            int i, j;            //循环变量
+
+            //  获得图像的区域重心(普通矩)
+            double s10 = 0, s01 = 0, s00 = 0;  //0阶矩和1阶矩  
+            for (j = 0; j < bmpHeight; j++)//y
+            {
+                for (i = 0; i < bmpWidth; i++)//x
+                {
+                    s10 += i;// * pBmpBuf[j * bmpStep + i];
+                    s01 += j;// * pBmpBuf[j * bmpStep + i];
+                    s00 += 1;// pBmpBuf[j * bmpStep + i];
+                }
+            }
+            Center_x = (int)(s10 / s00 + 0.5);
+            Center_y = (int)(s01 / s00 + 0.5);
+
+            //  计算二阶、三阶矩(中心矩)
+            m00 = s00;
+            //// 11 20 02 21+ 21- 12+ 12- 30+ 30- 03+ 02-
+            for (j = 0; j < bmpHeight; j++)
+            {
+                for (i = 0; i < bmpWidth; i++)//x 
+                {
+                    //白色tiao
+                    if (pbp.GetPixel(i, j).R == 255) continue;
+                    x0 = (i - Center_x);
+                    y0 = (j - Center_y);
+                    m11 += x0 * y0;// * pBmpBuf[j * bmpStep + i];
+                    m20 += x0 * x0;// * pBmpBuf[j * bmpStep + i];
+                    m02 += y0 * y0;// * pBmpBuf[j * bmpStep + i];
+                    m03 += y0 * y0 * y0;// * pBmpBuf[j * bmpStep + i];
+                    m30 += x0 * x0 * x0;// * pBmpBuf[j * bmpStep + i];
+                    m12 += x0 * y0 * y0;// * pBmpBuf[j * bmpStep + i];
+                    m21 += x0 * x0 * y0;// * pBmpBuf[j * bmpStep + i];
+                }
+            }
+
+            //  计算规范化后的中心矩: mij/pow(m00,((i+j+2)/2)
+            u20 = m20 / Math.Pow(m00, 2);
+            u02 = m02 / Math.Pow(m00, 2);
+            u11 = m11 / Math.Pow(m00, 2);
+            u30 = m30 / Math.Pow(m00, 2.5);
+            u03 = m03 / Math.Pow(m00, 2.5);
+            u12 = m12 / Math.Pow(m00, 2.5);
+            u21 = m21 / Math.Pow(m00, 2.5);
+
+            //  计算中间变量
+            t1 = (u20 - u02);
+            t2 = (u30 - 3 * u12);
+            t3 = (3 * u21 - u03);
+            t4 = (u30 + u12);
+            t5 = (u21 + u03);
+
+            //  计算不变矩 
+            M[0] = u20 + u02;
+            M[1] = t1 * t1 + 4 * u11 * u11;
+            M[2] = t2 * t2 + t3 * t3;
+            M[3] = t4 * t4 + t5 * t5;
+            M[4] = t2 * t4 * (t4 * t4 - 3 * t5 * t5) + t3 * t5 * (3 * t4 * t4 - t5 * t5);
+            M[5] = t1 * (t4 * t4 - t5 * t5) + 4 * u11 * t4 * t5;
+            M[6] = t3 * t4 * (t4 * t4 - 3 * t5 * t5) - t2 * t5 * (3 * t4 * t4 - t5 * t5);
+            pbp.UnlockBits();
+            return M;
+        }
+        /// <summary>
+        /// 获取两个特征码的相似度
+        /// </summary>
+        /// <returns></returns>
+        public static double getDbR(double []Sa,double []Ta)
+        {
+
+            //  计算相似度1
+            double dbR = 0; //相似度
+            double dSigmaST = 0;
+            double dSigmaS = 0;
+            double dSigmaT = 0;
+            double temp = 0;
+            {
+                for (int i = 0; i <7; i++)
+                {
+                    temp = Math .Abs (Sa[i] * Ta[i]);
+                    dSigmaST += temp;
+                    dSigmaS += Math.Pow (Sa[i], 2);
+                    dSigmaT += Math.Pow (Ta[i], 2);
+                }
+            }
+            dbR = dSigmaST / (Math.Sqrt (dSigmaS) * Math.Sqrt (dSigmaT));
+            return dbR;
+        }
 
 
+
+
+
+
+        #endregion HU不变矩
 
         /// <summary>
         /// 二值化图片 取得数组

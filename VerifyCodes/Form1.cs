@@ -299,13 +299,27 @@ namespace VerifyCodes
             prebmp = VerifyTools.getBlackPic (prebmp);
             showbmp = VerifyTools.getBig(prebmp, ref mul);
         }
-
+        double[] m1 = null;
+        double[] m2 = null;
         private void button15_Click(object sender, EventArgs e)
         {
-            int index = int.Parse(txtBox_fillIndex .Text .Trim ());
-             VerifyTools.getFillbmp(prebmp ,8,1,true ,index );
-           // prebmp = VerifyTools.getFill (prebmp);
-            showbmp = VerifyTools.getBig(prebmp, ref mul);
+             m1 = VerifyTools.HuMoment(prebmp );
+
+            for (int i = 0; i < m1.Length ; i++)
+            {
+                Console.WriteLine(m1[i]);
+            }
+            m2 = VerifyTools.HuMoment(prebmp);
+            for (int i = 0; i < m2.Length; i++)
+            {
+                Console.WriteLine(m2[i]);
+            }
+            double xx = VerifyTools.getDbR(m2,m1);
+
+           // int index = int.Parse(txtBox_fillIndex .Text .Trim ());
+           //  VerifyTools.getFillbmp(prebmp ,8,1,true ,index );
+           //// prebmp = VerifyTools.getFill (prebmp);
+           // showbmp = VerifyTools.getBig(prebmp, ref mul);
         }
 
         private void button16_Click(object sender, EventArgs e)
