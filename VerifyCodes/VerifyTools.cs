@@ -93,6 +93,35 @@ namespace VerifyCodes
 
         #endregion 变量
 
+        #region 裁剪
+
+        /// <summary>
+        /// 边框置白
+        /// </summary>
+        /// <param name="l"></param>
+        /// <param name="r"></param>
+        /// <param name="u"></param>
+        /// <param name="d"></param>
+        public static Bitmap ClearBlock(Bitmap userBmp, int l, int r, int u, int d)
+        {
+
+            for (int i = 0; i < userBmp.Width; i++)
+            {
+                for (int j = 0; j < userBmp.Height; j++)
+                {
+                    if (i - l < 0 || i + r >= userBmp.Width || j - u < 0 || j + d >= userBmp.Height)
+                    {
+                        userBmp.SetPixel(i, j, Color.FromArgb(255, 255, 255));
+                    }
+                }
+            }
+            return userBmp;
+        }
+
+
+        #endregion
+
+        #region 颜色处理
 
         /// <summary>
         /// 灰度转换,逐像素
@@ -105,6 +134,165 @@ namespace VerifyCodes
                 {
                     int tmpValue = GetGrayNumColor(userBmp.GetPixel(j, i));
                     userBmp.SetPixel(j, i, Color.FromArgb(tmpValue, tmpValue, tmpValue));
+                }
+            }
+            return userBmp;
+        }
+
+        /// <summary>
+        /// 翻转图像
+        /// </summary>
+        public static Bitmap reversal(Bitmap userBmp)
+        {
+
+            for (var x = 0; x < userBmp.Width; x++)
+            {
+                for (var y = 0; y < userBmp.Height; y++)
+                {
+                    Color tmp = userBmp.GetPixel(x, y);
+                    userBmp.SetPixel(x, y, Color.FromArgb(255 - tmp.R, 255 - tmp.G, 255 - tmp.B));
+
+                }
+            }
+            return userBmp;
+        }
+
+        /// <summary>
+        /// 获取单色图，
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <param name="type">1单R，2单G,3单B</param>
+        /// <returns></returns>
+        public static Bitmap getClrBmp(Bitmap bmp,int type)
+        {
+            Color c ;
+            int tmpint = -1;
+            for (int i = 0; i < bmp.Width  ; i++)
+            {
+                for (int j = 0; j < bmp.Height ; j++)
+                {
+                    c = bmp.GetPixel(i,j );
+                    if (type == 1) tmpint = c.R;
+                    else if (type == 2) tmpint = c.G;
+                    else if (type == 3) tmpint = c.B;
+                    else return bmp;
+                    bmp.SetPixel(i, j, Color.FromArgb(tmpint ,tmpint ,tmpint ));
+                }
+            }
+
+            return bmp;
+        }
+
+        #endregion 颜色处理
+
+        #region 滤波处理
+
+        /// <summary>
+        /// 需灰度图
+        /// 图像滤波处理
+        /// </summary>
+        /// <param name="bmp">目标位图</param>
+        /// <param name="lbwidth">滤波3*3，5*5，7*7</param>
+        /// <param name="type">类型，1中值，2均值</param>
+        /// <returns></returns>
+        public static Bitmap getLBbmp(Bitmap bmp, int lbwidth, int type = 1)
+        {
+            int wbwidth = -1;
+            switch (lbwidth)
+            {
+                case 3: wbwidth = 1; break;
+                case 5: wbwidth = 2; break;
+                case 7: wbwidth = 3; break;
+                default: return bmp;
+            }
+            Bitmap bmpnew = new Bitmap(bmp.Width, bmp.Height);
+            for (int i = 0; i < bmp.Width; i++)
+            {
+                for (int j = 0; j < bmp.Height; j++)
+                {
+                    List<int> tmpcoint = new List<int>();
+                    for (int ii = i - wbwidth; ii < i + wbwidth; ii++)
+                    {
+                        for (int jj = j - wbwidth; jj < j + wbwidth; jj++)
+                        {
+                            if (ii < 0 || jj < 0 || ii >= bmp.Width || jj >= bmp.Height)
+                            {
+                                continue;
+                            }
+                            tmpcoint.Add(bmp.GetPixel(ii, jj).R);
+                        }
+                    }
+                    int midc = 255;
+                    if (type == 1)
+                    {
+                        midc = getMidColor(tmpcoint);
+                    }
+                    else
+                    {
+                        midc = getAveColor(tmpcoint);
+                    }
+                    bmpnew.SetPixel(i, j, Color.FromArgb(midc, midc, midc));
+                }
+            }
+            return bmpnew;
+        }
+
+
+
+
+        #endregion 滤波处理
+
+        #region 二值化
+
+        /// <summary>
+        /// 非白变黑
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public static Bitmap getBlackPic(Bitmap bmp)
+        {
+            for (int i = 0; i < bmp.Width; i++)
+            {
+                for (int j = 0; j < bmp.Height; j++)
+                {
+                    Color c = bmp.GetPixel(i, j);
+                    bmp.SetPixel(i, j, c.B == 255 ? Color.White : Color.Black);
+                    //showbmp = VerifyTools.getBig(prebmp, ref mul);
+                }
+            }
+            return bmp;
+        }
+
+        /// <summary> 
+        /// 需灰度图
+        /// 图像二值化1：取图片的平均灰度作为阈值，低于该值的全都为0，高于该值的全都为255 
+        /// </summary> 
+        /// <param name="bmp"></param> 
+        /// <returns></returns> 
+        public static Bitmap ConvertTo1Bpp(Bitmap userBmp, int fazhi = -1)
+        {
+            int average = fazhi;
+            if (average == -1)
+            {
+                for (int i = 0; i < userBmp.Width; i++)
+                {
+                    for (int j = 0; j < userBmp.Height; j++)
+                    {
+                        Color color = userBmp.GetPixel(i, j);
+                        average += color.B;
+                    }
+                }
+                average = (int)average / (userBmp.Width * userBmp.Height);
+            }
+            for (int i = 0; i < userBmp.Width; i++)
+            {
+                for (int j = 0; j < userBmp.Height; j++)
+                {
+                    //获取该点的像素的RGB的颜色 
+                    Color color = userBmp.GetPixel(i, j);
+                    int value = 255 - color.B;
+                    Color newColor = value > average ? Color.FromArgb(0, 0, 0) : Color.FromArgb(255, 255, 255);
+                    userBmp.SetPixel(i, j, newColor);
                 }
             }
             return userBmp;
@@ -156,7 +344,6 @@ namespace VerifyCodes
                 sum += (double)k * (double)pixelNum[k];     //x*f(x)质量矩，也就是每个灰度的值乘以其点数（归一化后为概率），sum为其总和
                 n += pixelNum[k];                       //n为图象总的点数，归一化后就是累积概率
             }
-
             fmax = -1.0;                          //类间方差sb不可能为负，所以fmax初始值为-1不影响计算的进行
             n1 = 0;
             for (k = 0; k < 256; k++)                  //对每个灰度（从0到255）计算一次分割后的类间方差sb
@@ -179,30 +366,10 @@ namespace VerifyCodes
         }
 
 
-        /// <summary>
-        /// 边框置白
-        /// </summary>
-        /// <param name="l"></param>
-        /// <param name="r"></param>
-        /// <param name="u"></param>
-        /// <param name="d"></param>
-        public static Bitmap ClearBlock(Bitmap userBmp, int l, int r, int u, int d)
-        {
 
-            for (int i = 0; i < userBmp.Width; i++)
-            {
-                for (int j = 0; j < userBmp.Height; j++)
-                {
-                    if (i - l < 0 || i + r >= userBmp.Width || j - u < 0 || j + d >= userBmp.Height)
-                    {
-                        userBmp.SetPixel(i, j, Color.FromArgb(255, 255, 255));
-                    }
-                }
-            }
-            return userBmp;
-        }
+        #endregion 二值化
 
-
+        #region 黑白图处理
 
 
         /// <summary>
@@ -240,54 +407,13 @@ namespace VerifyCodes
                             if (userBmp.GetPixel(i + 1, j + 1).R < dgGrayValue) nearDots++;
                             if (nearDots < MaxNearPoints)
                                 userBmp.SetPixel(i, j, Color.FromArgb(255, 255, 255));   //去掉单点 && 粗细小3邻边点
-
                         }
-
                     }
                     else  //背景
                         userBmp.SetPixel(i, j, Color.FromArgb(255, 255, 255));
                 }
             return userBmp;
         }
-
-
-        /// <summary> 
-        /// 需灰度图
-        /// 图像二值化1：取图片的平均灰度作为阈值，低于该值的全都为0，高于该值的全都为255 
-        /// </summary> 
-        /// <param name="bmp"></param> 
-        /// <returns></returns> 
-        public static Bitmap ConvertTo1Bpp(Bitmap userBmp, int fazhi = -1)
-        {
-            int average = fazhi;
-            if (average == -1)
-            {
-                for (int i = 0; i < userBmp.Width; i++)
-                {
-                    for (int j = 0; j < userBmp.Height; j++)
-                    {
-                        Color color = userBmp.GetPixel(i, j);
-                        average += color.B;
-                    }
-                }
-                average = (int)average / (userBmp.Width * userBmp.Height);
-            }
-            for (int i = 0; i < userBmp.Width; i++)
-            {
-                for (int j = 0; j < userBmp.Height; j++)
-                {
-                    //获取该点的像素的RGB的颜色 
-                    Color color = userBmp.GetPixel(i, j);
-                    int value = 255 - color.B;
-                    Color newColor = value > average ? Color.FromArgb(0, 0, 0) : Color.FromArgb(255,
-
-255, 255);
-                    userBmp.SetPixel(i, j, newColor);
-                }
-            }
-            return userBmp;
-        }
-
 
 
         /// <summary>
@@ -320,13 +446,14 @@ namespace VerifyCodes
             userBmp = userBmp.Clone(cloneRect, userBmp.PixelFormat);
             return userBmp;
         }
+
         /// <summary>
         /// 得到有效图形并调整为可平均分割的大小
         /// </summary>
         /// <param name="dgGrayValue">灰度背景分界值</param>
         /// <param name="CharsCount">有效字符数</param>
         /// <returns></returns>
-        public void ClearEdge(Bitmap bmpobj,int dgGrayValue, int CharsCount)
+        public void ClearEdge(Bitmap bmpobj, int dgGrayValue, int CharsCount)
         {
             int posx1 = bmpobj.Width; int posy1 = bmpobj.Height;
             int posx2 = 0; int posy2 = 0;
@@ -360,6 +487,545 @@ namespace VerifyCodes
             bmpobj = bmpobj.Clone(cloneRect, bmpobj.PixelFormat);
         }
 
+
+        /// <summary>
+        /// 取图像骨架－－zhang_suen算法
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public Bitmap Thinbmp(Bitmap bmp)
+        {
+            int width = bmp.Width;
+            int height = bmp.Height;
+            Color c;
+            bool[,] b = new bool[width,height];
+            for (int i = 0; i < width ; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    c = bmp.GetPixel(i,j );
+                    b[i, j] = c.R == 0;          
+                }
+            }
+
+            b = ZhangSuenThinning(b);
+            for (int i = 0; i < width ; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    int conint = b[i, j] ? 0 : 255;
+                    c = Color.FromArgb(conint ,conint ,conint );
+                    bmp.SetPixel(i,j,c );
+                }
+            }
+            return bmp;
+        }
+
+        #region 骨架
+
+        public static bool[,] ZhangSuenThinning(bool[,] s)
+        {
+            bool[,] temp = s;
+            bool even = true;
+
+            for (int a = 1; a < s.GetLength (0) - 1; a++)
+            {
+                for (int b = 1; b < s.GetLength (1) - 1; b++)
+                {
+                    if (SuenThinningAlg(a, b, temp, even))
+                    {
+                        temp[a,b] = false;
+                    }
+                    even = !even;
+                }
+            }
+
+            return temp;
+        }
+        static bool SuenThinningAlg(int x, int y, bool[,] s, bool even)
+        {
+            bool p2 = s[x,y - 1];
+            bool p3 = s[x + 1,y - 1];
+            bool p4 = s[x + 1,y];
+            bool p5 = s[x + 1,y + 1];
+            bool p6 = s[x,y + 1];
+            bool p7 = s[x - 1,y + 1];
+            bool p8 = s[x - 1,y];
+            bool p9 = s[x - 1,y - 1];
+
+
+            int bp1 = NumberOfNonZeroNeighbors(x, y, s);
+            if (bp1 >= 2 && bp1 <= 6)//2nd condition
+            {
+                if (NumberOfZeroToOneTransitionFromP9(x, y, s) == 1)
+                {
+                    if (even)
+                    {
+                        if (!((p2 && p4) && p8))
+                        {
+                            if (!((p2 && p6) && p8))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!((p2 && p4) && p6))
+                        {
+                            if (!((p4 && p6) && p8))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            return false;
+        }
+        static int NumberOfZeroToOneTransitionFromP9(int x, int y, bool[,] s)
+        {
+            bool p2 = s[x,y - 1];
+            bool p3 = s[x + 1,y - 1];
+            bool p4 = s[x + 1,y];
+            bool p5 = s[x + 1,y + 1];
+            bool p6 = s[x,y + 1];
+            bool p7 = s[x - 1,y + 1];
+            bool p8 = s[x - 1,y];
+            bool p9 = s[x - 1,y - 1];
+
+            int A = Convert.ToInt32((p2 == false && p3 == true)) + Convert.ToInt32((p3 == false && p4 == true)) +
+                     Convert.ToInt32((p4 == false && p5 == true)) + Convert.ToInt32((p5 == false && p6 == true)) +
+                     Convert.ToInt32((p6 == false && p7 == true)) + Convert.ToInt32((p7 == false && p8 == true)) +
+                     Convert.ToInt32((p8 == false && p9 == true)) + Convert.ToInt32((p9 == false && p2 == true));
+            return A;
+        }
+        static int NumberOfNonZeroNeighbors(int x, int y, bool[,] s)
+        {
+            int count = 0;
+            if (s[x - 1,y])
+                count++;
+            if (s[x - 1,y + 1])
+                count++;
+            if (s[x - 1,y - 1])
+                count++;
+            if (s[x,y + 1])
+                count++;
+            if (s[x,y - 1])
+                count++;
+            if (s[x + 1,y])
+                count++;
+            if (s[x + 1,y + 1])
+                count++;
+            if (s[x + 1,y - 1])
+                count++;
+            return count;
+        }
+        #endregion 骨架
+
+        /// <summary>
+        /// 腐蚀---3*3 邻域全1则ij为1，否则为0
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public static Bitmap  getErosin(Bitmap bmp)
+        {
+            int width = bmp.Width;
+            int height = bmp.Height;
+            bool[,] b = getbmpbin(bmp );
+            bool allt=true ;
+            int tmpx, tmpy;
+
+            //腐蚀运算
+            for (int i = 0; i < width ; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (b[i, j])
+                    {
+                        allt = true;
+                        tmpx = i - 1; tmpy = j - 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        tmpx = i - 1; tmpy = j ;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        tmpx = i - 1; tmpy = j + 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        tmpx = i ; tmpy = j - 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        tmpx = i ; tmpy = j + 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        tmpx = i + 1; tmpy = j - 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        tmpx = i + 1; tmpy = j ;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        tmpx = i + 1; tmpy = j + 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+
+                        b[i, j] = allt;                  
+                    }
+                }
+            }
+            bmp =getBinToBmp(bmp,b);
+            return bmp;
+        }
+
+        /// <summary>
+        /// 膨胀－－－３×３邻域,有１则为１,否则为０，Ｓｗｅｌｌ
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public static Bitmap getSwell(Bitmap bmp)
+        {
+            int width = bmp.Width;
+            int height = bmp.Height;
+            bool[,] b = getbmpbin(bmp);
+            bool allt = true;
+            int tmpx, tmpy;
+
+            //腐蚀运算
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (!b[i, j])
+                    {
+                        allt = false ;
+                        tmpx = i - 1; tmpy = j - 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        tmpx = i - 1; tmpy = j;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        tmpx = i - 1; tmpy = j + 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        tmpx = i; tmpy = j - 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        tmpx = i; tmpy = j + 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        tmpx = i + 1; tmpy = j - 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        tmpx = i + 1; tmpy = j;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        tmpx = i + 1; tmpy = j + 1;
+                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+
+                        b[i, j] = allt;
+                    }
+                }
+            }
+            bmp = getBinToBmp(bmp, b);
+            return bmp;
+        }
+
+
+        /// <summary>
+        /// 先腐蚀后膨胀的过程称为开运算。用来消除小物体、在纤细点处分离物体、平滑较大物体的边界的同时并不明显改变其面积
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public static Bitmap getOpen(Bitmap  bmp)
+        {
+            bmp = getErosin(bmp );
+            bmp = getSwell(bmp );
+
+            return bmp;
+        }
+
+        /// <summary>
+        /// 先膨胀后腐蚀的过程称为闭运算。用来填充物体内细小空洞、连接邻近物体、平滑其边界的同时并不明显改变其面积
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public static Bitmap getClose(Bitmap bmp)
+        {
+            bmp = getSwell(bmp);
+            bmp = getErosin(bmp);
+            
+
+            return bmp;
+        }
+
+
+
+
+        #endregion  黑白图处理
+
+        #region 滤镜
+
+        /// <summary>
+        /// 锐化
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public Bitmap SharpenImage(Bitmap bmp)
+        {
+            int height = bmp.Height;
+            int width = bmp.Width;
+            Bitmap newbmp = new Bitmap(width, height);
+
+            LockBitmap lbmp = new LockBitmap(bmp);
+            LockBitmap newlbmp = new LockBitmap(newbmp);
+            lbmp.LockBits();
+            newlbmp.LockBits();
+
+            Color pixel;
+            //拉普拉斯模板
+            int[] Laplacian = { -1, -1, -1, -1, 9, -1, -1, -1, -1 };
+            for (int x = 1; x < width - 1; x++)
+            {
+                for (int y = 1; y < height - 1; y++)
+                {
+                    int r = 0, g = 0, b = 0;
+                    int Index = 0;
+                    for (int col = -1; col <= 1; col++)
+                    {
+                        for (int row = -1; row <= 1; row++)
+                        {
+                            pixel = lbmp.GetPixel(x + row, y + col); r += pixel.R * Laplacian[Index];
+                            g += pixel.G * Laplacian[Index];
+                            b += pixel.B * Laplacian[Index];
+                            Index++;
+                        }
+                    }
+                    //处理颜色值溢出
+                    r = r > 255 ? 255 : r;
+                    r = r < 0 ? 0 : r;
+                    g = g > 255 ? 255 : g;
+                    g = g < 0 ? 0 : g;
+                    b = b > 255 ? 255 : b;
+                    b = b < 0 ? 0 : b;
+                    newlbmp.SetPixel(x - 1, y - 1, Color.FromArgb(r, g, b));
+                }
+            }
+            lbmp.UnlockBits();
+            newlbmp.UnlockBits();
+            return newbmp;
+        }
+
+
+        /// <summary>
+        /// 雾化
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public Bitmap AtomizationImage(Bitmap bmp)
+        {
+            int height = bmp.Height;
+            int width = bmp.Width;
+            Bitmap newbmp = new Bitmap(width, height);
+
+            LockBitmap lbmp = new LockBitmap(bmp);
+            LockBitmap newlbmp = new LockBitmap(newbmp);
+            lbmp.LockBits();
+            newlbmp.LockBits();
+
+            System.Random MyRandom = new Random();
+            Color pixel;
+            for (int x = 1; x < width - 1; x++)
+            {
+                for (int y = 1; y < height - 1; y++)
+                {
+                    int k = MyRandom.Next(123456);
+                    //像素块大小
+                    int dx = x + k % 19;
+                    int dy = y + k % 19;
+                    if (dx >= width)
+                        dx = width - 1;
+                    if (dy >= height)
+                        dy = height - 1;
+                    pixel = lbmp.GetPixel(dx, dy);
+                    newlbmp.SetPixel(x, y, pixel);
+                }
+            }
+            lbmp.UnlockBits();
+            newlbmp.UnlockBits();
+            return newbmp;
+        }
+
+        /// <summary>
+        /// 柔化
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public Bitmap SoftenImage(Bitmap bmp)
+        {
+            int height = bmp.Height;
+            int width = bmp.Width;
+            Bitmap newbmp = new Bitmap(width, height);
+
+            LockBitmap lbmp = new LockBitmap(bmp);
+            LockBitmap newlbmp = new LockBitmap(newbmp);
+            lbmp.LockBits();
+            newlbmp.LockBits();
+
+            Color pixel;
+            //高斯模板
+            int[] Gauss = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+            for (int x = 1; x < width - 1; x++)
+            {
+                for (int y = 1; y < height - 1; y++)
+                {
+                    int r = 0, g = 0, b = 0;
+                    int Index = 0;
+                    for (int col = -1; col <= 1; col++)
+                    {
+                        for (int row = -1; row <= 1; row++)
+                        {
+                            pixel = lbmp.GetPixel(x + row, y + col);
+                            r += pixel.R * Gauss[Index];
+                            g += pixel.G * Gauss[Index];
+                            b += pixel.B * Gauss[Index];
+                            Index++;
+                        }
+                    }
+                    r /= 16;
+                    g /= 16;
+                    b /= 16;
+                    //处理颜色值溢出
+                    r = r > 255 ? 255 : r;
+                    r = r < 0 ? 0 : r;
+                    g = g > 255 ? 255 : g;
+                    g = g < 0 ? 0 : g;
+                    b = b > 255 ? 255 : b;
+                    b = b < 0 ? 0 : b;
+                    newlbmp.SetPixel(x - 1, y - 1, Color.FromArgb(r, g, b));
+                }
+            }
+            lbmp.UnlockBits();
+            newlbmp.UnlockBits();
+            return newbmp;
+        }
+
+        /// <summary>
+        /// 浮雕
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public Bitmap EmbossmentImage(Bitmap bmp)
+        {
+            int height = bmp.Height;
+            int width = bmp.Width;
+            Bitmap newbmp = new Bitmap(width, height);
+
+            LockBitmap lbmp = new LockBitmap(bmp);
+            LockBitmap newlbmp = new LockBitmap(newbmp);
+            lbmp.LockBits();
+            newlbmp.LockBits();
+
+            Color pixel1, pixel2;
+            for (int x = 0; x < width - 1; x++)
+            {
+                for (int y = 0; y < height - 1; y++)
+                {
+                    int r = 0, g = 0, b = 0;
+                    pixel1 = lbmp.GetPixel(x, y);
+                    pixel2 = lbmp.GetPixel(x + 1, y + 1);
+                    r = Math.Abs(pixel1.R - pixel2.R + 128);
+                    g = Math.Abs(pixel1.G - pixel2.G + 128);
+                    b = Math.Abs(pixel1.B - pixel2.B + 128);
+                    if (r > 255)
+                        r = 255;
+                    if (r < 0)
+                        r = 0;
+                    if (g > 255)
+                        g = 255;
+                    if (g < 0)
+                        g = 0;
+                    if (b > 255)
+                        b = 255;
+                    if (b < 0)
+                        b = 0;
+                    newlbmp.SetPixel(x, y, Color.FromArgb(r, g, b));
+                }
+            }
+            lbmp.UnlockBits();
+            newlbmp.UnlockBits();
+            return newbmp;
+        }
+
+
+        /// <summary>
+        /// 霓虹处理
+        /// </summary>
+        /// <param name="bmpobj"></param>
+        /// <returns></returns>
+        public static Bitmap neonPic(Bitmap bmpobj)
+        {
+            Bitmap bmpnew = new Bitmap(bmpobj.Width, bmpobj.Height);
+            for (int i = 0; i < bmpobj.Width - 1; i++)
+            {
+                for (int j = 0; j < bmpobj.Height - 1; j++)
+                {
+                    int r, g, b;
+
+                    //f(i,j)的RGB分量为(r1, g1, b1), f(i,j+1)为(r2, g2, b2), f(i+1,j)为(r3, g3, b3)
+                    Color c1 = bmpobj.GetPixel(i, j);
+                    Color c2 = bmpobj.GetPixel(i, j + 1);
+                    Color c3 = bmpobj.GetPixel(i + 1, j);
+                    //r = 2 * sqrt( (r1 - r2)^2 + (r1 - r3)^2 )
+                    r = (int)(2 * (Math.Sqrt(Math.Pow((c1.R - c2.R), 2) + Math.Pow((c1.R - c3.R), 2))));
+                    g = (int)(2 * (Math.Sqrt(Math.Pow((c1.G - c2.G), 2) + Math.Pow((c1.G - c3.G), 2))));
+                    b = (int)(2 * (Math.Sqrt(Math.Pow((c1.B - c2.B), 2) + Math.Pow((c1.B - c3.B), 2))));
+
+                    bmpnew.SetPixel(i, j, Color.FromArgb(r, g, b));
+
+                }
+            }
+            return bmpnew;
+        }
+
+
+
+
+        #endregion 滤镜
+
+
+
+
+        /// <summary>
+        /// 二值化图片 取得数组
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        private static  bool [,] getbmpbin(Bitmap bmp)
+        {
+            int width = bmp.Width;
+            int height = bmp.Height;
+            Color c;
+            bool[,] b = new bool[width, height];
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    c = bmp.GetPixel(i, j);
+                    b[i, j] = c.R == 0;
+                }
+            }
+            return b;
+        }
+
+        /// <summary>
+        /// 对位图使用数组 改变
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <param name="b"></param>
+        private static  Bitmap   getBinToBmp(Bitmap bmp,bool [,] b)
+        {
+            int width = bmp.Width;
+            int height = bmp.Height;
+            Color c;
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    int conint = b[i, j] ? 0 : 255;
+                    c = Color.FromArgb(conint, conint, conint);
+                    bmp.SetPixel(i, j, c);
+                }
+            }
+            return bmp;
+        }
+
         /// <summary>
         /// 平均分割图片
         /// </summary>
@@ -387,6 +1053,12 @@ namespace VerifyCodes
         }
 
 
+        /// <summary>
+        /// 取位图内部分
+        /// </summary>
+        /// <param name="srcbmp"></param>
+        /// <param name="rect"></param>
+        /// <returns></returns>
         public static Bitmap getRectBmp(Bitmap srcbmp, Rectangle rect)
         {
             Bitmap bmp = (Bitmap)srcbmp.Clone();
@@ -814,18 +1486,6 @@ namespace VerifyCodes
                             }
 
                         }
-
-                        //if(nerbSmall == -1)
-                        //{
-                        //    tag++;
-                        //    regions_tags[x, y] = tag;
-                        //}
-                        //else
-                        //{
-                        //    regions_tags[x, y] = nerbSmall ;
-                        //}
-                        //list_regions.Add(getneib(imgp, regions_tags, new Point(x, y), tag));
-                        //tag++;
                     }
 
                 }
@@ -892,26 +1552,131 @@ namespace VerifyCodes
         }
 
 
-
-        /// <summary>
-        /// 翻转图像
-        /// </summary>
-        public static Bitmap reversal(Bitmap userBmp)
+        public static void getClearLine(Bitmap bmp)
         {
-
-            for (var x = 0; x < userBmp.Width; x++)
+            int width = bmp.Width;
+            int height = bmp.Height;
+            int[,] imgp = new int[width, height];
+            int offset = -1;
+            for (int i = 0; i < width; i++)
             {
-                for (var y = 0; y < userBmp.Height; y++)
+                for (int j = 0; j < height; j++)
                 {
-                    Color tmp = userBmp.GetPixel(x, y);
-                    userBmp.SetPixel(x, y, Color.FromArgb(255 - tmp.R, 255 - tmp.G, 255 - tmp.B));
 
+                    imgp[i, j] = bmp.GetPixel(i, j).R==0?1:0;
+                    if (offset ==-1&&imgp[i, j] == 1)
+                    {
+                        offset = i;
+                    }
                 }
             }
-            return userBmp;
+
+            int[] b = new int[width ];
+
+            genLine(bmp ,offset ,imgp ,b ,0);
+
         }
+
+        public static void  genLine( Bitmap bmp ,int offset,int[,]a,int[]b,int n)
+        {
+            int threshold = 20;
+            int M = bmp.Width;
+            int N = bmp.Height;
+
+            if (n < offset)
+            {
+                b[n] = -1;
+                genLine(bmp ,offset ,a,b ,n + 1);
+            }
+            if (n == M  )
+            {
+                //for (int i = 0; i < M; i++)
+                //{
+                //    System.out.print(this.b[i] + " ");
+
+                //}
+                //System.out.println("");
+            }
+            //开始,首列处理
+            if (n == offset)
+            {
+                for (int j = 0; j < N; j++)
+                {
+                    if (a[offset,j] == 1)
+                    {
+                       b[offset] = j;
+                       // bmp.SetPixel(n ,j ,Color.Red );
+                       genLine(bmp,offset,a,b,n + 1);
+                    }
+                }
+            }
+
+            
+            if (n > 0 && n < M)
+            {
+                int hasMore = 0;
+
+                //左边的是有的，且左边的在位图内 且  当前位 是黑色
+                if (b[n - 1] > 0 && b[n - 1] < N && a[n,b[n - 1]] == 1)
+                {
+
+                    b[n] = b[n - 1];
+                    hasMore = 1;
+                    //bmp.SetPixel(n, b [n -1], Color.Red);
+                    genLine(bmp, offset, a, b, n + 1);
+                }
+                else
+                {
+                    if (b[n - 1] > 0 && a[n,b[n - 1] - 1] == 1)
+                    {
+                       // bmp.SetPixel(n, b[n - 1]-1, Color.Red);
+                        b[n] = b[n - 1] - 1;
+                        hasMore = 1;
+                        genLine(bmp, offset, a, b, n + 1);
+                    }
+                    if (b[n - 1] <N - 1 && a[n,b[n - 1] + 1] == 1)
+                    {
+                        //bmp.SetPixel(n, b[n - 1]+1, Color.Red);
+                        b[n] = b[n - 1] + 1;
+                        hasMore = 1;
+                        genLine(bmp, offset, a, b, n + 1);
+                    }
+                }
+                if (n -offset > threshold && hasMore == 0)
+                {
+                    for (int i = 0; i < n; i++)
+                    {
+                        if (b[i] > 0)
+                        {
+                            bmp.SetPixel(i, b[i], Color.FromArgb(255, 255, 255));
+                            //bmp .SetPixel (b[i], i, Color.FromArgb (255,255,255));
+                        }
+                    }
+                }
+            }else if(n - offset > threshold)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    if (b[i] > 0)
+                    {
+                        bmp.SetPixel(i, b [i], Color.FromArgb(255, 255, 255));
+                    }
+                }
+            }
+
+        }
+
+
+
+        public static void getRightrever(Bitmap bmp)
+        {
+
+        }
+
+   
         /// <summary>
         /// 需要二值化图片
+        /// 获取二值化图片的特征码字符串
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
@@ -940,57 +1705,7 @@ namespace VerifyCodes
             return strb.ToString();
         }
 
-        /// <summary>
-        /// 需灰度图
-        /// 图像滤波处理
-        /// </summary>
-        /// <param name="bmp">目标位图</param>
-        /// <param name="lbwidth">滤波3*3，5*5，7*7</param>
-        /// <param name="type">类型，1中值，2均值</param>
-        /// <returns></returns>
-        public static Bitmap getLBbmp(Bitmap bmp, int lbwidth, int type = 1)
-        {
-            int wbwidth = -1;
-            switch (lbwidth)
-            {
-                case 3: wbwidth = 1; break;
-                case 5: wbwidth = 2; break;
-                case 7: wbwidth = 3; break;
-                default: return bmp;
-            }
-            Bitmap bmpnew = new Bitmap(bmp.Width, bmp.Height);
-            for (int i = 0; i < bmp.Width; i++)
-            {
-                for (int j = 0; j < bmp.Height; j++)
-                {
-                    List<int> tmpcoint = new List<int>();
-                    for (int ii = i - wbwidth; ii < i + wbwidth; ii++)
-                    {
-                        for (int jj = j - wbwidth; jj < j + wbwidth; jj++)
-                        {
-                            if (ii < 0 || jj < 0 || ii >= bmp.Width || jj >= bmp.Height)
-                            {
-                                continue;
-                            }
-                            tmpcoint.Add(bmp.GetPixel(ii, jj).R);
-                        }
-                    }
-                    int midc = 255;
-                    if (type == 1)
-                    {
-                        midc = getMidColor(tmpcoint);
-                    }
-                    else
-                    {
-                        midc = getAveColor(tmpcoint);
-                    }
-                    bmpnew.SetPixel(i, j, Color.FromArgb(midc, midc, midc));
-                }
-            }
-            return bmpnew;
-        }
-
-
+    
 
         /// <summary>
         /// 线性滤镜处理
@@ -1081,54 +1796,11 @@ namespace VerifyCodes
             }
             return bmp;
         }
+
+
         #region 线性处理
 
-        /// <summary>
-        /// 霓虹处理
-        /// </summary>
-        /// <param name="bmpobj"></param>
-        /// <returns></returns>
-        public static Bitmap neonPic(Bitmap bmpobj)
-        {
-            Bitmap bmpnew = new Bitmap(bmpobj.Width ,bmpobj.Height );
-            for (int i = 0; i < bmpobj.Width-1 ; i++)
-            {
-                for (int j = 0; j < bmpobj.Height - 1; j++)
-                {
-                    int r, g, b;
-
-                    //f(i,j)的RGB分量为(r1, g1, b1), f(i,j+1)为(r2, g2, b2), f(i+1,j)为(r3, g3, b3)
-                    Color c1 = bmpobj.GetPixel(i, j);
-                    Color c2 = bmpobj.GetPixel(i, j + 1);
-                    Color c3 = bmpobj.GetPixel(i + 1, j);
-                    //r = 2 * sqrt( (r1 - r2)^2 + (r1 - r3)^2 )
-                    r = (int)(2 * (Math.Sqrt(Math.Pow((c1.R - c2.R), 2) + Math.Pow((c1.R - c3.R), 2))));
-                    g = (int)(2 * (Math.Sqrt(Math.Pow((c1.G - c2.G), 2) + Math.Pow((c1.G - c3.G), 2))));
-                    b = (int)(2 * (Math.Sqrt(Math.Pow((c1.B - c2.B), 2) + Math.Pow((c1.B - c3.B), 2))));
-
-                    bmpnew.SetPixel(i,j,Color.FromArgb (r,g,b));
-
-                }
-            }
-            return bmpnew;
-        }
-
-        public static Bitmap getBlackPic(Bitmap bmp)
-        {
-            for (int i = 0; i < bmp.Width; i++)
-            {
-                for (int j = 0; j < bmp.Height ; j++)
-                {
-                    Color c = bmp .GetPixel(i, j);
-                    bmp.SetPixel(i, j, c.B == 255 ? Color.White  : Color.Black );
-                    //showbmp = VerifyTools.getBig(prebmp, ref mul);
-                }
-            }
-            return bmp;
-        }
-
-      
-
+    
 
         /// <summary>
         /// 该函数用于对图像进行腐蚀运算。结构元素为水平方向或垂直方向的三个点，

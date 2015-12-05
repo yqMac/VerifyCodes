@@ -281,17 +281,17 @@ namespace VerifyCodes
 
         private void button12_Click(object sender, EventArgs e)
         {
-            int a = int.Parse(txtBox_lvbo .Text.Trim ());
-            showbmp = VerifyTools.getLBbmp(prebmp ,a ,1);
+            //int a = int.Parse(txtBox_lvbo .Text.Trim ());
+           // showbmp = VerifyTools.getLBbmp(prebmp ,a ,1);
             //showbmp = VerifyTools.getBig(prebmp, ref mul, true, rectstmp);
-            showbmp = VerifyTools.getBig(showbmp, ref mul);
-        }
+           // showbmp = VerifyTools.getBig(showbmp, ref mul);
+        }//
 
         private void button13_Click(object sender, EventArgs e)
         {
-            int a = int.Parse(txtBox_lvbo.Text.Trim());
-            showbmp = VerifyTools.getLBbmp(prebmp, a, 2);
-            showbmp = VerifyTools.getBig(showbmp, ref mul);
+           // int a = int.Parse(txtBox_lvbo.Text.Trim());
+            //showbmp = VerifyTools.getLBbmp(prebmp, a, 2);
+            //showbmp = VerifyTools.getBig(showbmp, ref mul);
         }
 
         private void button14_Click(object sender, EventArgs e)
@@ -305,6 +305,12 @@ namespace VerifyCodes
             int index = int.Parse(txtBox_fillIndex .Text .Trim ());
              VerifyTools.getFillbmp(prebmp ,8,1,true ,index );
            // prebmp = VerifyTools.getFill (prebmp);
+            showbmp = VerifyTools.getBig(prebmp, ref mul);
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            VerifyTools.getClearLine(prebmp );
             showbmp = VerifyTools.getBig(prebmp, ref mul);
         }
     }
