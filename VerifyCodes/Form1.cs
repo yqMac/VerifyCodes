@@ -50,6 +50,7 @@ namespace VerifyCodes
                 img.Dispose();
                 prebmp = (Bitmap)imgd.Clone();
                 srcbmp = (Bitmap)imgd.Clone();
+                this.Text = prebmp.Width + " w * h " + prebmp.Height;
                 //vfcode = new VerifyCode(prebmp );
             }
             
@@ -140,6 +141,7 @@ namespace VerifyCodes
             prebmp = VerifyTools.ClearNoise(prebmp,a,b );
             showbmp = VerifyTools.getBig(prebmp,ref mul);
 
+            
             //vfcode.ClearNoise(a, b);
             textBox2.Text = a.ToString();
             textBox3.Text = b.ToString();
@@ -155,7 +157,7 @@ namespace VerifyCodes
 
         private void button6_Click(object sender, EventArgs e)
         {
-            rects = VerifyTools.getRegions(prebmp);
+            rects = VerifyTools.getRegions(prebmp,8,1,true );
             showbmp = VerifyTools.getBig(prebmp,ref mul,true ,rects );
             // vfcode.drawRect = !vfcode .drawRect ;
         }
@@ -295,6 +297,14 @@ namespace VerifyCodes
         private void button14_Click(object sender, EventArgs e)
         {
             prebmp = VerifyTools.getBlackPic (prebmp);
+            showbmp = VerifyTools.getBig(prebmp, ref mul);
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            int index = int.Parse(txtBox_fillIndex .Text .Trim ());
+             VerifyTools.getFillbmp(prebmp ,8,1,true ,index );
+           // prebmp = VerifyTools.getFill (prebmp);
             showbmp = VerifyTools.getBig(prebmp, ref mul);
         }
     }

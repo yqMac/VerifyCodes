@@ -399,40 +399,44 @@ namespace VerifyCodes
 
 
         /// <summary>
-        /// 获取图像区域        提取连通分量法
+        /// 获取图像区域        提取连通分量法-种子法
         /// </summary>
         /// <returns></returns>
         public static Rectangle[] getRegions(Bitmap userBmp, int lside = 1)
         {
             List<List<Point>> list_regions = new List<List<Point>>();
             List<Rectangle> list_bt = new List<Rectangle>();
-            Bitmap img = (Bitmap)userBmp.Clone();
+            int width = userBmp.Width;
+            int heigth = userBmp.Height;
+            //Bitmap img = (Bitmap)userBmp.Clone();
             /// <summary>
             /// 分割框位置信息
             /// </summary>
             int[,] regions = null;
+            int[,] imgp = new int[width, heigth];
 
-
-            regions = new int[img.Width, img.Height];
-            list_regions = new List<List<Point>>();
-            int tag = 1;
-            for (int i = 0; i < img.Width; i++)
+            for (int i = 0; i < width; i++)
             {
-                for (int j = 0; j < img.Height; j++)
+                for (int j = 0; j < heigth; j++)
                 {
-                    regions[i, j] = 0;
+                    imgp[i, j] = userBmp.GetPixel(i, j).R;
                 }
             }
-            for (var x = 0; x < img.Width; x++)
+
+            regions = new int[width, heigth];
+            list_regions = new List<List<Point>>();
+            int tag = 1;
+
+            for (var x = 0; x <width ; x++)
             {
-                for (var y = 0; y < img.Height; y++)
+                for (var y = 0; y < heigth ; y++)
                 {
-                    Color c;
-                    if (((c = img.GetPixel(x, y)) == Color.FromArgb(0, 0, 0)) && regions[x, y] == 0)
+                    if(imgp [x,y]==0 && regions [x ,y] == 0)
                     {
-                        list_regions.Add(getneib(img, regions, new Point(x, y), tag));
+                        list_regions.Add(getneib(imgp, regions, new Point(x, y), tag));
                         tag++;
                     }
+              
                 }
             }
             foreach (List<Point> item in list_regions)
@@ -467,6 +471,427 @@ namespace VerifyCodes
             }
             return list_bt.ToArray();
         }
+
+        /// <summary>
+        /// two-pass法/四邻域
+        /// </summary>
+        /// <param name="userBmp"></param>
+        /// <param name="lside"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static Rectangle[] getRegions(Bitmap userBmp,int linyu=8,int lside=1,bool n=true)
+        {
+            List<List<Point>> list_regions = new List<List<Point>>();
+            Dictionary<int, List<Point>> dic_tag_region = new Dictionary<int, List<Point>>();
+            List<Rectangle> list_bt = new List<Rectangle>();
+            int width = userBmp.Width;
+            int height = userBmp.Height;
+            Dictionary<int, int > dic_tagLink = new Dictionary<int, int >();
+            //Bitmap img = (Bitmap)userBmp.Clone();
+            /// <summary>
+            /// 分割框位置信息
+            /// </summary>
+            int[,] regions_tags = null;
+            int[,] imgp = new int[width, height];
+
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    imgp[i, j] = userBmp.GetPixel(i, j).R;
+                }
+            }
+
+            regions_tags = new int[width, height];
+            list_regions = new List<List<Point>>();
+            int tag = 1;
+            ///第一遍
+            int nerbSmall = -1;
+            for (var y = 0; y < height ; y++)
+            {
+                for (var x = 0; x < width ; x++)
+                {
+                    nerbSmall = -1;
+
+                    if (imgp[x, y] == 0 )
+                    {
+                        List<int> list_nertags = new List<int>();
+                        
+                        //左邻域
+                        int tmpx = x - 1, tmpy = y;
+                        if (tmpx >= 0 && imgp[tmpx , tmpy ] == 0 && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //上邻域
+                        tmpx = x; tmpy = y - 1;
+                        if (tmpy >= 0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                    
+                        
+                        //下邻域
+                        tmpx = x; tmpy = y + 1;
+                        if (tmpy < height  && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //右邻域
+                        tmpx = x+1; tmpy = y;
+                        if (tmpx < width  && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //如果八邻域
+                        if(linyu == 8)
+                        {
+                            //左上邻域
+                            tmpx = x -1 ; tmpy = y-1;
+                            if (tmpx >0&&tmpy >0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            {
+                                list_nertags.Add(regions_tags[tmpx, tmpy]);
+                            }
+                            //右上邻域
+                            tmpx = x + 1; tmpy = y - 1;
+                            if (tmpx <width  && tmpy > 0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            {
+                                list_nertags.Add(regions_tags[tmpx, tmpy]);
+                            }
+                            //左下邻域
+                            tmpx = x - 1; tmpy = y +1;
+                            if (tmpx > 0 && tmpy<height  && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            {
+                                list_nertags.Add(regions_tags[tmpx, tmpy]);
+                            }
+                            //右下邻域
+                            tmpx = x + 1; tmpy = y + 1;
+                            if (tmpx <width  && tmpy <height  && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            {
+                                list_nertags.Add(regions_tags[tmpx, tmpy]);
+                            }
+                        }
+                        if (list_nertags.Count == 0)
+                        {
+                            tag++;
+                            regions_tags[x, y] = tag;
+                            dic_tagLink.Add(tag, tag);
+                        }
+                        else
+                        {
+                            list_nertags.Sort();
+                            regions_tags[x, y] = list_nertags[0];
+                            int last = list_nertags[0];
+                            for (int i = 1; i < list_nertags.Count; i++)
+                            {
+                                if (dic_tagLink[list_nertags[i]] > dic_tagLink[last])
+                                {
+                                    dic_tagLink[list_nertags[i]] = dic_tagLink[last];
+                                }
+                                else if (dic_tagLink[list_nertags[i]] < dic_tagLink[last])
+                                {
+                                    dic_tagLink[last] = dic_tagLink[list_nertags[i]];
+                                }
+                            }
+
+                        }
+                        
+                        //if(nerbSmall == -1)
+                        //{
+                        //    tag++;
+                        //    regions_tags[x, y] = tag;
+                        //}
+                        //else
+                        //{
+                        //    regions_tags[x, y] = nerbSmall ;
+                        //}
+                        //list_regions.Add(getneib(imgp, regions_tags, new Point(x, y), tag));
+                        //tag++;
+                    }
+
+                }
+            }
+            //第二遍
+            for (int y = 0; y < height ; y++)
+            {
+                for (int x = 0; x < width ; x++)
+                {
+                    if(regions_tags[x, y] > 0)
+                    {
+                        regions_tags[x, y] = dic_tagLink[regions_tags[x,y] ];
+                        //提取区域
+                        int tmptag = regions_tags[x, y];
+                        if (dic_tag_region.ContainsKey(tmptag))
+                        {
+                            dic_tag_region[tmptag].Add(new Point(x, y));
+                        }
+                        else
+                        {
+
+                            dic_tag_region.Add(tmptag, new List<Point>() { new Point(x, y) });
+                        }
+                    }
+                }
+            }
+            //提取区域
+            //for (int y = 0; y < height; y++)
+            //{
+            //    for (int x = 0; x < width; x++)
+            //    {
+            //        if (regions_tags[x, y] > 0)
+            //        {
+            //            int tmptag = regions_tags[x, y];
+            //            if(dic_tag_region .ContainsKey (tmptag))
+            //            {
+            //                dic_tag_region[tmptag].Add(new Point (x,y));
+            //            }else
+            //            {
+                            
+            //                dic_tag_region.Add(tmptag ,new List<Point>() { new Point (x,y)});
+            //            }
+            //            //regions_tags[x, y] = dic_tagLink[regions_tags[x, y]];
+            //        }
+            //    }
+            //}
+
+            foreach (List<Point> item in dic_tag_region .Values )
+            {
+                Point left, right;
+                left = item[0];
+                right = item[0];
+
+                foreach (Point p in item)
+                {
+                    if (left.X > p.X)
+                    {
+                        left.X = p.X;
+                    }
+                    if (left.Y > p.Y)
+                    {
+                        left.Y = p.Y;
+                    }
+                    if (right.X < p.X)
+                    {
+                        right.X = p.X;
+                    }
+                    if (right.Y < p.Y)
+                    {
+                        right.Y = p.Y;
+                    }
+                }
+                int h = right.Y - left.Y + 1;
+                int w = right.X - left.X + 1;
+                if (w > lside && h > lside)
+                    list_bt.Add(new Rectangle(left, new Size(w, h)));
+            }
+            return list_bt.ToArray();
+        }
+
+
+        /// <summary>
+        /// two-pass法/四邻域
+        /// </summary>
+        /// <param name="userBmp"></param>
+        /// <param name="lside"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static Rectangle[] getFillbmp(Bitmap userBmp, int linyu = 4, int lside = 1, bool n = true,int fillindex=1)
+        {
+            List<List<Point>> list_regions = new List<List<Point>>();
+            Dictionary<int, List<Point>> dic_tag_region = new Dictionary<int, List<Point>>();
+            List<Rectangle> list_bt = new List<Rectangle>();
+            int width = userBmp.Width;
+            int height = userBmp.Height;
+            Dictionary<int, int> dic_tagLink = new Dictionary<int, int>();
+            //Bitmap img = (Bitmap)userBmp.Clone();
+            /// <summary>
+            /// 分割框位置信息
+            /// </summary>
+            int[,] regions_tags = null;
+            int[,] imgp = new int[width, height];
+
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    imgp[i, j] = userBmp.GetPixel(i, j).R;
+                }
+            }
+
+            regions_tags = new int[width, height];
+            list_regions = new List<List<Point>>();
+
+
+            int pixel = 255;
+            int tag = 1;
+            ///第一遍
+            int nerbSmall = -1;
+            for (var y = 0; y < height; y++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    nerbSmall = -1;
+
+                    if (imgp[x, y] == pixel)
+                    {
+                        List<int> list_nertags = new List<int>();
+
+                        //左邻域
+                        int tmpx = x - 1, tmpy = y;
+                        if (tmpx >= 0 && imgp[tmpx, tmpy] == pixel && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //上邻域
+                        tmpx = x; tmpy = y - 1;
+                        if (tmpy >= 0 && imgp[tmpx, tmpy] == pixel && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+
+
+                        //下邻域
+                        tmpx = x; tmpy = y + 1;
+                        if (tmpy < height && imgp[tmpx, tmpy] == pixel && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //右邻域
+                        tmpx = x + 1; tmpy = y;
+                        if (tmpx < width && imgp[tmpx, tmpy] == pixel && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //如果八邻域
+                        if (linyu == 8)
+                        {
+                            //左上邻域
+                            tmpx = x - 1; tmpy = y - 1;
+                            if (tmpx > 0 && tmpy > 0 && imgp[tmpx, tmpy] == pixel && regions_tags[tmpx, tmpy] != 0)
+                            {
+                                list_nertags.Add(regions_tags[tmpx, tmpy]);
+                            }
+                            //右上邻域
+                            tmpx = x + 1; tmpy = y - 1;
+                            if (tmpx < width && tmpy > 0 && imgp[tmpx, tmpy] == pixel && regions_tags[tmpx, tmpy] != 0)
+                            {
+                                list_nertags.Add(regions_tags[tmpx, tmpy]);
+                            }
+                            //左下邻域
+                            tmpx = x - 1; tmpy = y + 1;
+                            if (tmpx > 0 && tmpy < height && imgp[tmpx, tmpy] == pixel && regions_tags[tmpx, tmpy] != 0)
+                            {
+                                list_nertags.Add(regions_tags[tmpx, tmpy]);
+                            }
+                            //右下邻域
+                            tmpx = x + 1; tmpy = y + 1;
+                            if (tmpx < width && tmpy < height && imgp[tmpx, tmpy] == pixel && regions_tags[tmpx, tmpy] != 0)
+                            {
+                                list_nertags.Add(regions_tags[tmpx, tmpy]);
+                            }
+                        }
+                        if (list_nertags.Count == 0)
+                        {
+                            tag++;
+                            regions_tags[x, y] = tag;
+                            dic_tagLink.Add(tag, tag);
+                        }
+                        else
+                        {
+                            list_nertags.Sort();
+                            regions_tags[x, y] = list_nertags[0];
+                            int last = list_nertags[0];
+                            for (int i = 1; i < list_nertags.Count; i++)
+                            {
+                                if (dic_tagLink[list_nertags[i]] > dic_tagLink[last])
+                                {
+                                    dic_tagLink[list_nertags[i]] = dic_tagLink[last];
+                                }
+                                else if (dic_tagLink[list_nertags[i]] < dic_tagLink[last])
+                                {
+                                    dic_tagLink[last] = dic_tagLink[list_nertags[i]];
+                                }
+                            }
+
+                        }
+
+                        //if(nerbSmall == -1)
+                        //{
+                        //    tag++;
+                        //    regions_tags[x, y] = tag;
+                        //}
+                        //else
+                        //{
+                        //    regions_tags[x, y] = nerbSmall ;
+                        //}
+                        //list_regions.Add(getneib(imgp, regions_tags, new Point(x, y), tag));
+                        //tag++;
+                    }
+
+                }
+            }
+            //第二遍
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (regions_tags[x, y] > 0)
+                    {
+                        regions_tags[x, y] = dic_tagLink[regions_tags[x, y]];
+                        //提取区域
+                        int tmptag = regions_tags[x, y];
+                        if (dic_tag_region.ContainsKey(tmptag))
+                        {
+                            dic_tag_region[tmptag].Add(new Point(x, y));
+                        }
+                        else
+                        {
+
+                            dic_tag_region.Add(tmptag, new List<Point>() { new Point(x, y) });
+                        }
+                    }
+                }
+            }
+            int index = 0;
+            foreach (List<Point> item in dic_tag_region.Values)
+            {
+                Point left, right;
+                left = item[0];
+                right = item[0];
+
+                foreach (Point p in item)
+                {
+                    if(index ==fillindex)
+                    {
+                        userBmp.SetPixel(p.X ,p.Y ,Color.Red );
+                    }
+                    if (left.X > p.X)
+                    {
+                        left.X = p.X;
+                    }
+                    if (left.Y > p.Y)
+                    {
+                        left.Y = p.Y;
+                    }
+                    if (right.X < p.X)
+                    {
+                        right.X = p.X;
+                    }
+                    if (right.Y < p.Y)
+                    {
+                        right.Y = p.Y;
+                    }
+                }
+                index++;
+                int h = right.Y - left.Y + 1;
+                int w = right.X - left.X + 1;
+                if (w > lside && h > lside)
+                    list_bt.Add(new Rectangle(left, new Size(w, h)));
+            }
+            return list_bt.ToArray();
+        }
+
+
 
         /// <summary>
         /// 翻转图像
@@ -596,7 +1021,66 @@ namespace VerifyCodes
         }
 
 
+        /// <summary>
+        /// 填充
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public static Bitmap getFill(Bitmap bmp)
+        {
 
+            int width = bmp.Width;
+            int height = bmp.Height;
+
+            // private static List<Point> getneib(Bitmap img, int[,] regions, Point x, int tag,bool findblack=true )
+            int[,] regions = new int[width, height];
+            List<Point> list_white = new List<Point>();
+
+            //最外层空白置tag1
+            //regions = new int[img.Width, img.Height];
+            // list_regions = new List<List<Point>>();
+            int[,] imgp = new int[width, height];
+
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    imgp[i, j] = bmp.GetPixel(i, j).R;
+                }
+            }
+            int tag = 1;
+            for (var x = 0; x < width; x++)
+            {
+                if (imgp[x, 0] == 255 && regions[x, 0] == 0)
+                {
+                    list_white.AddRange(getneib(imgp, regions, new Point(x, 0), 1, false));
+                }
+                if (imgp[x, height - 1] == 255 && regions[x, height - 1] == 0)
+                {
+                    list_white.AddRange(getneib(imgp, regions, new Point(x, bmp.Height - 1), 1, false));
+                }
+
+            }
+            for (var y = 0; y < height; y++)
+            {
+                if (imgp[0, y] == 255 && regions[0, y] == 0)
+                {
+                    list_white.AddRange(getneib(imgp, regions, new Point(0, y), 1, false));
+                }
+                if (imgp[width - 1, y] == 255 && regions[width - 1, y] == 0)
+                {
+                    list_white.AddRange(getneib(imgp, regions, new Point(width - 1, y), 1, false));
+                }
+
+
+            }
+            tag++;
+            foreach (Point item in list_white)
+            {
+                bmp.SetPixel(item.X, item.Y, Color.Red);
+            }
+            return bmp;
+        }
         #region 线性处理
 
         /// <summary>
@@ -642,6 +1126,9 @@ namespace VerifyCodes
             }
             return bmp;
         }
+
+      
+
 
         /// <summary>
         /// 该函数用于对图像进行腐蚀运算。结构元素为水平方向或垂直方向的三个点，
@@ -1077,74 +1564,93 @@ namespace VerifyCodes
             return sum;
         }
 
-        private static List<Point> getneib(Bitmap img, int[,] regions, Point x, int tag)
+        /// <summary>
+        /// 种子法
+        /// </summary>
+        /// <param name="img"></param>
+        /// <param name="regions"></param>
+        /// <param name="x"></param>
+        /// <param name="tag"></param>
+        /// <param name="findblack"></param>
+        /// <returns></returns>
+        private static List<Point> getneib(int [,] img, int[,] regions, Point x, int tag,bool findblack=true )
         {
+            List<Point> list_pretocheck = new List<Point>();
             List<Point> list_p = new List<Point>();
             list_p.Add(x);
             regions[x.X, x.Y] = tag;
-            bool l = x.X - 1 >= 0, r = x.X + 1 < img.Width, u = x.Y - 1 >= 0, d = x.Y + 1 < img.Height;
+            int coint = findblack ? 0 : 255;
+            int width = img.GetLength (0);
+            int height = img.GetLength(1);
+            bool l = x.X - 1 >= 0, r = x.X + 1 < width, u = x.Y - 1 >= 0, d = x.Y + 1 < height;
             //左列
             if (l)
             {
-                if (img.GetPixel(x.X - 1, x.Y) == Color.FromArgb(0, 0, 0) && regions[x.X - 1, x.Y] == 0)
+                if (img[x.X - 1, x.Y] == coint  && regions[x.X - 1, x.Y] == 0)
                 {
-                    list_p.AddRange(getneib(img, regions, new Point(x.X - 1, x.Y), tag));
+                    list_pretocheck.Add(new Point(x.X - 1, x.Y ));
                 }
                 if (u)
                 {
-                    if (img.GetPixel(x.X - 1, x.Y - 1) == Color.FromArgb(0, 0, 0) && regions[x.X - 1, x.Y - 1] == 0)
+                    if (img[x.X - 1, x.Y - 1] == coint && regions[x.X - 1, x.Y - 1] == 0)
                     {
-                        list_p.AddRange(getneib(img, regions, new Point(x.X - 1, x.Y - 1), tag));
+                        list_pretocheck.Add(new Point(x.X - 1, x.Y - 1));
                     }
                 }
                 if (d)
                 {
-                    if (img.GetPixel(x.X - 1, x.Y + 1) == Color.FromArgb(0, 0, 0) && regions[x.X - 1, x.Y + 1] == 0)
+                    if (img[x.X - 1, x.Y + 1]== coint && regions[x.X - 1, x.Y + 1] == 0)
                     {
-                        list_p.AddRange(getneib(img, regions, new Point(x.X - 1, x.Y + 1), tag));
+                        list_pretocheck.Add(new Point(x.X - 1, x.Y + 1));
                     }
                 }
             }
             //右列
             if (r)
             {
-                if (img.GetPixel(x.X + 1, x.Y) == Color.FromArgb(0, 0, 0) && regions[x.X + 1, x.Y] == 0)
+                if (img[x.X + 1, x.Y] == coint && regions[x.X + 1, x.Y] == 0)
                 {
-                    list_p.AddRange(getneib(img, regions, new Point(x.X + 1, x.Y), tag));
+                    list_pretocheck.Add(new Point(x.X + 1, x.Y  ));
                 }
                 if (u)
                 {
-                    if (img.GetPixel(x.X + 1, x.Y - 1) == Color.FromArgb(0, 0, 0) && regions[x.X + 1, x.Y - 1] == 0)
+                    if (img[x.X + 1, x.Y - 1] == coint && regions[x.X + 1, x.Y - 1] == 0)
                     {
-                        list_p.AddRange(getneib(img, regions, new Point(x.X + 1, x.Y - 1), tag));
+                        list_pretocheck.Add(new Point(x.X + 1, x.Y - 1));
                     }
                 }
                 if (d)
                 {
-                    if (img.GetPixel(x.X + 1, x.Y + 1) == Color.FromArgb(0, 0, 0) && regions[x.X + 1, x.Y + 1] == 0)
+                    if (img[x.X + 1, x.Y + 1] == coint && regions[x.X + 1, x.Y + 1] == 0)
                     {
-                        list_p.AddRange(getneib(img, regions, new Point(x.X + 1, x.Y + 1), tag));
+                        list_pretocheck.Add(new Point(x.X+1, x.Y + 1));
                     }
                 }
             }
             //中间
             if (u)
             {
-                if (img.GetPixel(x.X, x.Y - 1) == Color.FromArgb(0, 0, 0) && regions[x.X, x.Y - 1] == 0)
+                if (img[x.X, x.Y - 1] == coint && regions[x.X, x.Y - 1] == 0)
                 {
-                    list_p.AddRange(getneib(img, regions, new Point(x.X, x.Y - 1), tag));
+                    list_pretocheck.Add(new Point(x.X, x.Y - 1));
                 }
 
             }
             if (d)
             {
-                if (img.GetPixel(x.X, x.Y + 1) == Color.FromArgb(0, 0, 0) && regions[x.X, x.Y + 1] == 0)
+                if (img[x.X, x.Y + 1] == coint && regions[x.X, x.Y + 1] == 0)
                 {
-                    list_p.AddRange(getneib(img, regions, new Point(x.X, x.Y + 1), tag));
+                    list_pretocheck.Add(new Point (x.X ,x.Y +1));
                 }
+            }
+            for (int i = 0; i < list_pretocheck .Count ; i++)
+            {
+                list_p.AddRange(getneib(img, regions, list_pretocheck [i], tag, findblack));
             }
             return list_p;
         }
+
+
 
 
         /// <summary>

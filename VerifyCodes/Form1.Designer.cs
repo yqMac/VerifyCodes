@@ -57,6 +57,8 @@
             this.txtBox_lvbo = new System.Windows.Forms.TextBox();
             this.button13 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
+            this.button15 = new System.Windows.Forms.Button();
+            this.txtBox_fillIndex = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.picBox_src)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picBox_show)).BeginInit();
             this.SuspendLayout();
@@ -67,7 +69,7 @@
             this.txtBox_url.Name = "txtBox_url";
             this.txtBox_url.Size = new System.Drawing.Size(394, 21);
             this.txtBox_url.TabIndex = 0;
-            this.txtBox_url.Text = "F:\\Desktop\\csdn\\";
+            this.txtBox_url.Text = "F:\\Desktop\\sina\\";
             // 
             // btn_downloadPic
             // 
@@ -312,11 +314,31 @@
             this.button14.UseVisualStyleBackColor = true;
             this.button14.Click += new System.EventHandler(this.button14_Click);
             // 
+            // button15
+            // 
+            this.button15.Location = new System.Drawing.Point(1278, 512);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(75, 23);
+            this.button15.TabIndex = 26;
+            this.button15.Text = "填充";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
+            // 
+            // txtBox_fillIndex
+            // 
+            this.txtBox_fillIndex.Location = new System.Drawing.Point(1359, 514);
+            this.txtBox_fillIndex.Name = "txtBox_fillIndex";
+            this.txtBox_fillIndex.Size = new System.Drawing.Size(49, 21);
+            this.txtBox_fillIndex.TabIndex = 27;
+            this.txtBox_fillIndex.Text = "0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1426, 796);
+            this.Controls.Add(this.txtBox_fillIndex);
+            this.Controls.Add(this.button15);
             this.Controls.Add(this.button14);
             this.Controls.Add(this.button13);
             this.Controls.Add(this.txtBox_lvbo);
@@ -383,6 +405,8 @@
         private System.Windows.Forms.TextBox txtBox_lvbo;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.TextBox txtBox_fillIndex;
     }
 }
 
