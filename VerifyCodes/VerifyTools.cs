@@ -422,7 +422,7 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="dgGrayValue">灰度背景分界值</param>
         /// <returns></returns>
-        public static Bitmap ClearEdge(Bitmap userBmp, int dgGrayValue)
+        public static Bitmap ClearEdge(Bitmap userBmp, int dgGrayValue=1)
         {
             int posx1 = userBmp.Width; int posy1 = userBmp.Height;
             int posx2 = 0; int posy2 = 0;
@@ -493,7 +493,7 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        public Bitmap Thinbmp(Bitmap bmp)
+        public static  Bitmap Thinbmp(Bitmap bmp)
         {
             int width = bmp.Width;
             int height = bmp.Height;
@@ -967,6 +967,8 @@ namespace VerifyCodes
                     g = (int)(2 * (Math.Sqrt(Math.Pow((c1.G - c2.G), 2) + Math.Pow((c1.G - c3.G), 2))));
                     b = (int)(2 * (Math.Sqrt(Math.Pow((c1.B - c2.B), 2) + Math.Pow((c1.B - c3.B), 2))));
 
+
+                    if(r>=0 && r<=255 && g>=0 && g<=255 && b >=0 && b<=255)
                     bmpnew.SetPixel(i, j, Color.FromArgb(r, g, b));
 
                 }
@@ -979,7 +981,7 @@ namespace VerifyCodes
 
         #endregion 滤镜
 
-        #region HU不变矩
+        #region HU不变矩 特征码提取和匹配相似度
         //#################################################################################//
         //public static  double[] M = new double[7];        //HU不变矩
 
@@ -1097,11 +1099,6 @@ namespace VerifyCodes
             return dbR;
         }
 
-
-
-
-
-
         #endregion HU不变矩
 
         /// <summary>
@@ -1184,6 +1181,10 @@ namespace VerifyCodes
         public static Bitmap getRectBmp(Bitmap srcbmp, Rectangle rect)
         {
             Bitmap bmp = (Bitmap)srcbmp.Clone();
+            if (rect.Height >srcbmp .Height || rect.Width >srcbmp.Width)
+            {
+                return bmp;
+            }
 
             Rectangle rectc = new Rectangle(rect.X, rect.Y, rect.Width + 1, rect.Height + 1);
             bmp = bmp.Clone(rect, bmp.PixelFormat);
@@ -1191,6 +1192,7 @@ namespace VerifyCodes
 
         }
 
+        #region 图像轮廓提取
 
         /// <summary>
         /// 获取图像区域        提取连通分量法-种子法
@@ -1673,6 +1675,7 @@ namespace VerifyCodes
             return list_bt.ToArray();
         }
 
+        #endregion 图像轮廓提取
 
         public static void getClearLine(Bitmap bmp)
         {
