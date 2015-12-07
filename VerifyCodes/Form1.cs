@@ -17,28 +17,6 @@ namespace VerifyCodes
         {
             InitializeComponent();
         }
-        //滤镜名称，参数
-
-        /*
-        1、尺寸缩放——宽高
-        2、比例缩放——百分，百分
-        3、裁剪图像——上下左右
-        4、去除边框——上下左右
-        5、图像滤波——3*3中值 5*5中值 均值 极值 去除细线条
-        6、线性滤镜——浮雕、柔化、高斯、锐化、边缘、曝光、轮廓、霓虹、扩散、均衡
-        7、清除背景——颜色>=<某值 亮度><=某值
-        8、按亮度分离——保留几个亮度
-        9、按颜色分离——保留几个颜色
-        10、颜色处理——灰度、反转、单红、单绿、单蓝
-        11、转黑白图——所有非白变黑
-        12、指定阀值——阀值
-        13、中值差值——差值
-        14、自动阀值
-        15、黑白图处理——骨架、腐蚀、膨胀、开、闭、缩水、去除毛刺、去除杂点、去除白边、断开水平线条[线条宽]
-        16、修改亮度
-        17、修改对比度
-        */
-
 
         /// <summary>
         /// 根据参数，对图片进行处理
@@ -58,11 +36,17 @@ namespace VerifyCodes
                     if (param.Length != 2)
                         return;
                     //此处尺寸缩放
+                    int w = int .Parse(txtBox_resize_width .Text .Trim ());
+                    int h = int.Parse(txtBox_resize_height.Text .Trim ());
+                    prebmp = VerifyTools.getBmpResize(prebmp ,w,h,1,1,1);
                     break;
                 case enumMethods.比例缩放:
                     if (param.Length != 2)
                         return;
                     //此处比例缩放
+                    double dw = double.Parse(comb_resize_width .Text .Trim ());
+                    double dh = double.Parse(comb_resize_height .Text .Trim ());
+                    prebmp = VerifyTools.getBmpResize(prebmp, 1, 1, dw , dh , 2);
                     break;
                 case enumMethods.去除边框:
                     if (param.Length != 4)
@@ -125,14 +109,20 @@ namespace VerifyCodes
                             prebmp = VerifyTools.neonPic(prebmp);
                             break;
                         case "锐化":
-                            prebmp = VerifyTools.neonPic(prebmp);
+                            prebmp = VerifyTools.SharpenImage(prebmp );
                             break;
                         case "柔化":
-                            prebmp = VerifyTools.neonPic(prebmp);
+                            prebmp = VerifyTools.SoftenImage (prebmp);
                             break;
+
                         case "浮雕":
-                            prebmp = VerifyTools.neonPic(prebmp);
+                            prebmp = VerifyTools.EmbossmentImage (prebmp);
                             break;
+
+                        case "雾化":
+                            prebmp = VerifyTools.AtomizationImage(prebmp );
+                            break;
+
                         case "高斯":
                             prebmp = VerifyTools.neonPic(prebmp);
                             break;
@@ -300,26 +290,24 @@ namespace VerifyCodes
                         return;
                     }
                     break;
+                case enumMethods.特殊处理:
+                    VerifyTools.getClearLine(prebmp);
+                    break;
             }
         }
 
-
-    
-
-        //public VerifyCode vfcode = null;
-        string[]files = null;
+        string[] files = null;
         int fileIndex = -1;
         Bitmap prebmp = null;
         Bitmap srcbmp = null;
         Bitmap workbmp = null;
         Bitmap showbmp = null;
-        //bool isworkbmp = false;
 
-            /// <summary>
-            ///切换图片
-            /// </summary>
-            /// <param name="sender"></param>
-            /// <param name="e"></param>
+        /// <summary>
+        ///切换图片
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_NexPic_Click(object sender, EventArgs e)
         {
 
@@ -329,26 +317,26 @@ namespace VerifyCodes
                 loadfiles();
                 fileIndex = 0;
             }
-            if (fileIndex>=files .Length)
+            if (fileIndex >= files.Length)
             {
                 fileIndex = 0;
             }
-            using (FileStream fs = new FileStream(files [fileIndex],FileMode.Open ))
+            using (FileStream fs = new FileStream(files[fileIndex], FileMode.Open))
             {
                 //byte[] bytes = new byte[fs.Length ];
                 //fs.Read(bytes ,0,bytes.Length );
-                Bitmap img = (Bitmap )Bitmap.FromStream(fs );
-                Bitmap imgd = new Bitmap(img );
+                Bitmap img = (Bitmap)Bitmap.FromStream(fs);
+                Bitmap imgd = new Bitmap(img);
                 img.Dispose();
                 prebmp = (Bitmap)imgd.Clone();
                 srcbmp = (Bitmap)imgd.Clone();
                 this.Text = prebmp.Width + " w * h " + prebmp.Height;
                 //vfcode = new VerifyCode(prebmp );
             }
-            
-            
+
+
             mul = -1;
-            picBox_src.Image = VerifyTools.getBig(srcbmp ,ref mul, 233, 80, false );
+            picBox_src.Image = VerifyTools.getBig(srcbmp, ref mul, 233, 80, false);
             mul = -1;
             //showbmp  = VerifyTools.getBig(prebmp, ref mul, 560, 250);
 
@@ -388,16 +376,16 @@ namespace VerifyCodes
 
         private void picBox_show_Paint(object sender, PaintEventArgs e)
         {
-            if(showbmp!=null )
-            {
-                picBox_show.Image = showbmp;
-                picBox_pre.Image = prebmp;
-            }
+            //if (showbmp != null)
+            //{
+            //    picBox_show.Image = showbmp;
+            //    picBox_pre.Image = prebmp;
+            //}
             //if (vfcode != null)
-             //  picBox_show.Image = vfcode.UserBmpShow; 
+            //  picBox_show.Image = vfcode.UserBmpShow; 
         }
 
- 
+
         /// <summary>
         /// 刷新显示
         /// </summary>
@@ -408,28 +396,9 @@ namespace VerifyCodes
             refreshBmpByList();
         }
 
-
-
         Rectangle[] rects = null;
-
-        private void button10_Click(object sender, EventArgs e)
-        {
-            if (workbmp != null)
-            {
-                prebmp = (Bitmap)workbmp.Clone();
-                mul = -1;
-                showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250);
-            }
-        }
-
-        private void button11_Click(object sender, EventArgs e)
-        {
-            string featurestr = VerifyTools.getFeatureCode(prebmp );
-            MessageBox.Show(featurestr);
-        }
-
         bool drawhand = false;
-        Point drawhandstart = new Point ();
+        Point drawhandstart = new Point();
 
         private void picBox_show_MouseDown(object sender, MouseEventArgs e)
         {
@@ -439,10 +408,10 @@ namespace VerifyCodes
             }
             int x = e.X / mul;
             int y = e.Y / mul;
-            if (checkBox1 .Checked)
+            if (checkBox1.Checked)
             {
                 drawhand = true;
-                drawhandstart = new Point (x,y );
+                drawhandstart = new Point(x, y);
 
             }
         }
@@ -474,7 +443,7 @@ namespace VerifyCodes
                 {
                     //rects = null;
                     rects = new Rectangle[] { new Rectangle(drawhandstart.X, drawhandstart.Y, x - drawhandstart.X + 1, y - drawhandstart.Y + 1) };
-                    showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250,true, rects);
+                    showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250, true, rects);
 
                     checkBox1.Checked = false;
                     drawhand = false;
@@ -485,7 +454,7 @@ namespace VerifyCodes
                     prebmp.SetPixel(x, y, c.B == 255 ? Color.Black : Color.White);
                     showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250);
                 }
-            }         
+            }
         }
 
         private void picBox_show_MouseMove(object sender, MouseEventArgs e)
@@ -500,7 +469,7 @@ namespace VerifyCodes
             }
         }
 
-         
+
         /// <summary>
         /// 右键添加菜单添加指定项
         /// </summary>
@@ -509,7 +478,7 @@ namespace VerifyCodes
         private void ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem toolSMItem = (ToolStripMenuItem)sender;
-            string method = toolSMItem.Text.Trim ();
+            string method = toolSMItem.Text.Trim();
             ListViewItem lvi = new ListViewItem();
             lvi.Tag = method;
             string str_params = "";
@@ -555,15 +524,18 @@ namespace VerifyCodes
                     method = "修改亮度";
                     str_params = "3";
                     break;
+                case "特殊处理":
+                    method = "特殊处理";
+                    str_params = "特殊处理";
+                    break;
 
             }
-          
-            lvi.SubItems.Add(method );
-            lvi.SubItems.Add(str_params );
-            lvi.Checked = false ;
-            listView1.Items.Add(lvi );
-            lvi.Selected = true;
 
+            lvi.SubItems.Add(method);
+            lvi.SubItems.Add(str_params);
+            lvi.Checked = false;
+            listView1.Items.Add(lvi);
+            lvi.Selected = true;
         }
 
         /// <summary>
@@ -574,26 +546,26 @@ namespace VerifyCodes
         /// <param name="str_p"></param>
         /// <param name="paneltag"></param>
         /// <returns></returns>
-        private Panel setPanelLoc(string tag,string method,string str_p,int paneltag)
+        private Panel setPanelLoc(string tag, string method, string str_p, int paneltag)
         {
             panel_Binary.Visible = false;
             panel_Clip.Visible = false;
-            panel_clrpro.Visible = false ;
+            panel_clrpro.Visible = false;
             panel_filter.Visible = false;
             panel_ngt.Visible = false;
             panel_smoothing.Visible = false;
             panel_divPixel.Visible = false;
             panel_resize.Visible = false;
             panel_clearback.Visible = false;
+            panel_special.Visible = false;
             panel1.Visible = false;
 
-          
 
             Panel panelre = null;
-            string[] param = str_p.Split(' ').Where((o) => { return !string.IsNullOrEmpty(o); }).ToArray ();
+            string[] param = str_p.Split(' ').Where((o) => { return !string.IsNullOrEmpty(o); }).ToArray();
             if (param.Length == 0)
                 return null;
-            switch (tag )
+            switch (tag)
             {
                 case "图像缩放":
                     panelre = panel_resize;
@@ -612,7 +584,7 @@ namespace VerifyCodes
                     }
                     break;
                 case "图像裁剪":
-                    panelre  = panel_Clip;
+                    panelre = panel_Clip;
                     panelre.Tag = paneltag;
 
                     if (method == "裁剪图像")
@@ -620,9 +592,9 @@ namespace VerifyCodes
                     else if (method == "去除边框")
                         rB_Clip_clrBlock.Checked = true;
                     txtBox_Clip_up.Text = param[0];
-                    txtBox_Clip_left .Text = param[1];
-                    txtBox_Clip_right .Text = param[2];
-                    txtBox_Clip_down .Text = param[3];
+                    txtBox_Clip_left.Text = param[1];
+                    txtBox_Clip_right.Text = param[2];
+                    txtBox_Clip_down.Text = param[3];
                     break;
                 case "图像滤波":
                     panelre = panel_smoothing;
@@ -635,7 +607,7 @@ namespace VerifyCodes
                             rB_sm_mid3.Checked = true;
                             break;
                         case "中值滤波5*5":
-                            rB_sm_mid5.Checked  = true;
+                            rB_sm_mid5.Checked = true;
                             break;
                         case "中值滤波7*7":
                             rB_sm_mid7.Checked = true;
@@ -662,13 +634,13 @@ namespace VerifyCodes
                             rB_filter_neno.Checked = true;
                             break;
                         case "锐化":
-                            rB_filter_sharpen .Checked = true;
+                            rB_filter_sharpen.Checked = true;
                             break;
                         case "柔化":
-                            rB_filter_soften .Checked = true;
+                            rB_filter_soften.Checked = true;
                             break;
                         case "浮雕":
-                            rB_filter_Embosment .Checked = true;
+                            rB_filter_Embosment.Checked = true;
                             break;
                         case "高斯":
                             rB_filter_neno.Checked = true;
@@ -683,7 +655,7 @@ namespace VerifyCodes
                     }
                     break;
                 case "清除背景":
-                    panelre = panel_clearback ;
+                    panelre = panel_clearback;
                     panelre.Tag = paneltag;
 
                     if ("颜色".Equals(param[0]))
@@ -718,7 +690,7 @@ namespace VerifyCodes
                     }
                     break;
                 case "像素分离":
-                    panelre = panel_divPixel ;
+                    panelre = panel_divPixel;
                     panelre.Tag = paneltag;
 
                     if (method == "按亮度分离")
@@ -740,7 +712,7 @@ namespace VerifyCodes
                             rB_clrpro_gray.Checked = true;
                             break;
                         case "反转":
-                            rB_clrpro_reversal .Checked = true;
+                            rB_clrpro_reversal.Checked = true;
                             break;
                         case "单色红":
                             rB_clrpro_red.Checked = true;
@@ -761,13 +733,14 @@ namespace VerifyCodes
                     {
                         rB__Binary_allBlack.Checked = true;
 
-                    }else if (method == "指定阀值")
+                    }
+                    else if (method == "指定阀值")
                     {
-                        rB__Binary_threshold .Checked = true;
+                        rB__Binary_threshold.Checked = true;
                     }
                     else if (method == "中值差值")
                     {
-                        rB__Binary_autoSub .Checked = true;
+                        rB__Binary_autoSub.Checked = true;
                     }
                     else if (method == "自动阀值")
                     {
@@ -784,19 +757,19 @@ namespace VerifyCodes
                             rB_ngt_thin.Checked = true;
                             break;
                         case "腐蚀":
-                            rB_ngt_erosion .Checked = true;
+                            rB_ngt_erosion.Checked = true;
                             break;
                         case "膨胀":
                             rB_ngt_swell.Checked = true;
                             break;
                         case "开运算":
-                            rB_ngt_open .Checked = true;
+                            rB_ngt_open.Checked = true;
                             break;
                         case "闭运算":
-                            rB_ngt_close .Checked = true;
+                            rB_ngt_close.Checked = true;
                             break;
                         case "去除白边":
-                            rB_ngt_CEdge .Checked = true;
+                            rB_ngt_CEdge.Checked = true;
                             break;
                         case "去除杂点":
                             rB_ngt_cNoise.Checked = true;
@@ -804,22 +777,27 @@ namespace VerifyCodes
                     }
                     break;
                 case "亮度对比度":
-                    panelre = panel1 ;
+                    panelre = panel1;
                     panelre.Tag = paneltag;
 
                     if (method == "修改亮度")
                     {
-                        
+
                     }
                     else if (method == "修改对比度")
                     {
 
                     }
                     break;
+                case "特殊处理":
+                    panelre = panel_special;
+                    panelre.Tag = paneltag;
+
+                    break;
             }
             if (panelre != null)
             {
-                int x = listView1.Location.X +listView1 .Width /2 -panelre .Width /2;
+                int x = listView1.Location.X + listView1.Width / 2 - panelre.Width / 2;
                 int y = listView1.Location.Y + listView1.Height + 3;
 
                 Point p = new Point(x, y);
@@ -852,25 +830,25 @@ namespace VerifyCodes
                 panel1.Visible = false;
                 return;
             }
-            
-             ListViewItem lvi = listView1.SelectedItems[0];
+
+            ListViewItem lvi = listView1.SelectedItems[0];
             string method = lvi.SubItems[1].Text;
             string str_params = lvi.SubItems[2].Text;
-            string str_tag = lvi.Tag.ToString ();
+            string str_tag = lvi.Tag.ToString();
             int index = listView1.SelectedItems[0].Index;
-            setPanelLoc(str_tag ,method ,str_params ,index );
-            
+            setPanelLoc(str_tag, method, str_params, index);
+
         }
 
         private void refreshBmpByList()
         {
-            if(srcbmp ==null)
+            if (srcbmp == null)
             {
                 return;
             }
             mul = -1;
             prebmp = (Bitmap)srcbmp.Clone();
-            for (int i = 0; i < listView1 .Items.Count ; i++)
+            for (int i = 0; i < listView1.Items.Count; i++)
             {
                 ListViewItem lvi = listView1.Items[i];
                 if (lvi.Checked)
@@ -879,11 +857,12 @@ namespace VerifyCodes
                     string str_params = lvi.SubItems[2].Text;
                     string str_tag = lvi.Tag.ToString();
                     string[] pa = str_params.Split(' ').Where((o) => { return !string.IsNullOrEmpty(o); }).ToArray();
-                    methods((int )Enum.Parse (typeof (enumMethods),method), pa);              
+                    methods((int)Enum.Parse(typeof(enumMethods), method), pa);
                 }
             }
-            showbmp = VerifyTools.getBig(prebmp , ref mul, 560, 250);
-
+            showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250);
+            picBox_show.Image = showbmp;
+            picBox_pre.Image = prebmp;
         }
 
         private void config_Changed(object sender, EventArgs e)
@@ -891,15 +870,16 @@ namespace VerifyCodes
             string method = "";
             string param = "";
             Control ctr = null;
-            if (sender.GetType ().ToString() == typeof(RadioButton).ToString ()) {
+            if (sender.GetType().ToString() == typeof(RadioButton).ToString())
+            {
                 ctr = (RadioButton)sender;
             }
-            else if(sender.GetType().ToString() == typeof (TextBox ).ToString())
+            else if (sender.GetType().ToString() == typeof(TextBox).ToString())
             {
                 ctr = (TextBox)sender;
                 if (ctr.Text == "") ctr.Text = "0";
                 int a;
-                if(!int.TryParse (ctr.Text.Trim () ,out a))
+                if (!int.TryParse(ctr.Text.Trim(), out a))
                 {
                     return;
                 }
@@ -909,20 +889,20 @@ namespace VerifyCodes
                 return;
             }
             Panel fa = (Panel)ctr.Parent;
-            if (fa.Tag ==null)
+            if (fa.Tag == null)
             {
                 return;
             }
-            int index = (int )fa.Tag;
-            getMethodParamFromPanel(fa ,ref method ,ref param );             
-            listView1.Items[index ].SubItems[1].Text  = method;
+            int index = (int)fa.Tag;
+            getMethodParamFromPanel(fa, ref method, ref param);
+            listView1.Items[index].SubItems[1].Text = method;
             listView1.Items[index].SubItems[2].Text = param;
-            button2_Click(null,null);
+            button2_Click(null, null);
         }
 
-       private void getMethodParamFromPanel(Panel panel,ref string method,ref string param)
+        private void getMethodParamFromPanel(Panel panel, ref string method, ref string param)
         {
-            if(panel ==null)
+            if (panel == null)
             {
                 //method = "";
                 param = "";
@@ -1110,35 +1090,36 @@ namespace VerifyCodes
                     if (rB_resize_scale.Checked)
                     {
                         method = enumMethods.比例缩放.ToString();
-                        param = string.Format("{0} {1}", comb_resize_width .Text .Trim (),comb_resize_height .Text .Trim ());
-                    } else if (rB_resize_size .Checked )
+                        param = string.Format("{0} {1}", comb_resize_width.Text.Trim(), comb_resize_height.Text.Trim());
+                    }
+                    else if (rB_resize_size.Checked)
                     {
-                        method = enumMethods.尺寸缩放 .ToString();
-                        param = string.Format("{0} {1}", txtBox_resize_width .Text.Trim(), txtBox_resize_height.Text.Trim());
+                        method = enumMethods.尺寸缩放.ToString();
+                        param = string.Format("{0} {1}", txtBox_resize_width.Text.Trim(), txtBox_resize_height.Text.Trim());
                     }
                     break;
                 case "panel_divPixel":
-                    if (rB_divPixel_color .Checked)
+                    if (rB_divPixel_color.Checked)
                     {
-                        method = enumMethods.按颜色分离 .ToString();
-                        param = string.Format("{0} {1}", comb_divPixel_color .Text.Trim(), txtBox_divPixel_color .Text.Trim());
+                        method = enumMethods.按颜色分离.ToString();
+                        param = string.Format("{0} {1}", comb_divPixel_color.Text.Trim(), txtBox_divPixel_color.Text.Trim());
                     }
-                    else if (rB_divPixel_light .Checked)
+                    else if (rB_divPixel_light.Checked)
                     {
-                        method = enumMethods.按亮度分离 .ToString();
-                        param = string.Format("{0} {1}", comb_divPixel_light .Text.Trim(), txtBox_divPixel_light .Text.Trim());
+                        method = enumMethods.按亮度分离.ToString();
+                        param = string.Format("{0} {1}", comb_divPixel_light.Text.Trim(), txtBox_divPixel_light.Text.Trim());
                     }
                     break;
                 case "panel_clearback":
-                    if (rB_clearback_keepcolor .Checked)
+                    if (rB_clearback_keepcolor.Checked)
                     {
                         method = enumMethods.按颜色分离.ToString();
-                        param = string.Format("{0}", txtBox_clearback_keepcolor .Text .Trim ());
+                        param = string.Format("{0}", txtBox_clearback_keepcolor.Text.Trim());
                     }
-                    else if (rB_clearback_keeplight .Checked)
+                    else if (rB_clearback_keeplight.Checked)
                     {
                         method = enumMethods.按亮度分离.ToString();
-                        param = string.Format("{0}", txtBox_clearback_keeplight .Text.Trim());
+                        param = string.Format("{0}", txtBox_clearback_keeplight.Text.Trim());
                     }
                     break;
             }
@@ -1153,12 +1134,12 @@ namespace VerifyCodes
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int selectedCount = listView1.SelectedItems.Count;
-            if(selectedCount != 1)
+            if (selectedCount != 1)
             {
                 return;
             }
             int index = listView1.SelectedItems[0].Index;
-            listView1.Items.RemoveAt(index );
+            listView1.Items.RemoveAt(index);
         }
 
         private void 清空ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1166,21 +1147,8 @@ namespace VerifyCodes
             listView1.Items.Clear();
         }
 
-        private void picBox_src_Paint(object sender, PaintEventArgs e)
-        {
-           // if (srcbmp != null && srcbmp !=picBox_src .Image )
-               // picBox_src.Image = srcbmp;
-        }
-
-        private void picBox_pre_Paint(object sender, PaintEventArgs e)
-        {
-            //if (prebmp != null)
-            //{
-            //    picBox_pre.Image = prebmp;
-            //}
-        }
     }
-    public  enum  enumMethods 
+    public enum enumMethods
     {
         尺寸缩放,
         比例缩放,
@@ -1198,7 +1166,8 @@ namespace VerifyCodes
         自动阀值,
         黑白图处理,
         修改亮度,
-        修改对比度
+        修改对比度,
+        特殊处理
     }
 
 }

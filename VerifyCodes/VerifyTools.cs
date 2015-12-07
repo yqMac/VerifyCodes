@@ -93,6 +93,36 @@ namespace VerifyCodes
 
         #endregion 变量
 
+        #region 缩放
+
+
+        public static Bitmap getBmpResize(Bitmap bmp,int width,int height,double wd=1,double hd=1,int type = 1)
+        {
+            Bitmap rebmp = null;
+            int rewidth = 0;
+            int reheight = 0;
+            if (type == 1)
+            {
+                rewidth = width;
+                reheight = height;
+            }
+            else
+            {
+                rewidth =(int ) (bmp.Width * wd);
+                reheight =(int )( bmp.Height * hd);
+            }
+            rebmp = new Bitmap(rewidth ,reheight ,bmp.PixelFormat );
+
+            Graphics g = Graphics.FromImage(rebmp );
+            g.DrawImage(bmp ,0,0,rewidth ,reheight );
+            g.Dispose();
+
+            return rebmp;
+        }
+
+
+        #endregion 缩放
+
         #region 裁剪
 
         /// <summary>
@@ -415,14 +445,13 @@ namespace VerifyCodes
             return userBmp;
         }
 
-
         /// <summary>
         /// 需灰度图
         /// 去除白边
         /// </summary>
         /// <param name="dgGrayValue">灰度背景分界值</param>
         /// <returns></returns>
-        public static Bitmap ClearEdge(Bitmap userBmp, int dgGrayValue=1)
+        public static Bitmap ClearEdge(Bitmap userBmp, int dgGrayValue = 1)
         {
             int posx1 = userBmp.Width; int posy1 = userBmp.Height;
             int posx2 = 0; int posy2 = 0;
@@ -493,7 +522,7 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        public static  Bitmap Thinbmp(Bitmap bmp)
+        public static Bitmap Thinbmp(Bitmap bmp)
         {
             int width = bmp.Width;
             int height = bmp.Height;
@@ -757,7 +786,7 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        public Bitmap SharpenImage(Bitmap bmp)
+        public static  Bitmap SharpenImage(Bitmap bmp)
         {
             int height = bmp.Height;
             int width = bmp.Width;
@@ -808,7 +837,7 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        public Bitmap AtomizationImage(Bitmap bmp)
+        public static Bitmap AtomizationImage(Bitmap bmp)
         {
             int height = bmp.Height;
             int width = bmp.Width;
@@ -847,7 +876,7 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        public Bitmap SoftenImage(Bitmap bmp)
+        public static Bitmap SoftenImage(Bitmap bmp)
         {
             int height = bmp.Height;
             int width = bmp.Width;
@@ -901,7 +930,7 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        public Bitmap EmbossmentImage(Bitmap bmp)
+        public static Bitmap EmbossmentImage(Bitmap bmp)
         {
             int height = bmp.Height;
             int width = bmp.Width;
@@ -957,7 +986,6 @@ namespace VerifyCodes
                 for (int j = 0; j < bmpobj.Height - 1; j++)
                 {
                     int r, g, b;
-
                     //f(i,j)的RGB分量为(r1, g1, b1), f(i,j+1)为(r2, g2, b2), f(i+1,j)为(r3, g3, b3)
                     Color c1 = bmpobj.GetPixel(i, j);
                     Color c2 = bmpobj.GetPixel(i, j + 1);
@@ -967,17 +995,13 @@ namespace VerifyCodes
                     g = (int)(2 * (Math.Sqrt(Math.Pow((c1.G - c2.G), 2) + Math.Pow((c1.G - c3.G), 2))));
                     b = (int)(2 * (Math.Sqrt(Math.Pow((c1.B - c2.B), 2) + Math.Pow((c1.B - c3.B), 2))));
 
-
-                    if(r>=0 && r<=255 && g>=0 && g<=255 && b >=0 && b<=255)
-                    bmpnew.SetPixel(i, j, Color.FromArgb(r, g, b));
+                    if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255)
+                        bmpnew.SetPixel(i, j, Color.FromArgb(r, g, b));
 
                 }
             }
             return bmpnew;
         }
-
-
-
 
         #endregion 滤镜
 
@@ -985,20 +1009,20 @@ namespace VerifyCodes
         //#################################################################################//
         //public static  double[] M = new double[7];        //HU不变矩
 
-         /// <summary>
-         /// 获取二值化图像的体征吗
-         /// </summary>
-         /// <param name="img"></param>
-         /// <returns></returns>
-        public static  double [] HuMoment(Bitmap  img)
-        { 
-              double[] M = new double[7];
-            PointBitmap pbp = new PointBitmap(img );
+        /// <summary>
+        /// 获取二值化图像的体征吗
+        /// </summary>
+        /// <param name="img"></param>
+        /// <returns></returns>
+        public static double[] HuMoment(Bitmap img)
+        {
+            double[] M = new double[7];
+            PointBitmap pbp = new PointBitmap(img);
             pbp.LockBits();
 
-            int bmpWidth = pbp.Width ;
-            int bmpHeight = pbp.Height ;
-            int bmpStep = pbp.Depth ;
+            int bmpWidth = pbp.Width;
+            int bmpHeight = pbp.Height;
+            int bmpStep = pbp.Depth;
             //int bmpChannels = img->nChannels;
             //uchar* pBmpBuf = (uchar*)img->imageData;
 
@@ -1077,7 +1101,7 @@ namespace VerifyCodes
         /// 获取两个特征码的相似度
         /// </summary>
         /// <returns></returns>
-        public static double getDbR(double []Sa,double []Ta)
+        public static double getDbR(double[] Sa, double[] Ta)
         {
 
             //  计算相似度1
@@ -1087,15 +1111,15 @@ namespace VerifyCodes
             double dSigmaT = 0;
             double temp = 0;
             {
-                for (int i = 0; i <7; i++)
+                for (int i = 0; i < 7; i++)
                 {
-                    temp = Math .Abs (Sa[i] * Ta[i]);
+                    temp = Math.Abs(Sa[i] * Ta[i]);
                     dSigmaST += temp;
-                    dSigmaS += Math.Pow (Sa[i], 2);
-                    dSigmaT += Math.Pow (Ta[i], 2);
+                    dSigmaS += Math.Pow(Sa[i], 2);
+                    dSigmaT += Math.Pow(Ta[i], 2);
                 }
             }
-            dbR = dSigmaST / (Math.Sqrt (dSigmaS) * Math.Sqrt (dSigmaT));
+            dbR = dSigmaST / (Math.Sqrt(dSigmaS) * Math.Sqrt(dSigmaT));
             return dbR;
         }
 
@@ -1106,7 +1130,7 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        private static  bool [,] getbmpbin(Bitmap bmp)
+        private static bool[,] getbmpbin(Bitmap bmp)
         {
             int width = bmp.Width;
             int height = bmp.Height;
@@ -1128,7 +1152,7 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="bmp"></param>
         /// <param name="b"></param>
-        private static  Bitmap   getBinToBmp(Bitmap bmp,bool [,] b)
+        private static Bitmap getBinToBmp(Bitmap bmp, bool[,] b)
         {
             int width = bmp.Width;
             int height = bmp.Height;
@@ -1151,7 +1175,7 @@ namespace VerifyCodes
         /// <param name="RowNum">水平上分割数</param>
         /// <param name="ColNum">垂直上分割数</param>
         /// <returns>分割好的图片数组</returns>
-        public Bitmap[] GetSplitPics(Bitmap bmpobj,int RowNum, int ColNum)
+        public Bitmap[] GetSplitPics(Bitmap bmpobj, int RowNum, int ColNum)
         {
             if (RowNum == 0 || ColNum == 0)
                 return null;
@@ -1181,7 +1205,7 @@ namespace VerifyCodes
         public static Bitmap getRectBmp(Bitmap srcbmp, Rectangle rect)
         {
             Bitmap bmp = (Bitmap)srcbmp.Clone();
-            if (rect.Height >srcbmp .Height || rect.Width >srcbmp.Width)
+            if (rect.Height > srcbmp.Height || rect.Width > srcbmp.Width)
             {
                 return bmp;
             }
@@ -1223,16 +1247,16 @@ namespace VerifyCodes
             list_regions = new List<List<Point>>();
             int tag = 1;
 
-            for (var x = 0; x <width ; x++)
+            for (var x = 0; x < width; x++)
             {
-                for (var y = 0; y < heigth ; y++)
+                for (var y = 0; y < heigth; y++)
                 {
-                    if(imgp [x,y]==0 && regions [x ,y] == 0)
+                    if (imgp[x, y] == 0 && regions[x, y] == 0)
                     {
                         list_regions.Add(getneib(imgp, regions, new Point(x, y), tag));
                         tag++;
                     }
-              
+
                 }
             }
             foreach (List<Point> item in list_regions)
@@ -1275,14 +1299,14 @@ namespace VerifyCodes
         /// <param name="lside"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static Rectangle[] getRegions(Bitmap userBmp,int linyu=8,int lside=1,bool n=true)
+        public static Rectangle[] getRegions(Bitmap userBmp, int linyu = 8, int lside = 1, bool n = true)
         {
             List<List<Point>> list_regions = new List<List<Point>>();
             Dictionary<int, List<Point>> dic_tag_region = new Dictionary<int, List<Point>>();
             List<Rectangle> list_bt = new List<Rectangle>();
             int width = userBmp.Width;
             int height = userBmp.Height;
-            Dictionary<int, int > dic_tagLink = new Dictionary<int, int >();
+            Dictionary<int, int> dic_tagLink = new Dictionary<int, int>();
             //Bitmap img = (Bitmap)userBmp.Clone();
             /// <summary>
             /// 分割框位置信息
@@ -1303,19 +1327,19 @@ namespace VerifyCodes
             int tag = 1;
             ///第一遍
             int nerbSmall = -1;
-            for (var y = 0; y < height ; y++)
+            for (var y = 0; y < height; y++)
             {
-                for (var x = 0; x < width ; x++)
+                for (var x = 0; x < width; x++)
                 {
                     nerbSmall = -1;
 
-                    if (imgp[x, y] == 0 )
+                    if (imgp[x, y] == 0)
                     {
                         List<int> list_nertags = new List<int>();
-                        
+
                         //左邻域
                         int tmpx = x - 1, tmpy = y;
-                        if (tmpx >= 0 && imgp[tmpx , tmpy ] == 0 && regions_tags[tmpx, tmpy] != 0)
+                        if (tmpx >= 0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
                         {
                             list_nertags.Add(regions_tags[tmpx, tmpy]);
                         }
@@ -1325,44 +1349,44 @@ namespace VerifyCodes
                         {
                             list_nertags.Add(regions_tags[tmpx, tmpy]);
                         }
-                    
-                        
+
+
                         //下邻域
                         tmpx = x; tmpy = y + 1;
-                        if (tmpy < height  && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                        if (tmpy < height && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
                         {
                             list_nertags.Add(regions_tags[tmpx, tmpy]);
                         }
                         //右邻域
-                        tmpx = x+1; tmpy = y;
-                        if (tmpx < width  && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                        tmpx = x + 1; tmpy = y;
+                        if (tmpx < width && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
                         {
                             list_nertags.Add(regions_tags[tmpx, tmpy]);
                         }
                         //如果八邻域
-                        if(linyu == 8)
+                        if (linyu == 8)
                         {
                             //左上邻域
-                            tmpx = x -1 ; tmpy = y-1;
-                            if (tmpx >0&&tmpy >0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            tmpx = x - 1; tmpy = y - 1;
+                            if (tmpx > 0 && tmpy > 0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
                             {
                                 list_nertags.Add(regions_tags[tmpx, tmpy]);
                             }
                             //右上邻域
                             tmpx = x + 1; tmpy = y - 1;
-                            if (tmpx <width  && tmpy > 0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            if (tmpx < width && tmpy > 0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
                             {
                                 list_nertags.Add(regions_tags[tmpx, tmpy]);
                             }
                             //左下邻域
-                            tmpx = x - 1; tmpy = y +1;
-                            if (tmpx > 0 && tmpy<height  && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            tmpx = x - 1; tmpy = y + 1;
+                            if (tmpx > 0 && tmpy < height && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
                             {
                                 list_nertags.Add(regions_tags[tmpx, tmpy]);
                             }
                             //右下邻域
                             tmpx = x + 1; tmpy = y + 1;
-                            if (tmpx <width  && tmpy <height  && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            if (tmpx < width && tmpy < height && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
                             {
                                 list_nertags.Add(regions_tags[tmpx, tmpy]);
                             }
@@ -1391,7 +1415,7 @@ namespace VerifyCodes
                             }
 
                         }
-                        
+
                         //if(nerbSmall == -1)
                         //{
                         //    tag++;
@@ -1408,13 +1432,13 @@ namespace VerifyCodes
                 }
             }
             //第二遍
-            for (int y = 0; y < height ; y++)
+            for (int y = 0; y < height; y++)
             {
-                for (int x = 0; x < width ; x++)
+                for (int x = 0; x < width; x++)
                 {
-                    if(regions_tags[x, y] > 0)
+                    if (regions_tags[x, y] > 0)
                     {
-                        regions_tags[x, y] = dic_tagLink[regions_tags[x,y] ];
+                        regions_tags[x, y] = dic_tagLink[regions_tags[x, y]];
                         //提取区域
                         int tmptag = regions_tags[x, y];
                         if (dic_tag_region.ContainsKey(tmptag))
@@ -1442,7 +1466,7 @@ namespace VerifyCodes
             //                dic_tag_region[tmptag].Add(new Point (x,y));
             //            }else
             //            {
-                            
+
             //                dic_tag_region.Add(tmptag ,new List<Point>() { new Point (x,y)});
             //            }
             //            //regions_tags[x, y] = dic_tagLink[regions_tags[x, y]];
@@ -1450,7 +1474,7 @@ namespace VerifyCodes
             //    }
             //}
 
-            foreach (List<Point> item in dic_tag_region .Values )
+            foreach (List<Point> item in dic_tag_region.Values)
             {
                 Point left, right;
                 left = item[0];
@@ -1491,7 +1515,7 @@ namespace VerifyCodes
         /// <param name="lside"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static Rectangle[] getFillbmp(Bitmap userBmp, int linyu = 4, int lside = 1, bool n = true,int fillindex=1)
+        public static Rectangle[] getFillbmp(Bitmap userBmp, int linyu = 4, int lside = 1, bool n = true, int fillindex = 1)
         {
             List<List<Point>> list_regions = new List<List<Point>>();
             Dictionary<int, List<Point>> dic_tag_region = new Dictionary<int, List<Point>>();
@@ -1645,9 +1669,9 @@ namespace VerifyCodes
 
                 foreach (Point p in item)
                 {
-                    if(index ==fillindex)
+                    if (index == fillindex)
                     {
-                        userBmp.SetPixel(p.X ,p.Y ,Color.Red );
+                        userBmp.SetPixel(p.X, p.Y, Color.Red);
                     }
                     if (left.X > p.X)
                     {
@@ -1677,6 +1701,8 @@ namespace VerifyCodes
 
         #endregion 图像轮廓提取
 
+
+
         public static void getClearLine(Bitmap bmp)
         {
             int width = bmp.Width;
@@ -1688,21 +1714,21 @@ namespace VerifyCodes
                 for (int j = 0; j < height; j++)
                 {
 
-                    imgp[i, j] = bmp.GetPixel(i, j).R==0?1:0;
-                    if (offset ==-1&&imgp[i, j] == 1)
+                    imgp[i, j] = bmp.GetPixel(i, j).R == 0 ? 1 : 0;
+                    if (offset == -1 && imgp[i, j] == 1)
                     {
                         offset = i;
                     }
                 }
             }
 
-            int[] b = new int[width ];
+            int[] b = new int[width];
 
-            genLine(bmp ,offset ,imgp ,b ,0);
+            genLine(bmp, offset, imgp, b, 0);
 
         }
 
-        public static void  genLine( Bitmap bmp ,int offset,int[,]a,int[]b,int n)
+        public static void genLine(Bitmap bmp, int offset, int[,] a, int[] b, int n)
         {
             int threshold = 20;
             int M = bmp.Width;
@@ -1711,9 +1737,9 @@ namespace VerifyCodes
             if (n < offset)
             {
                 b[n] = -1;
-                genLine(bmp ,offset ,a,b ,n + 1);
+                genLine(bmp, offset, a, b, n + 1);
             }
-            if (n == M  )
+            if (n == M)
             {
                 //for (int i = 0; i < M; i++)
                 //{
@@ -1727,22 +1753,22 @@ namespace VerifyCodes
             {
                 for (int j = 0; j < N; j++)
                 {
-                    if (a[offset,j] == 1)
+                    if (a[offset, j] == 1)
                     {
-                       b[offset] = j;
-                       // bmp.SetPixel(n ,j ,Color.Red );
-                       genLine(bmp,offset,a,b,n + 1);
+                        b[offset] = j;
+                        // bmp.SetPixel(n ,j ,Color.Red );
+                        genLine(bmp, offset, a, b, n + 1);
                     }
                 }
             }
 
-            
+
             if (n > 0 && n < M)
             {
                 int hasMore = 0;
 
                 //左边的是有的，且左边的在位图内 且  当前位 是黑色
-                if (b[n - 1] > 0 && b[n - 1] < N && a[n,b[n - 1]] == 1)
+                if (b[n - 1] > 0 && b[n - 1] < N && a[n, b[n - 1]] == 1)
                 {
 
                     b[n] = b[n - 1];
@@ -1752,14 +1778,14 @@ namespace VerifyCodes
                 }
                 else
                 {
-                    if (b[n - 1] > 0 && a[n,b[n - 1] - 1] == 1)
+                    if (b[n - 1] > 0 && a[n, b[n - 1] - 1] == 1)
                     {
-                       // bmp.SetPixel(n, b[n - 1]-1, Color.Red);
+                        // bmp.SetPixel(n, b[n - 1]-1, Color.Red);
                         b[n] = b[n - 1] - 1;
                         hasMore = 1;
                         genLine(bmp, offset, a, b, n + 1);
                     }
-                    if (b[n - 1] <N - 1 && a[n,b[n - 1] + 1] == 1)
+                    if (b[n - 1] < N - 1 && a[n, b[n - 1] + 1] == 1)
                     {
                         //bmp.SetPixel(n, b[n - 1]+1, Color.Red);
                         b[n] = b[n - 1] + 1;
@@ -1767,7 +1793,7 @@ namespace VerifyCodes
                         genLine(bmp, offset, a, b, n + 1);
                     }
                 }
-                if (n -offset > threshold && hasMore == 0)
+                if (n - offset > threshold && hasMore == 0)
                 {
                     for (int i = 0; i < n; i++)
                     {
@@ -1778,13 +1804,14 @@ namespace VerifyCodes
                         }
                     }
                 }
-            }else if(n - offset > threshold)
+            }
+            else if (n - offset > threshold)
             {
                 for (int i = 0; i < n; i++)
                 {
                     if (b[i] > 0)
                     {
-                        bmp.SetPixel(i, b [i], Color.FromArgb(255, 255, 255));
+                        bmp.SetPixel(i, b[i], Color.FromArgb(255, 255, 255));
                     }
                 }
             }
@@ -1798,7 +1825,7 @@ namespace VerifyCodes
 
         }
 
-   
+
         /// <summary>
         /// 需要二值化图片
         /// 获取二值化图片的特征码字符串
@@ -1830,7 +1857,7 @@ namespace VerifyCodes
             return strb.ToString();
         }
 
-    
+
 
         /// <summary>
         /// 线性滤镜处理
@@ -1839,21 +1866,21 @@ namespace VerifyCodes
         /// <param name="type">处理类型，1腐蚀，2锐化，3细化</param>
         /// <param name="param">参数：腐蚀灰度|锐化程度。取值[0,1]。值越大锐化程度越高|细化灰度</param>
         /// <returns></returns>
-        public static Bitmap lineFilter(Bitmap bmp,int type,double param)
+        public static Bitmap lineFilter(Bitmap bmp, int type, double param)
         {
             switch (type)
             {
                 case 1:
-                    ErosionPic(bmp ,(int )param ,0,null );
+                    ErosionPic(bmp, (int)param, 0, null);
                     break;
                 case 2:
-                    Sharpen(bmp ,(float )param );
+                    Sharpen(bmp, (float)param);
                     break;
                 case 3:
-                    ThiningPic(bmp ,(int)param );
+                    ThiningPic(bmp, (int)param);
                     break;
                 default:
-                    return bmp ;
+                    return bmp;
                     break;
             }
 
@@ -1925,7 +1952,7 @@ namespace VerifyCodes
 
         #region 线性处理
 
-    
+
 
         /// <summary>
         /// 该函数用于对图像进行腐蚀运算。结构元素为水平方向或垂直方向的三个点，
@@ -1934,7 +1961,7 @@ namespace VerifyCodes
         /// <param name="dgGrayValue">前后景临界值</param>
         /// <param name="nMode">腐蚀方式：0表示水平方向，1垂直方向，2自定义结构元素。</param>
         /// <param name="structure"> 自定义的3×3结构元素</param>
-        public static  void ErosionPic(Bitmap bmpobj,int dgGrayValue, int nMode, bool[,] structure)
+        public static void ErosionPic(Bitmap bmpobj, int dgGrayValue, int nMode, bool[,] structure)
         {
             int lWidth = bmpobj.Width;
             int lHeight = bmpobj.Height;
@@ -2022,7 +2049,7 @@ namespace VerifyCodes
         /// 该函数用于对图像进行细化运算。要求目标图像为灰度图像
         /// </summary>
         /// <param name="dgGrayValue"></param>
-        public static  void ThiningPic(Bitmap bmpobj,int dgGrayValue)
+        public static void ThiningPic(Bitmap bmpobj, int dgGrayValue)
         {
             int lWidth = bmpobj.Width;
             int lHeight = bmpobj.Height;
@@ -2179,7 +2206,7 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="val">锐化程度。取值[0,1]。值越大锐化程度越高</param>
         /// <returns>锐化后的图像</returns>
-        public static  void Sharpen(Bitmap bmpobj,float val)
+        public static void Sharpen(Bitmap bmpobj, float val)
         {
             int w = bmpobj.Width;
             int h = bmpobj.Height;
@@ -2370,22 +2397,22 @@ namespace VerifyCodes
         /// <param name="tag"></param>
         /// <param name="findblack"></param>
         /// <returns></returns>
-        private static List<Point> getneib(int [,] img, int[,] regions, Point x, int tag,bool findblack=true )
+        private static List<Point> getneib(int[,] img, int[,] regions, Point x, int tag, bool findblack = true)
         {
             List<Point> list_pretocheck = new List<Point>();
             List<Point> list_p = new List<Point>();
             list_p.Add(x);
             regions[x.X, x.Y] = tag;
             int coint = findblack ? 0 : 255;
-            int width = img.GetLength (0);
+            int width = img.GetLength(0);
             int height = img.GetLength(1);
             bool l = x.X - 1 >= 0, r = x.X + 1 < width, u = x.Y - 1 >= 0, d = x.Y + 1 < height;
             //左列
             if (l)
             {
-                if (img[x.X - 1, x.Y] == coint  && regions[x.X - 1, x.Y] == 0)
+                if (img[x.X - 1, x.Y] == coint && regions[x.X - 1, x.Y] == 0)
                 {
-                    list_pretocheck.Add(new Point(x.X - 1, x.Y ));
+                    list_pretocheck.Add(new Point(x.X - 1, x.Y));
                 }
                 if (u)
                 {
@@ -2396,7 +2423,7 @@ namespace VerifyCodes
                 }
                 if (d)
                 {
-                    if (img[x.X - 1, x.Y + 1]== coint && regions[x.X - 1, x.Y + 1] == 0)
+                    if (img[x.X - 1, x.Y + 1] == coint && regions[x.X - 1, x.Y + 1] == 0)
                     {
                         list_pretocheck.Add(new Point(x.X - 1, x.Y + 1));
                     }
@@ -2407,7 +2434,7 @@ namespace VerifyCodes
             {
                 if (img[x.X + 1, x.Y] == coint && regions[x.X + 1, x.Y] == 0)
                 {
-                    list_pretocheck.Add(new Point(x.X + 1, x.Y  ));
+                    list_pretocheck.Add(new Point(x.X + 1, x.Y));
                 }
                 if (u)
                 {
@@ -2420,7 +2447,7 @@ namespace VerifyCodes
                 {
                     if (img[x.X + 1, x.Y + 1] == coint && regions[x.X + 1, x.Y + 1] == 0)
                     {
-                        list_pretocheck.Add(new Point(x.X+1, x.Y + 1));
+                        list_pretocheck.Add(new Point(x.X + 1, x.Y + 1));
                     }
                 }
             }
@@ -2437,12 +2464,12 @@ namespace VerifyCodes
             {
                 if (img[x.X, x.Y + 1] == coint && regions[x.X, x.Y + 1] == 0)
                 {
-                    list_pretocheck.Add(new Point (x.X ,x.Y +1));
+                    list_pretocheck.Add(new Point(x.X, x.Y + 1));
                 }
             }
-            for (int i = 0; i < list_pretocheck .Count ; i++)
+            for (int i = 0; i < list_pretocheck.Count; i++)
             {
-                list_p.AddRange(getneib(img, regions, list_pretocheck [i], tag, findblack));
+                list_p.AddRange(getneib(img, regions, list_pretocheck[i], tag, findblack));
             }
             return list_p;
         }
@@ -2456,7 +2483,7 @@ namespace VerifyCodes
         /// <param name="img">源图</param>
         /// <param name="mul">倍数</param>
         /// <returns></returns>
-        public static Bitmap getBig(Bitmap img, ref int mul,int widthmax,int heightmax, bool lines = true, Rectangle[] rects = null)
+        public static Bitmap getBig(Bitmap img, ref int mul, int widthmax, int heightmax, bool lines = true, Rectangle[] rects = null)
         {
             if (mul == -1)
             {
@@ -2566,7 +2593,6 @@ namespace VerifyCodes
             {
                 if (pf.Equals(imgPixelFormat)) return true;
             }
-
             return false;
         }
 
