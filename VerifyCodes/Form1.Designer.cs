@@ -71,6 +71,8 @@
             this.txtBox_fillIndex = new System.Windows.Forms.TextBox();
             this.button16 = new System.Windows.Forms.Button();
             this.panel_Clip = new System.Windows.Forms.Panel();
+            this.rB_Clip_clrBlock = new System.Windows.Forms.RadioButton();
+            this.rB_Clip_Cut = new System.Windows.Forms.RadioButton();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -104,6 +106,7 @@
             this.rB__Binary_自动阀值 = new System.Windows.Forms.RadioButton();
             this.label8 = new System.Windows.Forms.Label();
             this.panel_ngt = new System.Windows.Forms.Panel();
+            this.rB_ngt_cNoise = new System.Windows.Forms.RadioButton();
             this.rB_ngt_close = new System.Windows.Forms.RadioButton();
             this.rB_ngt_open = new System.Windows.Forms.RadioButton();
             this.rB_ngt_swell = new System.Windows.Forms.RadioButton();
@@ -120,9 +123,7 @@
             this.rB_filter_sharpen = new System.Windows.Forms.RadioButton();
             this.label10 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
-            this.rB_Clip_Cut = new System.Windows.Forms.RadioButton();
-            this.rB_Clip_clrBlock = new System.Windows.Forms.RadioButton();
-            this.rB_ngt_cNoise = new System.Windows.Forms.RadioButton();
+            this.btn_bin_getmid = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picBox_src)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picBox_show)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -189,7 +190,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(861, 603);
+            this.button1.Location = new System.Drawing.Point(1594, 650);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(88, 32);
             this.button1.TabIndex = 5;
@@ -208,13 +209,14 @@
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.listView1.Location = new System.Drawing.Point(784, 71);
+            this.listView1.Location = new System.Drawing.Point(954, 50);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(228, 230);
             this.listView1.TabIndex = 6;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listView1_ItemChecked);
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
             // 
             // check
@@ -263,70 +265,70 @@
             // 缩放ToolStripMenuItem
             // 
             this.缩放ToolStripMenuItem.Name = "缩放ToolStripMenuItem";
-            this.缩放ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.缩放ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.缩放ToolStripMenuItem.Text = "图像缩放";
             this.缩放ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // 图像裁剪ToolStripMenuItem
             // 
             this.图像裁剪ToolStripMenuItem.Name = "图像裁剪ToolStripMenuItem";
-            this.图像裁剪ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.图像裁剪ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.图像裁剪ToolStripMenuItem.Text = "图像裁剪";
             this.图像裁剪ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // 图像滤波ToolStripMenuItem
             // 
             this.图像滤波ToolStripMenuItem.Name = "图像滤波ToolStripMenuItem";
-            this.图像滤波ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.图像滤波ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.图像滤波ToolStripMenuItem.Text = "图像滤波";
             this.图像滤波ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // 线性滤镜ToolStripMenuItem
             // 
             this.线性滤镜ToolStripMenuItem.Name = "线性滤镜ToolStripMenuItem";
-            this.线性滤镜ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.线性滤镜ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.线性滤镜ToolStripMenuItem.Text = "线性滤镜";
             this.线性滤镜ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // 清除背景ToolStripMenuItem
             // 
             this.清除背景ToolStripMenuItem.Name = "清除背景ToolStripMenuItem";
-            this.清除背景ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.清除背景ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.清除背景ToolStripMenuItem.Text = "清除背景";
             this.清除背景ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // 像素分离ToolStripMenuItem
             // 
             this.像素分离ToolStripMenuItem.Name = "像素分离ToolStripMenuItem";
-            this.像素分离ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.像素分离ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.像素分离ToolStripMenuItem.Text = "像素分离";
             this.像素分离ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // 颜色处理ToolStripMenuItem
             // 
             this.颜色处理ToolStripMenuItem.Name = "颜色处理ToolStripMenuItem";
-            this.颜色处理ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.颜色处理ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.颜色处理ToolStripMenuItem.Text = "颜色处理";
             this.颜色处理ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // 二值化ToolStripMenuItem
             // 
             this.二值化ToolStripMenuItem.Name = "二值化ToolStripMenuItem";
-            this.二值化ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.二值化ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.二值化ToolStripMenuItem.Text = "二值化";
             this.二值化ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // 黑白图处理ToolStripMenuItem
             // 
             this.黑白图处理ToolStripMenuItem.Name = "黑白图处理ToolStripMenuItem";
-            this.黑白图处理ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.黑白图处理ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.黑白图处理ToolStripMenuItem.Text = "黑白图处理";
             this.黑白图处理ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // 亮度对比度ToolStripMenuItem
             // 
             this.亮度对比度ToolStripMenuItem.Name = "亮度对比度ToolStripMenuItem";
-            this.亮度对比度ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.亮度对比度ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.亮度对比度ToolStripMenuItem.Text = "亮度对比度";
             this.亮度对比度ToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -351,7 +353,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(815, 350);
+            this.button2.Location = new System.Drawing.Point(954, 287);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(126, 41);
             this.button2.TabIndex = 8;
@@ -361,7 +363,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(398, 478);
+            this.button4.Location = new System.Drawing.Point(1131, 525);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(138, 40);
             this.button4.TabIndex = 10;
@@ -371,7 +373,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(913, 498);
+            this.button5.Location = new System.Drawing.Point(1646, 545);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(90, 27);
             this.button5.TabIndex = 11;
@@ -381,14 +383,14 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(548, 498);
+            this.textBox2.Location = new System.Drawing.Point(1281, 545);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(45, 21);
             this.textBox2.TabIndex = 12;
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(714, 507);
+            this.button6.Location = new System.Drawing.Point(1447, 554);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(138, 30);
             this.button6.TabIndex = 13;
@@ -398,14 +400,14 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(610, 497);
+            this.textBox3.Location = new System.Drawing.Point(1343, 544);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(51, 21);
             this.textBox3.TabIndex = 15;
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(578, 544);
+            this.button8.Location = new System.Drawing.Point(1311, 591);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(114, 29);
             this.button8.TabIndex = 16;
@@ -415,7 +417,7 @@
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(568, 577);
+            this.button9.Location = new System.Drawing.Point(1301, 624);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(75, 23);
             this.button9.TabIndex = 17;
@@ -425,7 +427,7 @@
             // 
             // textBox_fangda
             // 
-            this.textBox_fangda.Location = new System.Drawing.Point(653, 580);
+            this.textBox_fangda.Location = new System.Drawing.Point(1386, 627);
             this.textBox_fangda.Name = "textBox_fangda";
             this.textBox_fangda.Size = new System.Drawing.Size(36, 21);
             this.textBox_fangda.TabIndex = 18;
@@ -443,7 +445,7 @@
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(410, 580);
+            this.button11.Location = new System.Drawing.Point(1143, 627);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(138, 23);
             this.button11.TabIndex = 20;
@@ -463,7 +465,7 @@
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(874, 548);
+            this.button13.Location = new System.Drawing.Point(1607, 595);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(75, 23);
             this.button13.TabIndex = 24;
@@ -473,7 +475,7 @@
             // 
             // button15
             // 
-            this.button15.Location = new System.Drawing.Point(714, 548);
+            this.button15.Location = new System.Drawing.Point(1447, 595);
             this.button15.Name = "button15";
             this.button15.Size = new System.Drawing.Size(75, 23);
             this.button15.TabIndex = 26;
@@ -483,7 +485,7 @@
             // 
             // txtBox_fillIndex
             // 
-            this.txtBox_fillIndex.Location = new System.Drawing.Point(795, 550);
+            this.txtBox_fillIndex.Location = new System.Drawing.Point(1528, 597);
             this.txtBox_fillIndex.Name = "txtBox_fillIndex";
             this.txtBox_fillIndex.Size = new System.Drawing.Size(49, 21);
             this.txtBox_fillIndex.TabIndex = 27;
@@ -491,7 +493,7 @@
             // 
             // button16
             // 
-            this.button16.Location = new System.Drawing.Point(731, 580);
+            this.button16.Location = new System.Drawing.Point(1464, 627);
             this.button16.Name = "button16";
             this.button16.Size = new System.Drawing.Size(75, 23);
             this.button16.TabIndex = 28;
@@ -517,6 +519,30 @@
             this.panel_Clip.Name = "panel_Clip";
             this.panel_Clip.Size = new System.Drawing.Size(201, 138);
             this.panel_Clip.TabIndex = 29;
+            // 
+            // rB_Clip_clrBlock
+            // 
+            this.rB_Clip_clrBlock.AutoSize = true;
+            this.rB_Clip_clrBlock.Location = new System.Drawing.Point(112, 18);
+            this.rB_Clip_clrBlock.Name = "rB_Clip_clrBlock";
+            this.rB_Clip_clrBlock.Size = new System.Drawing.Size(71, 16);
+            this.rB_Clip_clrBlock.TabIndex = 10;
+            this.rB_Clip_clrBlock.TabStop = true;
+            this.rB_Clip_clrBlock.Text = "去除边框";
+            this.rB_Clip_clrBlock.UseVisualStyleBackColor = true;
+            this.rB_Clip_clrBlock.CheckedChanged += new System.EventHandler(this.config_Changed);
+            // 
+            // rB_Clip_Cut
+            // 
+            this.rB_Clip_Cut.AutoSize = true;
+            this.rB_Clip_Cut.Location = new System.Drawing.Point(9, 18);
+            this.rB_Clip_Cut.Name = "rB_Clip_Cut";
+            this.rB_Clip_Cut.Size = new System.Drawing.Size(71, 16);
+            this.rB_Clip_Cut.TabIndex = 9;
+            this.rB_Clip_Cut.TabStop = true;
+            this.rB_Clip_Cut.Text = "裁剪图像";
+            this.rB_Clip_Cut.UseVisualStyleBackColor = true;
+            this.rB_Clip_Cut.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // label5
             // 
@@ -560,6 +586,8 @@
             this.txtBox_Clip_right.Name = "txtBox_Clip_right";
             this.txtBox_Clip_right.Size = new System.Drawing.Size(32, 21);
             this.txtBox_Clip_right.TabIndex = 4;
+            this.txtBox_Clip_right.Text = "0";
+            this.txtBox_Clip_right.TextChanged += new System.EventHandler(this.config_Changed);
             // 
             // txtBox_Clip_down
             // 
@@ -567,6 +595,8 @@
             this.txtBox_Clip_down.Name = "txtBox_Clip_down";
             this.txtBox_Clip_down.Size = new System.Drawing.Size(27, 21);
             this.txtBox_Clip_down.TabIndex = 3;
+            this.txtBox_Clip_down.Text = "0";
+            this.txtBox_Clip_down.TextChanged += new System.EventHandler(this.config_Changed);
             // 
             // txtBox_Clip_left
             // 
@@ -574,6 +604,8 @@
             this.txtBox_Clip_left.Name = "txtBox_Clip_left";
             this.txtBox_Clip_left.Size = new System.Drawing.Size(29, 21);
             this.txtBox_Clip_left.TabIndex = 2;
+            this.txtBox_Clip_left.Text = "0";
+            this.txtBox_Clip_left.TextChanged += new System.EventHandler(this.config_Changed);
             // 
             // txtBox_Clip_up
             // 
@@ -581,6 +613,8 @@
             this.txtBox_Clip_up.Name = "txtBox_Clip_up";
             this.txtBox_Clip_up.Size = new System.Drawing.Size(27, 21);
             this.txtBox_Clip_up.TabIndex = 1;
+            this.txtBox_Clip_up.Text = "0";
+            this.txtBox_Clip_up.TextChanged += new System.EventHandler(this.config_Changed);
             // 
             // label1
             // 
@@ -608,68 +642,74 @@
             // rB_sm_mid7
             // 
             this.rB_sm_mid7.AutoSize = true;
-            this.rB_sm_mid7.Location = new System.Drawing.Point(15, 106);
+            this.rB_sm_mid7.Location = new System.Drawing.Point(11, 106);
             this.rB_sm_mid7.Name = "rB_sm_mid7";
             this.rB_sm_mid7.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_mid7.TabIndex = 7;
             this.rB_sm_mid7.TabStop = true;
             this.rB_sm_mid7.Text = "7*7 中值滤波";
             this.rB_sm_mid7.UseVisualStyleBackColor = true;
+            this.rB_sm_mid7.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_sm_ave7
             // 
             this.rB_sm_ave7.AutoSize = true;
-            this.rB_sm_ave7.Location = new System.Drawing.Point(113, 106);
+            this.rB_sm_ave7.Location = new System.Drawing.Point(109, 106);
             this.rB_sm_ave7.Name = "rB_sm_ave7";
             this.rB_sm_ave7.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_ave7.TabIndex = 6;
             this.rB_sm_ave7.TabStop = true;
             this.rB_sm_ave7.Text = "7*7 均值滤波";
             this.rB_sm_ave7.UseVisualStyleBackColor = true;
+            this.rB_sm_ave7.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_sm_ave5
             // 
             this.rB_sm_ave5.AutoSize = true;
-            this.rB_sm_ave5.Location = new System.Drawing.Point(113, 71);
+            this.rB_sm_ave5.Location = new System.Drawing.Point(109, 71);
             this.rB_sm_ave5.Name = "rB_sm_ave5";
             this.rB_sm_ave5.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_ave5.TabIndex = 5;
             this.rB_sm_ave5.TabStop = true;
             this.rB_sm_ave5.Text = "5*5 均值滤波";
             this.rB_sm_ave5.UseVisualStyleBackColor = true;
+            this.rB_sm_ave5.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_sm_mid5
             // 
             this.rB_sm_mid5.AutoSize = true;
-            this.rB_sm_mid5.Location = new System.Drawing.Point(15, 71);
+            this.rB_sm_mid5.Location = new System.Drawing.Point(11, 71);
             this.rB_sm_mid5.Name = "rB_sm_mid5";
             this.rB_sm_mid5.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_mid5.TabIndex = 4;
             this.rB_sm_mid5.TabStop = true;
             this.rB_sm_mid5.Text = "5*5 中值滤波";
             this.rB_sm_mid5.UseVisualStyleBackColor = true;
+            this.rB_sm_mid5.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_sm_ave3
             // 
             this.rB_sm_ave3.AutoSize = true;
-            this.rB_sm_ave3.Location = new System.Drawing.Point(113, 35);
+            this.rB_sm_ave3.Location = new System.Drawing.Point(109, 35);
             this.rB_sm_ave3.Name = "rB_sm_ave3";
             this.rB_sm_ave3.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_ave3.TabIndex = 3;
             this.rB_sm_ave3.TabStop = true;
             this.rB_sm_ave3.Text = "3*3 均值滤波";
             this.rB_sm_ave3.UseVisualStyleBackColor = true;
+            this.rB_sm_ave3.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_sm_mid3
             // 
             this.rB_sm_mid3.AutoSize = true;
-            this.rB_sm_mid3.Location = new System.Drawing.Point(15, 35);
+            this.rB_sm_mid3.Location = new System.Drawing.Point(11, 35);
             this.rB_sm_mid3.Name = "rB_sm_mid3";
             this.rB_sm_mid3.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_mid3.TabIndex = 2;
             this.rB_sm_mid3.TabStop = true;
             this.rB_sm_mid3.Text = "3*3 中值滤波";
             this.rB_sm_mid3.UseVisualStyleBackColor = true;
+            this.rB_sm_mid3.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // label6
             // 
@@ -703,6 +743,7 @@
             this.rB_clrpro_blue.TabStop = true;
             this.rB_clrpro_blue.Text = "单蓝";
             this.rB_clrpro_blue.UseVisualStyleBackColor = true;
+            this.rB_clrpro_blue.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_clrpro_green
             // 
@@ -714,6 +755,7 @@
             this.rB_clrpro_green.TabStop = true;
             this.rB_clrpro_green.Text = "单绿";
             this.rB_clrpro_green.UseVisualStyleBackColor = true;
+            this.rB_clrpro_green.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_clrpro_red
             // 
@@ -725,6 +767,7 @@
             this.rB_clrpro_red.TabStop = true;
             this.rB_clrpro_red.Text = "单红";
             this.rB_clrpro_red.UseVisualStyleBackColor = true;
+            this.rB_clrpro_red.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_clrpro_reversal
             // 
@@ -736,6 +779,7 @@
             this.rB_clrpro_reversal.TabStop = true;
             this.rB_clrpro_reversal.Text = "反转";
             this.rB_clrpro_reversal.UseVisualStyleBackColor = true;
+            this.rB_clrpro_reversal.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_clrpro_gray
             // 
@@ -747,6 +791,7 @@
             this.rB_clrpro_gray.TabStop = true;
             this.rB_clrpro_gray.Text = "灰度";
             this.rB_clrpro_gray.UseVisualStyleBackColor = true;
+            this.rB_clrpro_gray.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // label7
             // 
@@ -759,6 +804,7 @@
             // 
             // panel_Binary
             // 
+            this.panel_Binary.Controls.Add(this.btn_bin_getmid);
             this.panel_Binary.Controls.Add(this.numericUpDown1);
             this.panel_Binary.Controls.Add(this.txtBox_Bin_threshold);
             this.panel_Binary.Controls.Add(this.rB__Binary_autoSub);
@@ -773,39 +819,43 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(100, 94);
+            this.numericUpDown1.Location = new System.Drawing.Point(100, 99);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(36, 21);
             this.numericUpDown1.TabIndex = 10;
             // 
             // txtBox_Bin_threshold
             // 
-            this.txtBox_Bin_threshold.Location = new System.Drawing.Point(100, 63);
+            this.txtBox_Bin_threshold.Location = new System.Drawing.Point(100, 67);
             this.txtBox_Bin_threshold.Name = "txtBox_Bin_threshold";
             this.txtBox_Bin_threshold.Size = new System.Drawing.Size(45, 21);
             this.txtBox_Bin_threshold.TabIndex = 8;
+            this.txtBox_Bin_threshold.Text = "127";
+            this.txtBox_Bin_threshold.TextChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB__Binary_autoSub
             // 
             this.rB__Binary_autoSub.AutoSize = true;
-            this.rB__Binary_autoSub.Location = new System.Drawing.Point(16, 99);
+            this.rB__Binary_autoSub.Location = new System.Drawing.Point(15, 99);
             this.rB__Binary_autoSub.Name = "rB__Binary_autoSub";
             this.rB__Binary_autoSub.Size = new System.Drawing.Size(71, 16);
             this.rB__Binary_autoSub.TabIndex = 5;
             this.rB__Binary_autoSub.TabStop = true;
             this.rB__Binary_autoSub.Text = "自动差值";
             this.rB__Binary_autoSub.UseVisualStyleBackColor = true;
+            this.rB__Binary_autoSub.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB__Binary_threshold
             // 
             this.rB__Binary_threshold.AutoSize = true;
-            this.rB__Binary_threshold.Location = new System.Drawing.Point(15, 68);
+            this.rB__Binary_threshold.Location = new System.Drawing.Point(16, 69);
             this.rB__Binary_threshold.Name = "rB__Binary_threshold";
             this.rB__Binary_threshold.Size = new System.Drawing.Size(71, 16);
             this.rB__Binary_threshold.TabIndex = 4;
             this.rB__Binary_threshold.TabStop = true;
             this.rB__Binary_threshold.Text = "指定阀值";
             this.rB__Binary_threshold.UseVisualStyleBackColor = true;
+            this.rB__Binary_threshold.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB__Binary_allBlack
             // 
@@ -817,17 +867,19 @@
             this.rB__Binary_allBlack.TabStop = true;
             this.rB__Binary_allBlack.Text = "非白转黑";
             this.rB__Binary_allBlack.UseVisualStyleBackColor = true;
+            this.rB__Binary_allBlack.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB__Binary_自动阀值
             // 
             this.rB__Binary_自动阀值.AutoSize = true;
-            this.rB__Binary_自动阀值.Location = new System.Drawing.Point(12, 41);
+            this.rB__Binary_自动阀值.Location = new System.Drawing.Point(16, 41);
             this.rB__Binary_自动阀值.Name = "rB__Binary_自动阀值";
             this.rB__Binary_自动阀值.Size = new System.Drawing.Size(71, 16);
             this.rB__Binary_自动阀值.TabIndex = 2;
             this.rB__Binary_自动阀值.TabStop = true;
             this.rB__Binary_自动阀值.Text = "自动阀值";
             this.rB__Binary_自动阀值.UseVisualStyleBackColor = true;
+            this.rB__Binary_自动阀值.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // label8
             // 
@@ -853,6 +905,18 @@
             this.panel_ngt.Size = new System.Drawing.Size(208, 129);
             this.panel_ngt.TabIndex = 33;
             // 
+            // rB_ngt_cNoise
+            // 
+            this.rB_ngt_cNoise.AutoSize = true;
+            this.rB_ngt_cNoise.Location = new System.Drawing.Point(10, 72);
+            this.rB_ngt_cNoise.Name = "rB_ngt_cNoise";
+            this.rB_ngt_cNoise.Size = new System.Drawing.Size(71, 16);
+            this.rB_ngt_cNoise.TabIndex = 15;
+            this.rB_ngt_cNoise.TabStop = true;
+            this.rB_ngt_cNoise.Text = "去除杂点";
+            this.rB_ngt_cNoise.UseVisualStyleBackColor = true;
+            this.rB_ngt_cNoise.CheckedChanged += new System.EventHandler(this.config_Changed);
+            // 
             // rB_ngt_close
             // 
             this.rB_ngt_close.AutoSize = true;
@@ -863,6 +927,7 @@
             this.rB_ngt_close.TabStop = true;
             this.rB_ngt_close.Text = "闭运算";
             this.rB_ngt_close.UseVisualStyleBackColor = true;
+            this.rB_ngt_close.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_ngt_open
             // 
@@ -874,6 +939,7 @@
             this.rB_ngt_open.TabStop = true;
             this.rB_ngt_open.Text = "开运算";
             this.rB_ngt_open.UseVisualStyleBackColor = true;
+            this.rB_ngt_open.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_ngt_swell
             // 
@@ -885,6 +951,7 @@
             this.rB_ngt_swell.TabStop = true;
             this.rB_ngt_swell.Text = "膨胀";
             this.rB_ngt_swell.UseVisualStyleBackColor = true;
+            this.rB_ngt_swell.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_ngt_erosion
             // 
@@ -896,6 +963,7 @@
             this.rB_ngt_erosion.TabStop = true;
             this.rB_ngt_erosion.Text = "腐蚀";
             this.rB_ngt_erosion.UseVisualStyleBackColor = true;
+            this.rB_ngt_erosion.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_ngt_thin
             // 
@@ -907,6 +975,7 @@
             this.rB_ngt_thin.TabStop = true;
             this.rB_ngt_thin.Text = "骨架";
             this.rB_ngt_thin.UseVisualStyleBackColor = true;
+            this.rB_ngt_thin.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_ngt_CEdge
             // 
@@ -916,8 +985,9 @@
             this.rB_ngt_CEdge.Size = new System.Drawing.Size(71, 16);
             this.rB_ngt_CEdge.TabIndex = 2;
             this.rB_ngt_CEdge.TabStop = true;
-            this.rB_ngt_CEdge.Text = "清理白框";
+            this.rB_ngt_CEdge.Text = "去除白边";
             this.rB_ngt_CEdge.UseVisualStyleBackColor = true;
+            this.rB_ngt_CEdge.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // label9
             // 
@@ -930,7 +1000,7 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(410, 544);
+            this.button7.Location = new System.Drawing.Point(1143, 591);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(90, 27);
             this.button7.TabIndex = 34;
@@ -953,35 +1023,38 @@
             // rB_filter_neno
             // 
             this.rB_filter_neno.AutoSize = true;
-            this.rB_filter_neno.Location = new System.Drawing.Point(84, 36);
+            this.rB_filter_neno.Location = new System.Drawing.Point(76, 36);
             this.rB_filter_neno.Name = "rB_filter_neno";
             this.rB_filter_neno.Size = new System.Drawing.Size(47, 16);
             this.rB_filter_neno.TabIndex = 7;
             this.rB_filter_neno.TabStop = true;
             this.rB_filter_neno.Text = "霓虹";
             this.rB_filter_neno.UseVisualStyleBackColor = true;
+            this.rB_filter_neno.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_filter_Embosment
             // 
             this.rB_filter_Embosment.AutoSize = true;
-            this.rB_filter_Embosment.Location = new System.Drawing.Point(84, 72);
+            this.rB_filter_Embosment.Location = new System.Drawing.Point(76, 72);
             this.rB_filter_Embosment.Name = "rB_filter_Embosment";
             this.rB_filter_Embosment.Size = new System.Drawing.Size(47, 16);
             this.rB_filter_Embosment.TabIndex = 5;
             this.rB_filter_Embosment.TabStop = true;
             this.rB_filter_Embosment.Text = "浮雕";
             this.rB_filter_Embosment.UseVisualStyleBackColor = true;
+            this.rB_filter_Embosment.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_filter_soften
             // 
             this.rB_filter_soften.AutoSize = true;
-            this.rB_filter_soften.Location = new System.Drawing.Point(29, 72);
+            this.rB_filter_soften.Location = new System.Drawing.Point(11, 72);
             this.rB_filter_soften.Name = "rB_filter_soften";
             this.rB_filter_soften.Size = new System.Drawing.Size(47, 16);
             this.rB_filter_soften.TabIndex = 4;
             this.rB_filter_soften.TabStop = true;
             this.rB_filter_soften.Text = "柔化";
             this.rB_filter_soften.UseVisualStyleBackColor = true;
+            this.rB_filter_soften.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_filter_atom
             // 
@@ -993,17 +1066,19 @@
             this.rB_filter_atom.TabStop = true;
             this.rB_filter_atom.Text = "雾化";
             this.rB_filter_atom.UseVisualStyleBackColor = true;
+            this.rB_filter_atom.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB_filter_sharpen
             // 
             this.rB_filter_sharpen.AutoSize = true;
-            this.rB_filter_sharpen.Location = new System.Drawing.Point(29, 36);
+            this.rB_filter_sharpen.Location = new System.Drawing.Point(11, 36);
             this.rB_filter_sharpen.Name = "rB_filter_sharpen";
             this.rB_filter_sharpen.Size = new System.Drawing.Size(47, 16);
             this.rB_filter_sharpen.TabIndex = 2;
             this.rB_filter_sharpen.TabStop = true;
             this.rB_filter_sharpen.Text = "锐化";
             this.rB_filter_sharpen.UseVisualStyleBackColor = true;
+            this.rB_filter_sharpen.CheckedChanged += new System.EventHandler(this.config_Changed);
             // 
             // label10
             // 
@@ -1016,45 +1091,21 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(915, 459);
+            this.button3.Location = new System.Drawing.Point(1648, 506);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(88, 32);
             this.button3.TabIndex = 35;
             this.button3.Text = "滤镜";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // rB_Clip_Cut
+            // btn_bin_getmid
             // 
-            this.rB_Clip_Cut.AutoSize = true;
-            this.rB_Clip_Cut.Location = new System.Drawing.Point(9, 18);
-            this.rB_Clip_Cut.Name = "rB_Clip_Cut";
-            this.rB_Clip_Cut.Size = new System.Drawing.Size(71, 16);
-            this.rB_Clip_Cut.TabIndex = 9;
-            this.rB_Clip_Cut.TabStop = true;
-            this.rB_Clip_Cut.Text = "裁剪图像";
-            this.rB_Clip_Cut.UseVisualStyleBackColor = true;
-            // 
-            // rB_Clip_clrBlock
-            // 
-            this.rB_Clip_clrBlock.AutoSize = true;
-            this.rB_Clip_clrBlock.Location = new System.Drawing.Point(112, 18);
-            this.rB_Clip_clrBlock.Name = "rB_Clip_clrBlock";
-            this.rB_Clip_clrBlock.Size = new System.Drawing.Size(71, 16);
-            this.rB_Clip_clrBlock.TabIndex = 10;
-            this.rB_Clip_clrBlock.TabStop = true;
-            this.rB_Clip_clrBlock.Text = "去除边框";
-            this.rB_Clip_clrBlock.UseVisualStyleBackColor = true;
-            // 
-            // rB_ngt_cNoise
-            // 
-            this.rB_ngt_cNoise.AutoSize = true;
-            this.rB_ngt_cNoise.Location = new System.Drawing.Point(10, 72);
-            this.rB_ngt_cNoise.Name = "rB_ngt_cNoise";
-            this.rB_ngt_cNoise.Size = new System.Drawing.Size(71, 16);
-            this.rB_ngt_cNoise.TabIndex = 15;
-            this.rB_ngt_cNoise.TabStop = true;
-            this.rB_ngt_cNoise.Text = "去除杂点";
-            this.rB_ngt_cNoise.UseVisualStyleBackColor = true;
+            this.btn_bin_getmid.Location = new System.Drawing.Point(151, 66);
+            this.btn_bin_getmid.Name = "btn_bin_getmid";
+            this.btn_bin_getmid.Size = new System.Drawing.Size(47, 23);
+            this.btn_bin_getmid.TabIndex = 11;
+            this.btn_bin_getmid.Text = "取优";
+            this.btn_bin_getmid.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1212,6 +1263,7 @@
         private System.Windows.Forms.RadioButton rB_Clip_Cut;
         private System.Windows.Forms.RadioButton rB_Clip_clrBlock;
         private System.Windows.Forms.RadioButton rB_ngt_cNoise;
+        private System.Windows.Forms.Button btn_bin_getmid;
     }
 }
 
