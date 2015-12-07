@@ -34,7 +34,6 @@
             this.picBox_src = new System.Windows.Forms.PictureBox();
             this.picBox_show = new System.Windows.Forms.PictureBox();
             this.btn_serchPath = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
             this.check = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.name = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -55,21 +54,8 @@
             this.清空ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button6 = new System.Windows.Forms.Button();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
-            this.textBox_fangda = new System.Windows.Forms.TextBox();
             this.button10 = new System.Windows.Forms.Button();
-            this.button11 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.button13 = new System.Windows.Forms.Button();
-            this.button15 = new System.Windows.Forms.Button();
-            this.txtBox_fillIndex = new System.Windows.Forms.TextBox();
-            this.button16 = new System.Windows.Forms.Button();
             this.panel_Clip = new System.Windows.Forms.Panel();
             this.rB_Clip_clrBlock = new System.Windows.Forms.RadioButton();
             this.rB_Clip_Cut = new System.Windows.Forms.RadioButton();
@@ -81,7 +67,6 @@
             this.txtBox_Clip_down = new System.Windows.Forms.TextBox();
             this.txtBox_Clip_left = new System.Windows.Forms.TextBox();
             this.txtBox_Clip_up = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel_smoothing = new System.Windows.Forms.Panel();
             this.rB_sm_mid7 = new System.Windows.Forms.RadioButton();
             this.rB_sm_ave7 = new System.Windows.Forms.RadioButton();
@@ -98,6 +83,7 @@
             this.rB_clrpro_gray = new System.Windows.Forms.RadioButton();
             this.label7 = new System.Windows.Forms.Label();
             this.panel_Binary = new System.Windows.Forms.Panel();
+            this.btn_bin_getmid = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.txtBox_Bin_threshold = new System.Windows.Forms.TextBox();
             this.rB__Binary_autoSub = new System.Windows.Forms.RadioButton();
@@ -114,7 +100,6 @@
             this.rB_ngt_thin = new System.Windows.Forms.RadioButton();
             this.rB_ngt_CEdge = new System.Windows.Forms.RadioButton();
             this.label9 = new System.Windows.Forms.Label();
-            this.button7 = new System.Windows.Forms.Button();
             this.panel_filter = new System.Windows.Forms.Panel();
             this.rB_filter_neno = new System.Windows.Forms.RadioButton();
             this.rB_filter_Embosment = new System.Windows.Forms.RadioButton();
@@ -122,8 +107,37 @@
             this.rB_filter_atom = new System.Windows.Forms.RadioButton();
             this.rB_filter_sharpen = new System.Windows.Forms.RadioButton();
             this.label10 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
-            this.btn_bin_getmid = new System.Windows.Forms.Button();
+            this.panel_resize = new System.Windows.Forms.Panel();
+            this.rB_resize_size = new System.Windows.Forms.RadioButton();
+            this.rB_resize_scale = new System.Windows.Forms.RadioButton();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.txtBox_resize_width = new System.Windows.Forms.TextBox();
+            this.txtBox_resize_height = new System.Windows.Forms.TextBox();
+            this.comb_resize_width = new System.Windows.Forms.ComboBox();
+            this.comb_resize_height = new System.Windows.Forms.ComboBox();
+            this.panel_divPixel = new System.Windows.Forms.Panel();
+            this.comb_divPixel_light = new System.Windows.Forms.ComboBox();
+            this.comb_divPixel_color = new System.Windows.Forms.ComboBox();
+            this.txtBox_divPixel_color = new System.Windows.Forms.TextBox();
+            this.txtBox_divPixel_light = new System.Windows.Forms.TextBox();
+            this.rB_divPixel_light = new System.Windows.Forms.RadioButton();
+            this.rB_divPixel_color = new System.Windows.Forms.RadioButton();
+            this.label19 = new System.Windows.Forms.Label();
+            this.panel_clearback = new System.Windows.Forms.Panel();
+            this.txtBox_clearback_keepcolor = new System.Windows.Forms.TextBox();
+            this.txtBox_clearback_keeplight = new System.Windows.Forms.TextBox();
+            this.rB_clearback_keeplight = new System.Windows.Forms.RadioButton();
+            this.rB_clearback_keepcolor = new System.Windows.Forms.RadioButton();
+            this.label15 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.label16 = new System.Windows.Forms.Label();
+            this.picBox_pre = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.picBox_src)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picBox_show)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -134,6 +148,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.panel_ngt.SuspendLayout();
             this.panel_filter.SuspendLayout();
+            this.panel_resize.SuspendLayout();
+            this.panel_divPixel.SuspendLayout();
+            this.panel_clearback.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picBox_pre)).BeginInit();
             this.SuspendLayout();
             // 
             // txtBox_url
@@ -146,30 +165,31 @@
             // 
             // btn_downloadPic
             // 
-            this.btn_downloadPic.Location = new System.Drawing.Point(560, 30);
+            this.btn_downloadPic.Location = new System.Drawing.Point(578, 94);
             this.btn_downloadPic.Name = "btn_downloadPic";
-            this.btn_downloadPic.Size = new System.Drawing.Size(96, 28);
+            this.btn_downloadPic.Size = new System.Drawing.Size(108, 22);
             this.btn_downloadPic.TabIndex = 1;
             this.btn_downloadPic.Text = "下张图像";
             this.btn_downloadPic.UseVisualStyleBackColor = true;
-            this.btn_downloadPic.Click += new System.EventHandler(this.btn_downloadPic_Click);
+            this.btn_downloadPic.Click += new System.EventHandler(this.btn_NexPic_Click);
             // 
             // picBox_src
             // 
             this.picBox_src.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picBox_src.Location = new System.Drawing.Point(680, 12);
+            this.picBox_src.Location = new System.Drawing.Point(576, 12);
             this.picBox_src.Name = "picBox_src";
-            this.picBox_src.Size = new System.Drawing.Size(100, 50);
-            this.picBox_src.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.picBox_src.Size = new System.Drawing.Size(233, 80);
+            this.picBox_src.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.picBox_src.TabIndex = 2;
             this.picBox_src.TabStop = false;
+            this.picBox_src.Paint += new System.Windows.Forms.PaintEventHandler(this.picBox_src_Paint);
             // 
             // picBox_show
             // 
             this.picBox_show.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picBox_show.Location = new System.Drawing.Point(27, 68);
+            this.picBox_show.Location = new System.Drawing.Point(13, 64);
             this.picBox_show.Name = "picBox_show";
-            this.picBox_show.Size = new System.Drawing.Size(744, 323);
+            this.picBox_show.Size = new System.Drawing.Size(557, 216);
             this.picBox_show.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picBox_show.TabIndex = 3;
             this.picBox_show.TabStop = false;
@@ -188,16 +208,6 @@
             this.btn_serchPath.UseVisualStyleBackColor = true;
             this.btn_serchPath.Click += new System.EventHandler(this.btn_serchPath_Click);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(1594, 650);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(88, 32);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "灰度";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // listView1
             // 
             this.listView1.CheckBoxes = true;
@@ -209,10 +219,10 @@
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.listView1.Location = new System.Drawing.Point(954, 50);
+            this.listView1.Location = new System.Drawing.Point(576, 203);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(228, 230);
+            this.listView1.Size = new System.Drawing.Size(233, 120);
             this.listView1.TabIndex = 6;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -337,105 +347,35 @@
             this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
             this.删除ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.删除ToolStripMenuItem.Text = "删除";
+            this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
             // 
             // 清空ToolStripMenuItem
             // 
             this.清空ToolStripMenuItem.Name = "清空ToolStripMenuItem";
             this.清空ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.清空ToolStripMenuItem.Text = "清空";
+            this.清空ToolStripMenuItem.Click += new System.EventHandler(this.清空ToolStripMenuItem_Click);
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(1246, 14);
+            this.textBox1.Location = new System.Drawing.Point(111, 322);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(90, 21);
             this.textBox1.TabIndex = 7;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(954, 287);
+            this.button2.Location = new System.Drawing.Point(692, 94);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(126, 41);
+            this.button2.Size = new System.Drawing.Size(108, 22);
             this.button2.TabIndex = 8;
-            this.button2.Text = "边框置背景【4参】";
+            this.button2.Text = "刷新显示";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(1131, 525);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(138, 40);
-            this.button4.TabIndex = 10;
-            this.button4.Text = "除杂点";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(1646, 545);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(90, 27);
-            this.button5.TabIndex = 11;
-            this.button5.Text = "二值化";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(1281, 545);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(45, 21);
-            this.textBox2.TabIndex = 12;
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(1447, 554);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(138, 30);
-            this.button6.TabIndex = 13;
-            this.button6.Text = "分割线";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(1343, 544);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(51, 21);
-            this.textBox3.TabIndex = 15;
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(1311, 591);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(114, 29);
-            this.button8.TabIndex = 16;
-            this.button8.Text = "重置";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // button9
-            // 
-            this.button9.Location = new System.Drawing.Point(1301, 624);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(75, 23);
-            this.button9.TabIndex = 17;
-            this.button9.Text = "放大";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
-            // 
-            // textBox_fangda
-            // 
-            this.textBox_fangda.Location = new System.Drawing.Point(1386, 627);
-            this.textBox_fangda.Name = "textBox_fangda";
-            this.textBox_fangda.Size = new System.Drawing.Size(36, 21);
-            this.textBox_fangda.TabIndex = 18;
-            this.textBox_fangda.Text = "10";
-            // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(972, 12);
+            this.button10.Location = new System.Drawing.Point(125, 297);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(75, 23);
             this.button10.TabIndex = 19;
@@ -443,63 +383,15 @@
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
-            // button11
-            // 
-            this.button11.Location = new System.Drawing.Point(1143, 627);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(138, 23);
-            this.button11.TabIndex = 20;
-            this.button11.Text = "当前特征码";
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.button11_Click);
-            // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(1166, 16);
+            this.checkBox1.Location = new System.Drawing.Point(31, 324);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(72, 16);
             this.checkBox1.TabIndex = 21;
             this.checkBox1.Text = "手动分割";
             this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // button13
-            // 
-            this.button13.Location = new System.Drawing.Point(1607, 595);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(75, 23);
-            this.button13.TabIndex = 24;
-            this.button13.Text = "均值滤波";
-            this.button13.UseVisualStyleBackColor = true;
-            this.button13.Click += new System.EventHandler(this.button13_Click);
-            // 
-            // button15
-            // 
-            this.button15.Location = new System.Drawing.Point(1447, 595);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(75, 23);
-            this.button15.TabIndex = 26;
-            this.button15.Text = "填充";
-            this.button15.UseVisualStyleBackColor = true;
-            this.button15.Click += new System.EventHandler(this.button15_Click);
-            // 
-            // txtBox_fillIndex
-            // 
-            this.txtBox_fillIndex.Location = new System.Drawing.Point(1528, 597);
-            this.txtBox_fillIndex.Name = "txtBox_fillIndex";
-            this.txtBox_fillIndex.Size = new System.Drawing.Size(49, 21);
-            this.txtBox_fillIndex.TabIndex = 27;
-            this.txtBox_fillIndex.Text = "0";
-            // 
-            // button16
-            // 
-            this.button16.Location = new System.Drawing.Point(1464, 627);
-            this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(75, 23);
-            this.button16.TabIndex = 28;
-            this.button16.Text = "button16";
-            this.button16.UseVisualStyleBackColor = true;
-            this.button16.Click += new System.EventHandler(this.button16_Click);
             // 
             // panel_Clip
             // 
@@ -514,10 +406,9 @@
             this.panel_Clip.Controls.Add(this.txtBox_Clip_down);
             this.panel_Clip.Controls.Add(this.txtBox_Clip_left);
             this.panel_Clip.Controls.Add(this.txtBox_Clip_up);
-            this.panel_Clip.Controls.Add(this.label1);
-            this.panel_Clip.Location = new System.Drawing.Point(1188, 48);
+            this.panel_Clip.Location = new System.Drawing.Point(1223, 12);
             this.panel_Clip.Name = "panel_Clip";
-            this.panel_Clip.Size = new System.Drawing.Size(201, 138);
+            this.panel_Clip.Size = new System.Drawing.Size(201, 129);
             this.panel_Clip.TabIndex = 29;
             // 
             // rB_Clip_clrBlock
@@ -547,7 +438,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(34, 88);
+            this.label5.Location = new System.Drawing.Point(23, 75);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(29, 12);
             this.label5.TabIndex = 8;
@@ -556,7 +447,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(75, 114);
+            this.label4.Location = new System.Drawing.Point(64, 95);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 12);
             this.label4.TabIndex = 7;
@@ -565,7 +456,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(118, 89);
+            this.label3.Location = new System.Drawing.Point(107, 70);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 12);
             this.label3.TabIndex = 6;
@@ -574,7 +465,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(75, 61);
+            this.label2.Location = new System.Drawing.Point(64, 42);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(23, 12);
             this.label2.TabIndex = 5;
@@ -582,51 +473,47 @@
             // 
             // txtBox_Clip_right
             // 
-            this.txtBox_Clip_right.Location = new System.Drawing.Point(147, 85);
+            this.txtBox_Clip_right.Location = new System.Drawing.Point(136, 66);
             this.txtBox_Clip_right.Name = "txtBox_Clip_right";
             this.txtBox_Clip_right.Size = new System.Drawing.Size(32, 21);
             this.txtBox_Clip_right.TabIndex = 4;
             this.txtBox_Clip_right.Text = "0";
+            this.txtBox_Clip_right.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtBox_Clip_right.TextChanged += new System.EventHandler(this.config_Changed);
             // 
             // txtBox_Clip_down
             // 
-            this.txtBox_Clip_down.Location = new System.Drawing.Point(104, 111);
+            this.txtBox_Clip_down.Location = new System.Drawing.Point(93, 92);
             this.txtBox_Clip_down.Name = "txtBox_Clip_down";
             this.txtBox_Clip_down.Size = new System.Drawing.Size(27, 21);
             this.txtBox_Clip_down.TabIndex = 3;
             this.txtBox_Clip_down.Text = "0";
+            this.txtBox_Clip_down.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtBox_Clip_down.TextChanged += new System.EventHandler(this.config_Changed);
             // 
             // txtBox_Clip_left
             // 
-            this.txtBox_Clip_left.Location = new System.Drawing.Point(63, 85);
+            this.txtBox_Clip_left.Location = new System.Drawing.Point(52, 66);
             this.txtBox_Clip_left.Name = "txtBox_Clip_left";
             this.txtBox_Clip_left.Size = new System.Drawing.Size(29, 21);
             this.txtBox_Clip_left.TabIndex = 2;
             this.txtBox_Clip_left.Text = "0";
+            this.txtBox_Clip_left.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtBox_Clip_left.TextChanged += new System.EventHandler(this.config_Changed);
             // 
             // txtBox_Clip_up
             // 
-            this.txtBox_Clip_up.Location = new System.Drawing.Point(104, 58);
+            this.txtBox_Clip_up.Location = new System.Drawing.Point(93, 39);
             this.txtBox_Clip_up.Name = "txtBox_Clip_up";
             this.txtBox_Clip_up.Size = new System.Drawing.Size(27, 21);
             this.txtBox_Clip_up.TabIndex = 1;
             this.txtBox_Clip_up.Text = "0";
+            this.txtBox_Clip_up.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtBox_Clip_up.TextChanged += new System.EventHandler(this.config_Changed);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 58);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 12);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "裁剪";
             // 
             // panel_smoothing
             // 
+            this.panel_smoothing.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel_smoothing.Controls.Add(this.rB_sm_mid7);
             this.panel_smoothing.Controls.Add(this.rB_sm_ave7);
             this.panel_smoothing.Controls.Add(this.rB_sm_ave5);
@@ -634,15 +521,15 @@
             this.panel_smoothing.Controls.Add(this.rB_sm_ave3);
             this.panel_smoothing.Controls.Add(this.rB_sm_mid3);
             this.panel_smoothing.Controls.Add(this.label6);
-            this.panel_smoothing.Location = new System.Drawing.Point(1416, 50);
+            this.panel_smoothing.Location = new System.Drawing.Point(1446, 274);
             this.panel_smoothing.Name = "panel_smoothing";
-            this.panel_smoothing.Size = new System.Drawing.Size(208, 136);
+            this.panel_smoothing.Size = new System.Drawing.Size(201, 106);
             this.panel_smoothing.TabIndex = 30;
             // 
             // rB_sm_mid7
             // 
             this.rB_sm_mid7.AutoSize = true;
-            this.rB_sm_mid7.Location = new System.Drawing.Point(11, 106);
+            this.rB_sm_mid7.Location = new System.Drawing.Point(7, 80);
             this.rB_sm_mid7.Name = "rB_sm_mid7";
             this.rB_sm_mid7.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_mid7.TabIndex = 7;
@@ -654,7 +541,7 @@
             // rB_sm_ave7
             // 
             this.rB_sm_ave7.AutoSize = true;
-            this.rB_sm_ave7.Location = new System.Drawing.Point(109, 106);
+            this.rB_sm_ave7.Location = new System.Drawing.Point(103, 80);
             this.rB_sm_ave7.Name = "rB_sm_ave7";
             this.rB_sm_ave7.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_ave7.TabIndex = 6;
@@ -666,7 +553,7 @@
             // rB_sm_ave5
             // 
             this.rB_sm_ave5.AutoSize = true;
-            this.rB_sm_ave5.Location = new System.Drawing.Point(109, 71);
+            this.rB_sm_ave5.Location = new System.Drawing.Point(103, 56);
             this.rB_sm_ave5.Name = "rB_sm_ave5";
             this.rB_sm_ave5.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_ave5.TabIndex = 5;
@@ -678,7 +565,7 @@
             // rB_sm_mid5
             // 
             this.rB_sm_mid5.AutoSize = true;
-            this.rB_sm_mid5.Location = new System.Drawing.Point(11, 71);
+            this.rB_sm_mid5.Location = new System.Drawing.Point(7, 56);
             this.rB_sm_mid5.Name = "rB_sm_mid5";
             this.rB_sm_mid5.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_mid5.TabIndex = 4;
@@ -690,7 +577,7 @@
             // rB_sm_ave3
             // 
             this.rB_sm_ave3.AutoSize = true;
-            this.rB_sm_ave3.Location = new System.Drawing.Point(109, 35);
+            this.rB_sm_ave3.Location = new System.Drawing.Point(103, 29);
             this.rB_sm_ave3.Name = "rB_sm_ave3";
             this.rB_sm_ave3.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_ave3.TabIndex = 3;
@@ -702,7 +589,7 @@
             // rB_sm_mid3
             // 
             this.rB_sm_mid3.AutoSize = true;
-            this.rB_sm_mid3.Location = new System.Drawing.Point(11, 35);
+            this.rB_sm_mid3.Location = new System.Drawing.Point(7, 29);
             this.rB_sm_mid3.Name = "rB_sm_mid3";
             this.rB_sm_mid3.Size = new System.Drawing.Size(95, 16);
             this.rB_sm_mid3.TabIndex = 2;
@@ -722,21 +609,22 @@
             // 
             // panel_clrpro
             // 
+            this.panel_clrpro.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel_clrpro.Controls.Add(this.rB_clrpro_blue);
             this.panel_clrpro.Controls.Add(this.rB_clrpro_green);
             this.panel_clrpro.Controls.Add(this.rB_clrpro_red);
             this.panel_clrpro.Controls.Add(this.rB_clrpro_reversal);
             this.panel_clrpro.Controls.Add(this.rB_clrpro_gray);
             this.panel_clrpro.Controls.Add(this.label7);
-            this.panel_clrpro.Location = new System.Drawing.Point(1188, 192);
+            this.panel_clrpro.Location = new System.Drawing.Point(1223, 147);
             this.panel_clrpro.Name = "panel_clrpro";
-            this.panel_clrpro.Size = new System.Drawing.Size(208, 135);
+            this.panel_clrpro.Size = new System.Drawing.Size(201, 110);
             this.panel_clrpro.TabIndex = 31;
             // 
             // rB_clrpro_blue
             // 
             this.rB_clrpro_blue.AutoSize = true;
-            this.rB_clrpro_blue.Location = new System.Drawing.Point(29, 107);
+            this.rB_clrpro_blue.Location = new System.Drawing.Point(29, 88);
             this.rB_clrpro_blue.Name = "rB_clrpro_blue";
             this.rB_clrpro_blue.Size = new System.Drawing.Size(47, 16);
             this.rB_clrpro_blue.TabIndex = 7;
@@ -748,7 +636,7 @@
             // rB_clrpro_green
             // 
             this.rB_clrpro_green.AutoSize = true;
-            this.rB_clrpro_green.Location = new System.Drawing.Point(137, 72);
+            this.rB_clrpro_green.Location = new System.Drawing.Point(132, 62);
             this.rB_clrpro_green.Name = "rB_clrpro_green";
             this.rB_clrpro_green.Size = new System.Drawing.Size(47, 16);
             this.rB_clrpro_green.TabIndex = 5;
@@ -760,7 +648,7 @@
             // rB_clrpro_red
             // 
             this.rB_clrpro_red.AutoSize = true;
-            this.rB_clrpro_red.Location = new System.Drawing.Point(29, 72);
+            this.rB_clrpro_red.Location = new System.Drawing.Point(29, 62);
             this.rB_clrpro_red.Name = "rB_clrpro_red";
             this.rB_clrpro_red.Size = new System.Drawing.Size(47, 16);
             this.rB_clrpro_red.TabIndex = 4;
@@ -772,7 +660,7 @@
             // rB_clrpro_reversal
             // 
             this.rB_clrpro_reversal.AutoSize = true;
-            this.rB_clrpro_reversal.Location = new System.Drawing.Point(137, 36);
+            this.rB_clrpro_reversal.Location = new System.Drawing.Point(132, 36);
             this.rB_clrpro_reversal.Name = "rB_clrpro_reversal";
             this.rB_clrpro_reversal.Size = new System.Drawing.Size(47, 16);
             this.rB_clrpro_reversal.TabIndex = 3;
@@ -804,6 +692,7 @@
             // 
             // panel_Binary
             // 
+            this.panel_Binary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel_Binary.Controls.Add(this.btn_bin_getmid);
             this.panel_Binary.Controls.Add(this.numericUpDown1);
             this.panel_Binary.Controls.Add(this.txtBox_Bin_threshold);
@@ -812,31 +701,41 @@
             this.panel_Binary.Controls.Add(this.rB__Binary_allBlack);
             this.panel_Binary.Controls.Add(this.rB__Binary_自动阀值);
             this.panel_Binary.Controls.Add(this.label8);
-            this.panel_Binary.Location = new System.Drawing.Point(1416, 333);
+            this.panel_Binary.Location = new System.Drawing.Point(1446, 147);
             this.panel_Binary.Name = "panel_Binary";
-            this.panel_Binary.Size = new System.Drawing.Size(208, 129);
+            this.panel_Binary.Size = new System.Drawing.Size(201, 121);
             this.panel_Binary.TabIndex = 32;
+            // 
+            // btn_bin_getmid
+            // 
+            this.btn_bin_getmid.Location = new System.Drawing.Point(145, 59);
+            this.btn_bin_getmid.Name = "btn_bin_getmid";
+            this.btn_bin_getmid.Size = new System.Drawing.Size(47, 23);
+            this.btn_bin_getmid.TabIndex = 11;
+            this.btn_bin_getmid.Text = "取优";
+            this.btn_bin_getmid.UseVisualStyleBackColor = true;
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(100, 99);
+            this.numericUpDown1.Location = new System.Drawing.Point(94, 92);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(36, 21);
             this.numericUpDown1.TabIndex = 10;
             // 
             // txtBox_Bin_threshold
             // 
-            this.txtBox_Bin_threshold.Location = new System.Drawing.Point(100, 67);
+            this.txtBox_Bin_threshold.Location = new System.Drawing.Point(94, 60);
             this.txtBox_Bin_threshold.Name = "txtBox_Bin_threshold";
             this.txtBox_Bin_threshold.Size = new System.Drawing.Size(45, 21);
             this.txtBox_Bin_threshold.TabIndex = 8;
             this.txtBox_Bin_threshold.Text = "127";
+            this.txtBox_Bin_threshold.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtBox_Bin_threshold.TextChanged += new System.EventHandler(this.config_Changed);
             // 
             // rB__Binary_autoSub
             // 
             this.rB__Binary_autoSub.AutoSize = true;
-            this.rB__Binary_autoSub.Location = new System.Drawing.Point(15, 99);
+            this.rB__Binary_autoSub.Location = new System.Drawing.Point(9, 92);
             this.rB__Binary_autoSub.Name = "rB__Binary_autoSub";
             this.rB__Binary_autoSub.Size = new System.Drawing.Size(71, 16);
             this.rB__Binary_autoSub.TabIndex = 5;
@@ -848,7 +747,7 @@
             // rB__Binary_threshold
             // 
             this.rB__Binary_threshold.AutoSize = true;
-            this.rB__Binary_threshold.Location = new System.Drawing.Point(16, 69);
+            this.rB__Binary_threshold.Location = new System.Drawing.Point(10, 62);
             this.rB__Binary_threshold.Name = "rB__Binary_threshold";
             this.rB__Binary_threshold.Size = new System.Drawing.Size(71, 16);
             this.rB__Binary_threshold.TabIndex = 4;
@@ -860,7 +759,7 @@
             // rB__Binary_allBlack
             // 
             this.rB__Binary_allBlack.AutoSize = true;
-            this.rB__Binary_allBlack.Location = new System.Drawing.Point(120, 41);
+            this.rB__Binary_allBlack.Location = new System.Drawing.Point(114, 34);
             this.rB__Binary_allBlack.Name = "rB__Binary_allBlack";
             this.rB__Binary_allBlack.Size = new System.Drawing.Size(71, 16);
             this.rB__Binary_allBlack.TabIndex = 3;
@@ -872,7 +771,7 @@
             // rB__Binary_自动阀值
             // 
             this.rB__Binary_自动阀值.AutoSize = true;
-            this.rB__Binary_自动阀值.Location = new System.Drawing.Point(16, 41);
+            this.rB__Binary_自动阀值.Location = new System.Drawing.Point(10, 34);
             this.rB__Binary_自动阀值.Name = "rB__Binary_自动阀值";
             this.rB__Binary_自动阀值.Size = new System.Drawing.Size(71, 16);
             this.rB__Binary_自动阀值.TabIndex = 2;
@@ -892,6 +791,7 @@
             // 
             // panel_ngt
             // 
+            this.panel_ngt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel_ngt.Controls.Add(this.rB_ngt_cNoise);
             this.panel_ngt.Controls.Add(this.rB_ngt_close);
             this.panel_ngt.Controls.Add(this.rB_ngt_open);
@@ -900,9 +800,9 @@
             this.panel_ngt.Controls.Add(this.rB_ngt_thin);
             this.panel_ngt.Controls.Add(this.rB_ngt_CEdge);
             this.panel_ngt.Controls.Add(this.label9);
-            this.panel_ngt.Location = new System.Drawing.Point(1188, 333);
+            this.panel_ngt.Location = new System.Drawing.Point(1446, 12);
             this.panel_ngt.Name = "panel_ngt";
-            this.panel_ngt.Size = new System.Drawing.Size(208, 129);
+            this.panel_ngt.Size = new System.Drawing.Size(201, 129);
             this.panel_ngt.TabIndex = 33;
             // 
             // rB_ngt_cNoise
@@ -998,26 +898,18 @@
             this.label9.TabIndex = 1;
             this.label9.Text = "黑白图处理";
             // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(1143, 591);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(90, 27);
-            this.button7.TabIndex = 34;
-            this.button7.Text = "黑白图处理";
-            this.button7.UseVisualStyleBackColor = true;
-            // 
             // panel_filter
             // 
+            this.panel_filter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel_filter.Controls.Add(this.rB_filter_neno);
             this.panel_filter.Controls.Add(this.rB_filter_Embosment);
             this.panel_filter.Controls.Add(this.rB_filter_soften);
             this.panel_filter.Controls.Add(this.rB_filter_atom);
             this.panel_filter.Controls.Add(this.rB_filter_sharpen);
             this.panel_filter.Controls.Add(this.label10);
-            this.panel_filter.Location = new System.Drawing.Point(1416, 192);
+            this.panel_filter.Location = new System.Drawing.Point(1223, 274);
             this.panel_filter.Name = "panel_filter";
-            this.panel_filter.Size = new System.Drawing.Size(208, 135);
+            this.panel_filter.Size = new System.Drawing.Size(201, 106);
             this.panel_filter.TabIndex = 36;
             // 
             // rB_filter_neno
@@ -1089,56 +981,376 @@
             this.label10.TabIndex = 1;
             this.label10.Text = "滤镜处理";
             // 
-            // button3
+            // panel_resize
             // 
-            this.button3.Location = new System.Drawing.Point(1648, 506);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(88, 32);
-            this.button3.TabIndex = 35;
-            this.button3.Text = "滤镜";
-            this.button3.UseVisualStyleBackColor = true;
+            this.panel_resize.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel_resize.Controls.Add(this.comb_resize_height);
+            this.panel_resize.Controls.Add(this.comb_resize_width);
+            this.panel_resize.Controls.Add(this.txtBox_resize_height);
+            this.panel_resize.Controls.Add(this.txtBox_resize_width);
+            this.panel_resize.Controls.Add(this.label14);
+            this.panel_resize.Controls.Add(this.label13);
+            this.panel_resize.Controls.Add(this.label12);
+            this.panel_resize.Controls.Add(this.label11);
+            this.panel_resize.Controls.Add(this.rB_resize_size);
+            this.panel_resize.Controls.Add(this.rB_resize_scale);
+            this.panel_resize.Controls.Add(this.label1);
+            this.panel_resize.Location = new System.Drawing.Point(1223, 386);
+            this.panel_resize.Name = "panel_resize";
+            this.panel_resize.Size = new System.Drawing.Size(201, 127);
+            this.panel_resize.TabIndex = 37;
             // 
-            // btn_bin_getmid
+            // rB_resize_size
             // 
-            this.btn_bin_getmid.Location = new System.Drawing.Point(151, 66);
-            this.btn_bin_getmid.Name = "btn_bin_getmid";
-            this.btn_bin_getmid.Size = new System.Drawing.Size(47, 23);
-            this.btn_bin_getmid.TabIndex = 11;
-            this.btn_bin_getmid.Text = "取优";
-            this.btn_bin_getmid.UseVisualStyleBackColor = true;
+            this.rB_resize_size.AutoSize = true;
+            this.rB_resize_size.Location = new System.Drawing.Point(9, 80);
+            this.rB_resize_size.Name = "rB_resize_size";
+            this.rB_resize_size.Size = new System.Drawing.Size(47, 16);
+            this.rB_resize_size.TabIndex = 7;
+            this.rB_resize_size.TabStop = true;
+            this.rB_resize_size.Text = "宽高";
+            this.rB_resize_size.UseVisualStyleBackColor = true;
+            // 
+            // rB_resize_scale
+            // 
+            this.rB_resize_scale.AutoSize = true;
+            this.rB_resize_scale.Location = new System.Drawing.Point(5, 34);
+            this.rB_resize_scale.Name = "rB_resize_scale";
+            this.rB_resize_scale.Size = new System.Drawing.Size(47, 16);
+            this.rB_resize_scale.TabIndex = 2;
+            this.rB_resize_scale.TabStop = true;
+            this.rB_resize_scale.Text = "比例";
+            this.rB_resize_scale.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 10);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 12);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "图像缩放";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(23, 58);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(29, 12);
+            this.label11.TabIndex = 8;
+            this.label11.Text = "宽：";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(111, 58);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(29, 12);
+            this.label12.TabIndex = 9;
+            this.label12.Text = "高：";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(23, 101);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(29, 12);
+            this.label13.TabIndex = 10;
+            this.label13.Text = "宽：";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(111, 101);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(29, 12);
+            this.label14.TabIndex = 11;
+            this.label14.Text = "高：";
+            // 
+            // txtBox_resize_width
+            // 
+            this.txtBox_resize_width.Location = new System.Drawing.Point(52, 97);
+            this.txtBox_resize_width.Name = "txtBox_resize_width";
+            this.txtBox_resize_width.Size = new System.Drawing.Size(42, 21);
+            this.txtBox_resize_width.TabIndex = 12;
+            this.txtBox_resize_width.Text = "127";
+            this.txtBox_resize_width.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // txtBox_resize_height
+            // 
+            this.txtBox_resize_height.Location = new System.Drawing.Point(137, 97);
+            this.txtBox_resize_height.Name = "txtBox_resize_height";
+            this.txtBox_resize_height.Size = new System.Drawing.Size(42, 21);
+            this.txtBox_resize_height.TabIndex = 13;
+            this.txtBox_resize_height.Text = "127";
+            this.txtBox_resize_height.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // comb_resize_width
+            // 
+            this.comb_resize_width.FormattingEnabled = true;
+            this.comb_resize_width.Items.AddRange(new object[] {
+            "0.1",
+            "0.2",
+            "0.3",
+            "0.4",
+            "0.5",
+            "0.6",
+            "0.7",
+            "0.8",
+            "0.9",
+            "1.0"});
+            this.comb_resize_width.Location = new System.Drawing.Point(52, 54);
+            this.comb_resize_width.Name = "comb_resize_width";
+            this.comb_resize_width.Size = new System.Drawing.Size(42, 20);
+            this.comb_resize_width.TabIndex = 14;
+            this.comb_resize_width.Text = "1.0";
+            // 
+            // comb_resize_height
+            // 
+            this.comb_resize_height.FormattingEnabled = true;
+            this.comb_resize_height.Items.AddRange(new object[] {
+            "0.1",
+            "0.2",
+            "0.3",
+            "0.4",
+            "0.5",
+            "0.6",
+            "0.7",
+            "0.8",
+            "0.9",
+            "1.0"});
+            this.comb_resize_height.Location = new System.Drawing.Point(137, 54);
+            this.comb_resize_height.Name = "comb_resize_height";
+            this.comb_resize_height.Size = new System.Drawing.Size(42, 20);
+            this.comb_resize_height.TabIndex = 15;
+            this.comb_resize_height.Text = "1.0";
+            // 
+            // panel_divPixel
+            // 
+            this.panel_divPixel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel_divPixel.Controls.Add(this.comb_divPixel_light);
+            this.panel_divPixel.Controls.Add(this.comb_divPixel_color);
+            this.panel_divPixel.Controls.Add(this.txtBox_divPixel_color);
+            this.panel_divPixel.Controls.Add(this.txtBox_divPixel_light);
+            this.panel_divPixel.Controls.Add(this.rB_divPixel_light);
+            this.panel_divPixel.Controls.Add(this.rB_divPixel_color);
+            this.panel_divPixel.Controls.Add(this.label19);
+            this.panel_divPixel.Location = new System.Drawing.Point(1446, 386);
+            this.panel_divPixel.Name = "panel_divPixel";
+            this.panel_divPixel.Size = new System.Drawing.Size(201, 97);
+            this.panel_divPixel.TabIndex = 38;
+            // 
+            // comb_divPixel_light
+            // 
+            this.comb_divPixel_light.FormattingEnabled = true;
+            this.comb_divPixel_light.Items.AddRange(new object[] {
+            ">",
+            "<",
+            "="});
+            this.comb_divPixel_light.Location = new System.Drawing.Point(63, 67);
+            this.comb_divPixel_light.Name = "comb_divPixel_light";
+            this.comb_divPixel_light.Size = new System.Drawing.Size(42, 20);
+            this.comb_divPixel_light.TabIndex = 15;
+            this.comb_divPixel_light.Text = ">";
+            // 
+            // comb_divPixel_color
+            // 
+            this.comb_divPixel_color.FormattingEnabled = true;
+            this.comb_divPixel_color.Items.AddRange(new object[] {
+            ">",
+            "<",
+            "="});
+            this.comb_divPixel_color.Location = new System.Drawing.Point(63, 34);
+            this.comb_divPixel_color.Name = "comb_divPixel_color";
+            this.comb_divPixel_color.Size = new System.Drawing.Size(42, 20);
+            this.comb_divPixel_color.TabIndex = 14;
+            this.comb_divPixel_color.Text = ">";
+            // 
+            // txtBox_divPixel_color
+            // 
+            this.txtBox_divPixel_color.Location = new System.Drawing.Point(114, 33);
+            this.txtBox_divPixel_color.Name = "txtBox_divPixel_color";
+            this.txtBox_divPixel_color.Size = new System.Drawing.Size(42, 21);
+            this.txtBox_divPixel_color.TabIndex = 13;
+            this.txtBox_divPixel_color.Text = "127";
+            this.txtBox_divPixel_color.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // txtBox_divPixel_light
+            // 
+            this.txtBox_divPixel_light.Location = new System.Drawing.Point(114, 68);
+            this.txtBox_divPixel_light.Name = "txtBox_divPixel_light";
+            this.txtBox_divPixel_light.Size = new System.Drawing.Size(42, 21);
+            this.txtBox_divPixel_light.TabIndex = 12;
+            this.txtBox_divPixel_light.Text = "127";
+            this.txtBox_divPixel_light.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // rB_divPixel_light
+            // 
+            this.rB_divPixel_light.AutoSize = true;
+            this.rB_divPixel_light.Location = new System.Drawing.Point(9, 71);
+            this.rB_divPixel_light.Name = "rB_divPixel_light";
+            this.rB_divPixel_light.Size = new System.Drawing.Size(47, 16);
+            this.rB_divPixel_light.TabIndex = 7;
+            this.rB_divPixel_light.TabStop = true;
+            this.rB_divPixel_light.Text = "亮度";
+            this.rB_divPixel_light.UseVisualStyleBackColor = true;
+            // 
+            // rB_divPixel_color
+            // 
+            this.rB_divPixel_color.AutoSize = true;
+            this.rB_divPixel_color.Location = new System.Drawing.Point(10, 34);
+            this.rB_divPixel_color.Name = "rB_divPixel_color";
+            this.rB_divPixel_color.Size = new System.Drawing.Size(47, 16);
+            this.rB_divPixel_color.TabIndex = 2;
+            this.rB_divPixel_color.TabStop = true;
+            this.rB_divPixel_color.Text = "颜色";
+            this.rB_divPixel_color.UseVisualStyleBackColor = true;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(13, 10);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(53, 12);
+            this.label19.TabIndex = 1;
+            this.label19.Text = "像素分离";
+            // 
+            // panel_clearback
+            // 
+            this.panel_clearback.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel_clearback.Controls.Add(this.txtBox_clearback_keepcolor);
+            this.panel_clearback.Controls.Add(this.txtBox_clearback_keeplight);
+            this.panel_clearback.Controls.Add(this.rB_clearback_keeplight);
+            this.panel_clearback.Controls.Add(this.rB_clearback_keepcolor);
+            this.panel_clearback.Controls.Add(this.label15);
+            this.panel_clearback.Location = new System.Drawing.Point(1223, 519);
+            this.panel_clearback.Name = "panel_clearback";
+            this.panel_clearback.Size = new System.Drawing.Size(201, 97);
+            this.panel_clearback.TabIndex = 39;
+            // 
+            // txtBox_clearback_keepcolor
+            // 
+            this.txtBox_clearback_keepcolor.Location = new System.Drawing.Point(114, 33);
+            this.txtBox_clearback_keepcolor.Name = "txtBox_clearback_keepcolor";
+            this.txtBox_clearback_keepcolor.Size = new System.Drawing.Size(42, 21);
+            this.txtBox_clearback_keepcolor.TabIndex = 13;
+            this.txtBox_clearback_keepcolor.Text = "127";
+            this.txtBox_clearback_keepcolor.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // txtBox_clearback_keeplight
+            // 
+            this.txtBox_clearback_keeplight.Location = new System.Drawing.Point(114, 68);
+            this.txtBox_clearback_keeplight.Name = "txtBox_clearback_keeplight";
+            this.txtBox_clearback_keeplight.Size = new System.Drawing.Size(42, 21);
+            this.txtBox_clearback_keeplight.TabIndex = 12;
+            this.txtBox_clearback_keeplight.Text = "127";
+            this.txtBox_clearback_keeplight.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // rB_clearback_keeplight
+            // 
+            this.rB_clearback_keeplight.AutoSize = true;
+            this.rB_clearback_keeplight.Location = new System.Drawing.Point(9, 71);
+            this.rB_clearback_keeplight.Name = "rB_clearback_keeplight";
+            this.rB_clearback_keeplight.Size = new System.Drawing.Size(71, 16);
+            this.rB_clearback_keeplight.TabIndex = 7;
+            this.rB_clearback_keeplight.TabStop = true;
+            this.rB_clearback_keeplight.Text = "保留亮度";
+            this.rB_clearback_keeplight.UseVisualStyleBackColor = true;
+            // 
+            // rB_clearback_keepcolor
+            // 
+            this.rB_clearback_keepcolor.AutoSize = true;
+            this.rB_clearback_keepcolor.Location = new System.Drawing.Point(10, 34);
+            this.rB_clearback_keepcolor.Name = "rB_clearback_keepcolor";
+            this.rB_clearback_keepcolor.Size = new System.Drawing.Size(83, 16);
+            this.rB_clearback_keepcolor.TabIndex = 2;
+            this.rB_clearback_keepcolor.TabStop = true;
+            this.rB_clearback_keepcolor.Text = "保留颜色数";
+            this.rB_clearback_keepcolor.UseVisualStyleBackColor = true;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(13, 10);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(53, 12);
+            this.label15.TabIndex = 1;
+            this.label15.Text = "清除背景";
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.radioButton1);
+            this.panel1.Controls.Add(this.radioButton2);
+            this.panel1.Controls.Add(this.label16);
+            this.panel1.Location = new System.Drawing.Point(1446, 489);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(201, 127);
+            this.panel1.TabIndex = 40;
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(9, 71);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(59, 16);
+            this.radioButton1.TabIndex = 7;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "对比度";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(10, 34);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(47, 16);
+            this.radioButton2.TabIndex = 2;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "亮度";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(13, 10);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(65, 12);
+            this.label16.TabIndex = 1;
+            this.label16.Text = "亮度对比度";
+            // 
+            // picBox_pre
+            // 
+            this.picBox_pre.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picBox_pre.Location = new System.Drawing.Point(576, 119);
+            this.picBox_pre.Name = "picBox_pre";
+            this.picBox_pre.Size = new System.Drawing.Size(233, 80);
+            this.picBox_pre.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.picBox_pre.TabIndex = 41;
+            this.picBox_pre.TabStop = false;
+            this.picBox_pre.Paint += new System.Windows.Forms.PaintEventHandler(this.picBox_pre_Paint);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1745, 705);
+            this.ClientSize = new System.Drawing.Size(822, 490);
+            this.Controls.Add(this.picBox_pre);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel_clearback);
+            this.Controls.Add(this.panel_divPixel);
+            this.Controls.Add(this.panel_resize);
             this.Controls.Add(this.panel_filter);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button7);
             this.Controls.Add(this.panel_ngt);
             this.Controls.Add(this.panel_Binary);
             this.Controls.Add(this.panel_clrpro);
             this.Controls.Add(this.panel_smoothing);
             this.Controls.Add(this.panel_Clip);
-            this.Controls.Add(this.button16);
-            this.Controls.Add(this.txtBox_fillIndex);
-            this.Controls.Add(this.button15);
-            this.Controls.Add(this.button13);
             this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.button11);
             this.Controls.Add(this.button10);
-            this.Controls.Add(this.textBox_fangda);
-            this.Controls.Add(this.button9);
-            this.Controls.Add(this.button8);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.listView1);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.btn_serchPath);
             this.Controls.Add(this.picBox_show);
             this.Controls.Add(this.picBox_src);
@@ -1162,6 +1374,15 @@
             this.panel_ngt.PerformLayout();
             this.panel_filter.ResumeLayout(false);
             this.panel_filter.PerformLayout();
+            this.panel_resize.ResumeLayout(false);
+            this.panel_resize.PerformLayout();
+            this.panel_divPixel.ResumeLayout(false);
+            this.panel_divPixel.PerformLayout();
+            this.panel_clearback.ResumeLayout(false);
+            this.panel_clearback.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picBox_pre)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1174,27 +1395,13 @@
         private System.Windows.Forms.PictureBox picBox_src;
         private System.Windows.Forms.PictureBox picBox_show;
         private System.Windows.Forms.Button btn_serchPath;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader name;
         private System.Windows.Forms.ColumnHeader param;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.TextBox textBox_fangda;
         private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Button button11;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Button button13;
-        private System.Windows.Forms.Button button15;
-        private System.Windows.Forms.TextBox txtBox_fillIndex;
-        private System.Windows.Forms.Button button16;
         private System.Windows.Forms.Panel panel_Clip;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
@@ -1204,7 +1411,6 @@
         private System.Windows.Forms.TextBox txtBox_Clip_down;
         private System.Windows.Forms.TextBox txtBox_Clip_left;
         private System.Windows.Forms.TextBox txtBox_Clip_up;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel_smoothing;
         private System.Windows.Forms.RadioButton rB_sm_mid7;
         private System.Windows.Forms.RadioButton rB_sm_ave7;
@@ -1232,7 +1438,6 @@
         private System.Windows.Forms.RadioButton rB_ngt_thin;
         private System.Windows.Forms.RadioButton rB_ngt_CEdge;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Button button7;
         private System.Windows.Forms.RadioButton rB_ngt_erosion;
         private System.Windows.Forms.RadioButton rB_ngt_swell;
         private System.Windows.Forms.RadioButton rB_ngt_close;
@@ -1244,7 +1449,6 @@
         private System.Windows.Forms.RadioButton rB_filter_atom;
         private System.Windows.Forms.RadioButton rB_filter_sharpen;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ColumnHeader check;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 添加ToolStripMenuItem;
@@ -1264,6 +1468,37 @@
         private System.Windows.Forms.RadioButton rB_Clip_clrBlock;
         private System.Windows.Forms.RadioButton rB_ngt_cNoise;
         private System.Windows.Forms.Button btn_bin_getmid;
+        private System.Windows.Forms.Panel panel_resize;
+        private System.Windows.Forms.ComboBox comb_resize_height;
+        private System.Windows.Forms.ComboBox comb_resize_width;
+        private System.Windows.Forms.TextBox txtBox_resize_height;
+        private System.Windows.Forms.TextBox txtBox_resize_width;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.RadioButton rB_resize_size;
+        private System.Windows.Forms.RadioButton rB_resize_scale;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel_divPixel;
+        private System.Windows.Forms.ComboBox comb_divPixel_light;
+        private System.Windows.Forms.ComboBox comb_divPixel_color;
+        private System.Windows.Forms.TextBox txtBox_divPixel_color;
+        private System.Windows.Forms.TextBox txtBox_divPixel_light;
+        private System.Windows.Forms.RadioButton rB_divPixel_light;
+        private System.Windows.Forms.RadioButton rB_divPixel_color;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Panel panel_clearback;
+        private System.Windows.Forms.TextBox txtBox_clearback_keepcolor;
+        private System.Windows.Forms.TextBox txtBox_clearback_keeplight;
+        private System.Windows.Forms.RadioButton rB_clearback_keeplight;
+        private System.Windows.Forms.RadioButton rB_clearback_keepcolor;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.PictureBox picBox_pre;
     }
 }
 

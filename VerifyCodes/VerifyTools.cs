@@ -2456,15 +2456,16 @@ namespace VerifyCodes
         /// <param name="img">源图</param>
         /// <param name="mul">倍数</param>
         /// <returns></returns>
-        public static Bitmap getBig(Bitmap img, ref int mul, bool lines = true, Rectangle[] rects = null)
+        public static Bitmap getBig(Bitmap img, ref int mul,int widthmax,int heightmax, bool lines = true, Rectangle[] rects = null)
         {
             if (mul == -1)
             {
                 //700,250
+                //557, 216
                 int wmul = 1;
                 int hmul = 1;
-                wmul = 700 / img.Width;
-                hmul = 350 / img.Height;
+                wmul = widthmax / img.Width;
+                hmul = heightmax / img.Height;
                 mul = wmul > hmul ? hmul : wmul;
             }
             Bitmap bigimg = new Bitmap(img.Width * mul, img.Height * mul);
