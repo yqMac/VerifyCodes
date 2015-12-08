@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -98,7 +100,7 @@ namespace VerifyCodes
 
         public static Bitmap getBmpResize(Bitmap bmp,int width,int height,double wd=1,double hd=1,int type = 1)
         {
-            Bitmap rebmp = null;
+          
             int rewidth = 0;
             int reheight = 0;
             if (type == 1)
@@ -111,13 +113,9 @@ namespace VerifyCodes
                 rewidth =(int ) (bmp.Width * wd);
                 reheight =(int )( bmp.Height * hd);
             }
-            rebmp = new Bitmap(rewidth ,reheight ,bmp.PixelFormat );
-
-            Graphics g = Graphics.FromImage(rebmp );
-            g.DrawImage(bmp ,0,0,rewidth ,reheight );
-            g.Dispose();
-
-            return rebmp;
+            Rectangle f = new Rectangle(0,0,rewidth ,reheight );
+            bmp = bmp.Clone(f,bmp.PixelFormat );
+            return bmp;
         }
 
 
@@ -172,9 +170,10 @@ namespace VerifyCodes
         /// <summary>
         /// 翻转图像
         /// </summary>
-        public static Bitmap reversal(Bitmap userBmp)
+        public static Bitmap reversal(Bitmap Bmp)
         {
-
+            LockBitmap userBmp = new LockBitmap(Bmp );
+            userBmp.LockBits();
             for (var x = 0; x < userBmp.Width; x++)
             {
                 for (var y = 0; y < userBmp.Height; y++)
@@ -184,7 +183,8 @@ namespace VerifyCodes
 
                 }
             }
-            return userBmp;
+            userBmp.UnlockBits();
+            return Bmp;
         }
 
         /// <summary>
@@ -235,36 +235,38 @@ namespace VerifyCodes
                 case 7: wbwidth = 3; break;
                 default: return bmp;
             }
-            Bitmap bmpnew = new Bitmap(bmp.Width, bmp.Height);
-            for (int i = 0; i < bmp.Width; i++)
+            using (Bitmap bmpnew = (Bitmap)bmp.Clone())
             {
-                for (int j = 0; j < bmp.Height; j++)
+                for (int i = 0; i < bmpnew.Width; i++)
                 {
-                    List<int> tmpcoint = new List<int>();
-                    for (int ii = i - wbwidth; ii < i + wbwidth; ii++)
+                    for (int j = 0; j < bmpnew.Height; j++)
                     {
-                        for (int jj = j - wbwidth; jj < j + wbwidth; jj++)
+                        List<int> tmpcoint = new List<int>();
+                        for (int ii = i - wbwidth; ii < i + wbwidth; ii++)
                         {
-                            if (ii < 0 || jj < 0 || ii >= bmp.Width || jj >= bmp.Height)
+                            for (int jj = j - wbwidth; jj < j + wbwidth; jj++)
                             {
-                                continue;
+                                if (ii < 0 || jj < 0 || ii >= bmpnew.Width || jj >= bmpnew.Height)
+                                {
+                                    continue;
+                                }
+                                tmpcoint.Add(bmpnew.GetPixel(ii, jj).R);
                             }
-                            tmpcoint.Add(bmp.GetPixel(ii, jj).R);
                         }
+                        int midc = 255;
+                        if (type == 1)
+                        {
+                            midc = getMidColor(tmpcoint);
+                        }
+                        else
+                        {
+                            midc = getAveColor(tmpcoint);
+                        }
+                        bmp.SetPixel(i, j, Color.FromArgb(midc, midc, midc));
                     }
-                    int midc = 255;
-                    if (type == 1)
-                    {
-                        midc = getMidColor(tmpcoint);
-                    }
-                    else
-                    {
-                        midc = getAveColor(tmpcoint);
-                    }
-                    bmpnew.SetPixel(i, j, Color.FromArgb(midc, midc, midc));
                 }
             }
-            return bmpnew;
+            return bmp;
         }
 
 
@@ -412,37 +414,179 @@ namespace VerifyCodes
         {
             Color piexl;
             int nearDots = 0;
+            Bitmap map = (Bitmap)userBmp.Clone();
             //逐点判断
-            for (int i = 0; i < userBmp.Width; i++)
-                for (int j = 0; j < userBmp.Height; j++)
+            for (int i = 0; i < map.Width; i++)
+                for (int j = 0; j < map.Height; j++)
                 {
-                    piexl = userBmp.GetPixel(i, j);
-                    if (piexl.R < dgGrayValue)
+                    piexl = map.GetPixel(i, j);
+                    if (piexl.R >= dgGrayValue)
                     {
-                        nearDots = 0;
-                        //判断周围8个点是否全为空
-                        if (i == 0 || i == userBmp.Width - 1 || j == 0 || j == userBmp.Height - 1)  //边框全去掉
+                        userBmp.SetPixel(i, j, Color.FromArgb(255, 255, 255));
+
+                    }         
+                }
+            map.Dispose();
+            return clearnoist(userBmp ,MaxNearPoints );
+        }
+
+
+        /// <summary>
+        /// two-pass方法取联通区域，用于去除杂点
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <param name="noisePointCount"></param>
+        /// <returns></returns>
+        public static Bitmap clearnoist(Bitmap bmp,int noisePointCount)
+        {
+            LockBitmap userBmp = new LockBitmap(bmp );
+            userBmp.LockBits();
+            List<List<Point>> list_regions = new List<List<Point>>();
+            Dictionary<int, List<Point>> dic_tag_region = new Dictionary<int, List<Point>>();
+            List<Rectangle> list_bt = new List<Rectangle>();
+            int width = userBmp.Width;
+            int height = userBmp.Height;
+            Dictionary<int, int> dic_tagLink = new Dictionary<int, int>();
+            //Bitmap img = (Bitmap)userBmp.Clone();
+            /// <summary>
+            /// 分割框位置信息
+            /// </summary>
+            int[,] regions_tags = null;
+            int[,] imgp = new int[width, height];
+
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    imgp[i, j] = userBmp.GetPixel(i, j).R;
+                }
+            }
+
+            regions_tags = new int[width, height];
+            list_regions = new List<List<Point>>();
+            int tag = 1;
+            ///第一遍
+            int nerbSmall = -1;
+            for (var y = 0; y < height; y++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    nerbSmall = -1;
+                    if (imgp[x, y] != 255)
+                    {
+                        List<int> list_nertags = new List<int>();
+
+                        //左邻域
+                        int tmpx = x - 1, tmpy = y;
+                        if (tmpx >= 0 && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
                         {
-                            //userBmp.SetPixel(i, j, Color.FromArgb(255, 255, 255));
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //上邻域
+                        tmpx = x; tmpy = y - 1;
+                        if (tmpy >= 0 && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //下邻域
+                        tmpx = x; tmpy = y + 1;
+                        if (tmpy < height && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //右邻域
+                        tmpx = x + 1; tmpy = y;
+                        if (tmpx < width && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //左上邻域
+                        tmpx = x - 1; tmpy = y - 1;
+                        if (tmpx > 0 && tmpy > 0 && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //右上邻域
+                        tmpx = x + 1; tmpy = y - 1;
+                        if (tmpx < width && tmpy > 0 && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //左下邻域
+                        tmpx = x - 1; tmpy = y + 1;
+                        if (tmpx > 0 && tmpy < height && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+                        //右下邻域
+                        tmpx = x + 1; tmpy = y + 1;
+                        if (tmpx < width && tmpy < height && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
+                        {
+                            list_nertags.Add(regions_tags[tmpx, tmpy]);
+                        }
+
+                        if (list_nertags.Count == 0)
+                        {
+                            tag++;
+                            regions_tags[x, y] = tag;
+                            dic_tagLink.Add(tag, tag);
                         }
                         else
                         {
-                            if (userBmp.GetPixel(i - 1, j - 1).R < dgGrayValue) nearDots++;
-                            if (userBmp.GetPixel(i, j - 1).R < dgGrayValue) nearDots++;
-                            if (userBmp.GetPixel(i + 1, j - 1).R < dgGrayValue) nearDots++;
-                            if (userBmp.GetPixel(i - 1, j).R < dgGrayValue) nearDots++;
-                            if (userBmp.GetPixel(i + 1, j).R < dgGrayValue) nearDots++;
-                            if (userBmp.GetPixel(i - 1, j + 1).R < dgGrayValue) nearDots++;
-                            if (userBmp.GetPixel(i, j + 1).R < dgGrayValue) nearDots++;
-                            if (userBmp.GetPixel(i + 1, j + 1).R < dgGrayValue) nearDots++;
-                            if (nearDots < MaxNearPoints)
-                                userBmp.SetPixel(i, j, Color.FromArgb(255, 255, 255));   //去掉单点 && 粗细小3邻边点
+                            list_nertags.Sort();
+                            regions_tags[x, y] = list_nertags[0];
+                            int last = list_nertags[0];
+                            for (int i = 1; i < list_nertags.Count; i++)
+                            {
+                                if (dic_tagLink[list_nertags[i]] > dic_tagLink[last])
+                                {
+                                    dic_tagLink[list_nertags[i]] = dic_tagLink[last];
+                                }
+                                else if (dic_tagLink[list_nertags[i]] < dic_tagLink[last])
+                                {
+                                    dic_tagLink[last] = dic_tagLink[list_nertags[i]];
+                                }
+                            }
                         }
                     }
-                    else  //背景
-                        userBmp.SetPixel(i, j, Color.FromArgb(255, 255, 255));
                 }
-            return userBmp;
+            }
+            //第二遍
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (regions_tags[x, y] > 0)
+                    {
+                        regions_tags[x, y] = dic_tagLink[regions_tags[x, y]];
+                        //提取区域
+                        int tmptag = regions_tags[x, y];
+                        if (dic_tag_region.ContainsKey(tmptag))
+                        {
+                            dic_tag_region[tmptag].Add(new Point(x, y));
+                        }
+                        else
+                        {
+                            dic_tag_region.Add(tmptag, new List<Point>() { new Point(x, y) });
+                        }
+                    }
+                }
+            }
+
+
+            foreach (List<Point> item in dic_tag_region.Values)
+            {
+                if(item.Count <=noisePointCount)
+                {
+                    for (int i = 0; i < item.Count ; i++)
+                    {
+                        Point p = item[i];
+                        userBmp.SetPixel(p.X ,p.Y ,Color.FromArgb  (255,255,255));
+                    }
+                }
+            }
+            userBmp.UnlockBits();
+            return bmp  ;
         }
 
         /// <summary>
@@ -451,9 +595,13 @@ namespace VerifyCodes
         /// </summary>
         /// <param name="dgGrayValue">灰度背景分界值</param>
         /// <returns></returns>
-        public static Bitmap ClearEdge(Bitmap userBmp, int dgGrayValue = 1)
+        public static Bitmap ClearEdge(Bitmap Bmp, int dgGrayValue = 1)
         {
-            int posx1 = userBmp.Width; int posy1 = userBmp.Height;
+            LockBitmap userBmp = new LockBitmap(Bmp );
+            userBmp.LockBits();
+            int posx1 = userBmp.Width;
+            int posy1 = userBmp.Height;
+
             int posx2 = 0; int posy2 = 0;
             for (int i = 0; i < userBmp.Height; i++)      //找有效区
             {
@@ -470,10 +618,13 @@ namespace VerifyCodes
                     };
                 };
             };
+            userBmp.UnlockBits();
+           
             //复制新图
             Rectangle cloneRect = new Rectangle(posx1, posy1, posx2 - posx1 + 1, posy2 - posy1 + 1);
-            userBmp = userBmp.Clone(cloneRect, userBmp.PixelFormat);
-            return userBmp;
+            if(cloneRect .Width >0 && cloneRect.Height >0)
+            Bmp = Bmp.Clone(cloneRect, Bmp.PixelFormat);
+            return Bmp;
         }
 
         /// <summary>
@@ -666,6 +817,8 @@ namespace VerifyCodes
             bool[,] b = getbmpbin(bmp);
             bool allt = true;
             int tmpx, tmpy;
+            LockBitmap lcbmp = new LockBitmap(bmp);
+            lcbmp.LockBits();
 
             //腐蚀运算
             for (int i = 0; i < width; i++)
@@ -676,27 +829,29 @@ namespace VerifyCodes
                     {
                         allt = true;
                         tmpx = i - 1; tmpy = j - 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
                         tmpx = i - 1; tmpy = j;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
                         tmpx = i - 1; tmpy = j + 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
                         tmpx = i; tmpy = j - 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
                         tmpx = i; tmpy = j + 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
                         tmpx = i + 1; tmpy = j - 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
                         tmpx = i + 1; tmpy = j;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
                         tmpx = i + 1; tmpy = j + 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt && b[tmpx, tmpy];
 
-                        b[i, j] = allt;
+                        if (!allt) lcbmp.SetPixel(i, j, Color.FromArgb(255,255,255));
+//                        b[i, j] = allt;
                     }
                 }
             }
-            bmp = getBinToBmp(bmp, b);
+            lcbmp.UnlockBits();
+            //bmp = getBinToBmp(bmp, b);
             return bmp;
         }
 
@@ -710,9 +865,11 @@ namespace VerifyCodes
             int width = bmp.Width;
             int height = bmp.Height;
             bool[,] b = getbmpbin(bmp);
+
             bool allt = true;
             int tmpx, tmpy;
-
+            LockBitmap lcbmp = new LockBitmap(bmp );
+            lcbmp.LockBits();
             //腐蚀运算
             for (int i = 0; i < width; i++)
             {
@@ -722,27 +879,30 @@ namespace VerifyCodes
                     {
                         allt = false;
                         tmpx = i - 1; tmpy = j - 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
                         tmpx = i - 1; tmpy = j;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
                         tmpx = i - 1; tmpy = j + 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
                         tmpx = i; tmpy = j - 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
                         tmpx = i; tmpy = j + 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
                         tmpx = i + 1; tmpy = j - 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
                         tmpx = i + 1; tmpy = j;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
                         tmpx = i + 1; tmpy = j + 1;
-                        if (tmpy >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
+                        if (tmpx >= 0 && tmpy >= 0 && tmpy < height && tmpx < width) allt = allt || b[tmpx, tmpy];
 
-                        b[i, j] = allt;
+                        if (allt) lcbmp.SetPixel(i,j,Color.FromArgb (0,0,0));
                     }
                 }
             }
-            bmp = getBinToBmp(bmp, b);
+
+
+            lcbmp.UnlockBits();
+           // bmp = getBinToBmp(bmp, b);
             return bmp;
         }
 
@@ -1333,19 +1493,19 @@ namespace VerifyCodes
                 {
                     nerbSmall = -1;
 
-                    if (imgp[x, y] == 0)
+                    if (imgp[x, y] !=255)
                     {
                         List<int> list_nertags = new List<int>();
 
                         //左邻域
                         int tmpx = x - 1, tmpy = y;
-                        if (tmpx >= 0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                        if (tmpx >= 0 && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
                         {
                             list_nertags.Add(regions_tags[tmpx, tmpy]);
                         }
                         //上邻域
                         tmpx = x; tmpy = y - 1;
-                        if (tmpy >= 0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                        if (tmpy >= 0 && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
                         {
                             list_nertags.Add(regions_tags[tmpx, tmpy]);
                         }
@@ -1353,13 +1513,13 @@ namespace VerifyCodes
 
                         //下邻域
                         tmpx = x; tmpy = y + 1;
-                        if (tmpy < height && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                        if (tmpy < height && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
                         {
                             list_nertags.Add(regions_tags[tmpx, tmpy]);
                         }
                         //右邻域
                         tmpx = x + 1; tmpy = y;
-                        if (tmpx < width && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                        if (tmpx < width && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
                         {
                             list_nertags.Add(regions_tags[tmpx, tmpy]);
                         }
@@ -1368,25 +1528,25 @@ namespace VerifyCodes
                         {
                             //左上邻域
                             tmpx = x - 1; tmpy = y - 1;
-                            if (tmpx > 0 && tmpy > 0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            if (tmpx > 0 && tmpy > 0 && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
                             {
                                 list_nertags.Add(regions_tags[tmpx, tmpy]);
                             }
                             //右上邻域
                             tmpx = x + 1; tmpy = y - 1;
-                            if (tmpx < width && tmpy > 0 && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            if (tmpx < width && tmpy > 0 && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
                             {
                                 list_nertags.Add(regions_tags[tmpx, tmpy]);
                             }
                             //左下邻域
                             tmpx = x - 1; tmpy = y + 1;
-                            if (tmpx > 0 && tmpy < height && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            if (tmpx > 0 && tmpy < height && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
                             {
                                 list_nertags.Add(regions_tags[tmpx, tmpy]);
                             }
                             //右下邻域
                             tmpx = x + 1; tmpy = y + 1;
-                            if (tmpx < width && tmpy < height && imgp[tmpx, tmpy] == 0 && regions_tags[tmpx, tmpy] != 0)
+                            if (tmpx < width && tmpy < height && imgp[tmpx, tmpy] != 255 && regions_tags[tmpx, tmpy] != 0)
                             {
                                 list_nertags.Add(regions_tags[tmpx, tmpy]);
                             }
@@ -1453,26 +1613,7 @@ namespace VerifyCodes
                     }
                 }
             }
-            //提取区域
-            //for (int y = 0; y < height; y++)
-            //{
-            //    for (int x = 0; x < width; x++)
-            //    {
-            //        if (regions_tags[x, y] > 0)
-            //        {
-            //            int tmptag = regions_tags[x, y];
-            //            if(dic_tag_region .ContainsKey (tmptag))
-            //            {
-            //                dic_tag_region[tmptag].Add(new Point (x,y));
-            //            }else
-            //            {
-
-            //                dic_tag_region.Add(tmptag ,new List<Point>() { new Point (x,y)});
-            //            }
-            //            //regions_tags[x, y] = dic_tagLink[regions_tags[x, y]];
-            //        }
-            //    }
-            //}
+  
 
             foreach (List<Point> item in dic_tag_region.Values)
             {
@@ -1819,10 +1960,63 @@ namespace VerifyCodes
         }
 
 
-
-        public static void getRightrever(Bitmap bmp)
+        public static Bitmap  getAutoreversal(Bitmap bmp,int gryNum=-1)
         {
+            if (gryNum == -1)
+            {
+                gryNum = GetDgGrayValue(bmp  );
+            }
+            LockBitmap img = new LockBitmap(bmp );
+            img.LockBits();
+            //key 颜色  value颜色对应的数量
+            Dictionary<int , int> colorDic = new Dictionary<int , int>();
+            //获取图片中每个颜色的数量
+            for (var x = 0; x < img.Width; x++)
+            {
+                for (var y = 0; y < img.Height; y++)
+                {
+                    //删除边框
+                    //if (y == 0 || y == img.Height)
+                    //{
+                    //    img.SetPixel(x, y, backcolor);
+                    //}
 
+                    var color = img.GetPixel(x, y).R ;
+                  
+                    if (colorDic.ContainsKey(color))
+                    {
+                        colorDic[color] = colorDic[color] + 1;
+                    }
+                    else
+                    {
+                        colorDic.Add(color ,1);
+                        //colorDic[color] = 1;
+                    }
+                }
+            }
+            //图片中最多的颜色
+            int  maxColor = colorDic.OrderByDescending(o => o.Value).FirstOrDefault().Key;
+            //图片中最少的颜色
+            int  minColor = colorDic.OrderBy(o => o.Value).FirstOrDefault().Key;
+
+            if(maxColor <gryNum)
+            {
+
+                for (var x = 0; x < img.Width; x++)
+                {
+                    for (var y = 0; y < img.Height; y++)
+                    {
+                        int  tmp = img.GetPixel(x, y).R ;
+                        img.SetPixel(x, y, Color.FromArgb(255 - tmp , 255 - tmp , 255 -tmp  ));
+
+                    }
+                }
+
+
+            }
+
+            img.UnlockBits();
+            return bmp;
         }
 
 
@@ -2348,8 +2542,46 @@ namespace VerifyCodes
         #endregion 
 
 
-
+        public static void Serialize<T>(T o, string filePath)
+        {
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                using (Stream stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+                {
+                    formatter.Serialize(stream, o);
+                    stream.Flush();
+                    stream.Close();
+                    stream.Dispose();
+                }
+            }
+            catch (Exception) { }
+        }
+        public static T DeSerialize<T>(string filePath)
+        {
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                using (Stream destream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    destream.Seek(0, SeekOrigin.Begin);
+                    destream.Position = 0;
+                    T o = (T)formatter.Deserialize(destream);
+                    destream.Flush();
+                    destream.Close();
+                    return o;
+                }
+               
+            }
+            catch (Exception ex)
+            {
+            }
+            return default(T);
+        }
         #region 内部处理
+
+
+
 
         private static int getMidColor(List<int> listcoint)
         {
@@ -2597,6 +2829,57 @@ namespace VerifyCodes
         }
 
         #endregion
+    }
+
+
+    [Serializable ]
+    class TM
+    {
+        public string context;
+        public string[] attributes;
+        public string tag;
+        public Bitmap bmp;
+    }
+
+
+    [Serializable ]
+    class ImgHd
+    {
+        public ImgHd(string method,string param,string tag="")
+        {
+            this.method = method;
+            this.param = param;
+            this.tag = tag;
+
+        }
+        public string method;
+        public string param;
+        public string tag;
+        public string[] pas
+        {
+            get
+            {
+                if(!string.IsNullOrEmpty (param))
+                {
+                    return param .Split(' ').Where((o) => { return !string.IsNullOrEmpty(o); }).ToArray();
+                }
+                else
+                {
+                    return new string[] { };
+                }
+            }
+        }
+    }
+
+    [Serializable ]
+    class TMBank
+    {
+        public string name;
+        public string url;
+        public string dir;
+        public string tag;
+        public List<TM> list_tm = new List<TM>();
+        public List<ImgHd> list_hd = new List<ImgHd>();
     }
 }
 

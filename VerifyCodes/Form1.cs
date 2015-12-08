@@ -16,6 +16,8 @@ namespace VerifyCodes
         public Form1()
         {
             InitializeComponent();
+            tmb.name = "test";
+            
         }
 
         /// <summary>
@@ -89,10 +91,10 @@ namespace VerifyCodes
                         case "均值滤波3*3":
                             prebmp = VerifyTools.getLBbmp(prebmp, 3, 2);
                             break;
-                        case "均值滤波3*5":
+                        case "均值滤波5*5":
                             prebmp = VerifyTools.getLBbmp(prebmp, 5, 2);
                             break;
-                        case "均值滤波3*7":
+                        case "均值滤波7*7":
                             prebmp = VerifyTools.getLBbmp(prebmp, 7, 2);
                             break;
                     }
@@ -202,7 +204,7 @@ namespace VerifyCodes
                             prebmp = VerifyTools.GrayByPixels(prebmp);
                             break;
                         case "反转":
-                            prebmp = VerifyTools.reversal(prebmp);
+                            prebmp = VerifyTools.getAutoreversal (prebmp);
                             break;
                         case "单色红":
                             prebmp = VerifyTools.getClrBmp(prebmp, 1);
@@ -244,7 +246,8 @@ namespace VerifyCodes
                     {
                         return;
                     }
-                    prebmp = VerifyTools.ConvertTo1Bpp(prebmp, VerifyTools.GetDgGrayValue(prebmp));
+                    int dgv = VerifyTools.GetDgGrayValue(prebmp );
+                    prebmp = VerifyTools.ConvertTo1Bpp(prebmp,dgv );
                     break;
                 case enumMethods.黑白图处理:
                     if (param.Length < 1)
@@ -273,7 +276,12 @@ namespace VerifyCodes
                             prebmp = VerifyTools.ClearEdge(prebmp);
                             break;
                         case "去除杂点":
-                            prebmp = VerifyTools.ClearNoise(prebmp, VerifyTools.GetDgGrayValue(prebmp), 1);
+                            if(param .Length <= 1||param [1]=="0")
+                            {
+                                prebmp = VerifyTools.ClearNoise(prebmp, VerifyTools .GetDgGrayValue (prebmp ), 2);
+                            }
+                            else if (param .Length ==2)
+                            prebmp = VerifyTools.ClearNoise(prebmp, int.Parse (param [1]), 2);
                             break;
                     }
 
@@ -303,6 +311,7 @@ namespace VerifyCodes
         Bitmap workbmp = null;
         Bitmap showbmp = null;
 
+
         /// <summary>
         ///切换图片
         /// </summary>
@@ -328,8 +337,22 @@ namespace VerifyCodes
                 Bitmap img = (Bitmap)Bitmap.FromStream(fs);
                 Bitmap imgd = new Bitmap(img);
                 img.Dispose();
+                if(prebmp !=null)
+                {
+                    prebmp.Dispose();
+                    prebmp = null;
+                }
+                if(srcbmp !=null)
+                {
+                    srcbmp.Dispose();
+                    srcbmp = null;
+                }
+
+
                 prebmp = (Bitmap)imgd.Clone();
                 srcbmp = (Bitmap)imgd.Clone();
+                imgd.Dispose();
+                imgd = null;
                 this.Text = prebmp.Width + " w * h " + prebmp.Height;
                 //vfcode = new VerifyCode(prebmp );
             }
@@ -361,6 +384,8 @@ namespace VerifyCodes
                 files = null;
                 files = Directory.GetFiles(txtBox_url.Text.Trim());
                 fileIndex = -1;
+                tmb.url = txtBox_url.Text.Trim();
+                tmb.dir = txtBox_url.Text.Trim();
             }
         }
 
@@ -408,11 +433,10 @@ namespace VerifyCodes
             }
             int x = e.X / mul;
             int y = e.Y / mul;
-            if (checkBox1.Checked)
+            if (checkBox_splitHand .Checked)
             {
                 drawhand = true;
                 drawhandstart = new Point(x, y);
-
             }
         }
 
@@ -435,6 +459,7 @@ namespace VerifyCodes
                     }
                     mul = -1;
                     showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250);
+                    picBox_show.Image = showbmp;
                 }
             }
             else if (e.Button == MouseButtons.Left)
@@ -445,7 +470,7 @@ namespace VerifyCodes
                     rects = new Rectangle[] { new Rectangle(drawhandstart.X, drawhandstart.Y, x - drawhandstart.X + 1, y - drawhandstart.Y + 1) };
                     showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250, true, rects);
 
-                    checkBox1.Checked = false;
+                    checkBox_splitHand .Checked = false;
                     drawhand = false;
                 }
                 else
@@ -454,7 +479,9 @@ namespace VerifyCodes
                     prebmp.SetPixel(x, y, c.B == 255 ? Color.Black : Color.White);
                     showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250);
                 }
+                picBox_show.Image = showbmp;
             }
+           
         }
 
         private void picBox_show_MouseMove(object sender, MouseEventArgs e)
@@ -840,6 +867,10 @@ namespace VerifyCodes
 
         }
 
+
+
+        TMBank tmb = new TMBank();
+        
         private void refreshBmpByList()
         {
             if (srcbmp == null)
@@ -847,6 +878,7 @@ namespace VerifyCodes
                 return;
             }
             mul = -1;
+            tmb.list_hd.Clear();
             prebmp = (Bitmap)srcbmp.Clone();
             for (int i = 0; i < listView1.Items.Count; i++)
             {
@@ -858,8 +890,10 @@ namespace VerifyCodes
                     string str_tag = lvi.Tag.ToString();
                     string[] pa = str_params.Split(' ').Where((o) => { return !string.IsNullOrEmpty(o); }).ToArray();
                     methods((int)Enum.Parse(typeof(enumMethods), method), pa);
+                    tmb.list_hd.Add(new ImgHd (method ,str_params ,str_tag  ));
                 }
             }
+
             showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250);
             picBox_show.Image = showbmp;
             picBox_pre.Image = prebmp;
@@ -869,7 +903,7 @@ namespace VerifyCodes
         {
             string method = "";
             string param = "";
-            Control ctr = null;
+             Control ctr = null;
             if (sender.GetType().ToString() == typeof(RadioButton).ToString())
             {
                 ctr = (RadioButton)sender;
@@ -883,6 +917,14 @@ namespace VerifyCodes
                 {
                     return;
                 }
+            }
+            else if(sender.GetType().ToString() == typeof(NumericUpDown ).ToString())
+            {
+                ctr =(NumericUpDown)sender;
+            }
+            else if (sender.GetType().ToString() == typeof(ComboBox ).ToString())
+            {
+                ctr = (ComboBox)sender;
             }
             else
             {
@@ -931,136 +973,73 @@ namespace VerifyCodes
                     break;
                 //
                 case "panel_smoothing":
-
-                    if (rB_sm_mid3.Checked)
+                    method = enumMethods.图像滤波.ToString();
+                    foreach (Control  item in panel.Controls )
                     {
-                        method = enumMethods.图像滤波.ToString();
-                        param = string.Format("{0}", "中值滤波3*3");
-                    }
-                    else if (rB_sm_ave3.Checked)
-                    {
-                        method = enumMethods.图像滤波.ToString();
-                        param = string.Format("{0}", "均值滤波3*3");
-                    }
-                    else if (rB_sm_mid5.Checked)
-                    {
-                        method = enumMethods.图像滤波.ToString();
-                        param = string.Format("{0}", "中值滤波5*5");
-                    }
-                    else if (rB_sm_ave5.Checked)
-                    {
-
-                        method = enumMethods.图像滤波.ToString();
-                        param = string.Format("{0}", "均值滤波5*5");
-                    }
-                    else if (rB_sm_mid7.Checked)
-                    {
-                        method = enumMethods.图像滤波.ToString();
-                        param = string.Format("{0}", "中值滤波7*7");
-                    }
-                    else if (rB_sm_ave7.Checked)
-                    {
-                        method = enumMethods.图像滤波.ToString();
-                        param = string.Format("{0}", "均值滤波7*7");
+                        if(item.GetType ()==typeof (RadioButton))
+                        {
+                            RadioButton rb = (RadioButton)item;
+                            if (rb.Checked)
+                            {
+                                param = string.Format("{0}", rb.Text.Trim());
+                                break;
+                            }
+                        }
                     }
                     break;
                 case "panel_clrpro":
+                    method = enumMethods.颜色处理.ToString();
+                    foreach (Control item in panel.Controls)
                     {
-                        if (rB_clrpro_gray.Checked)
+                        if (item.GetType() == typeof(RadioButton))
                         {
-                            method = enumMethods.颜色处理.ToString();
-                            param = string.Format("{0}", "灰度");
-                        }
-                        else if (rB_clrpro_reversal.Checked)
-                        {
-                            method = enumMethods.颜色处理.ToString();
-                            param = string.Format("{0}", "反转");
-                        }
-                        else if (rB_clrpro_red.Checked)
-                        {
-                            method = enumMethods.颜色处理.ToString();
-                            param = string.Format("{0}", "单红");
-                        }
-                        else if (rB_clrpro_green.Checked)
-                        {
-                            method = enumMethods.颜色处理.ToString();
-                            param = string.Format("{0}", "单绿");
-                        }
-                        else if (rB_clrpro_blue.Checked)
-                        {
-                            method = enumMethods.颜色处理.ToString();
-                            param = string.Format("{0}", "单蓝");
+                            RadioButton rb = (RadioButton)item;
+                            if (rb.Checked)
+                            {
+                                param = string.Format("{0}", rb.Text.Trim());
+                                break;
+                            }
                         }
                     }
                     break;
                 case "panel_filter":
+                    method = enumMethods.线性滤镜.ToString();
+                    foreach (Control item in panel.Controls)
                     {
-                        if (rB_filter_atom.Checked)
+                        if (item.GetType() == typeof(RadioButton))
                         {
-                            method = enumMethods.线性滤镜.ToString();
-                            param = string.Format("{0}", "雾化");
-                        }
-                        else if (rB_filter_sharpen.Checked)
-                        {
-                            method = enumMethods.线性滤镜.ToString();
-                            param = string.Format("{0}", "锐化");
-                        }
-                        else if (rB_filter_soften.Checked)
-                        {
-                            method = enumMethods.线性滤镜.ToString();
-                            param = string.Format("{0}", "柔化");
-                        }
-                        else if (rB_filter_Embosment.Checked)
-                        {
-                            method = enumMethods.线性滤镜.ToString();
-                            param = string.Format("{0}", "浮雕");
-                        }
-                        else if (rB_filter_neno.Checked)
-                        {
-                            method = enumMethods.线性滤镜.ToString();
-                            param = string.Format("{0}", "霓虹");
+                            RadioButton rb = (RadioButton)item;
+                            if (rb.Checked)
+                            {
+                                param = string.Format("{0}", rb.Text.Trim());
+                                break;
+                            }
                         }
                     }
                     break;
                 case "panel_ngt":
 
-                    if (rB_ngt_CEdge.Checked)
+                    method = enumMethods.黑白图处理.ToString();
+                    foreach (Control item in panel.Controls)
                     {
-                        method = enumMethods.黑白图处理.ToString();
-                        param = string.Format("{0}", "去除白边");
-                    }
-                    else if (rB_ngt_open.Checked)
-                    {
-                        method = enumMethods.黑白图处理.ToString();
-                        param = string.Format("{0}", "开运算");
-                    }
-                    else if (rB_ngt_close.Checked)
-                    {
-                        method = enumMethods.黑白图处理.ToString();
-                        param = string.Format("{0}", "闭运算");
-                    }
-                    else if (rB_ngt_erosion.Checked)
-                    {
-                        method = enumMethods.黑白图处理.ToString();
-                        param = string.Format("{0}", "腐蚀");
-                    }
-                    else if (rB_ngt_swell.Checked)
-                    {
-                        method = enumMethods.黑白图处理.ToString();
-                        param = string.Format("{0}", "膨胀");
-                    }
-                    else if (rB_ngt_thin.Checked)
-                    {
-                        method = enumMethods.黑白图处理.ToString();
-                        param = string.Format("{0}", "骨架");
-                    }
-                    else if (rB_ngt_cNoise.Checked)
-                    {
-                        method = enumMethods.黑白图处理.ToString();
-                        param = string.Format("{0}", "去除杂点");
-                    }
+                        if (item.GetType() == typeof(RadioButton))
+                        {
+                            RadioButton rb = (RadioButton)item;
+                            if (rb.Checked)
+                            {
+                                if(rb.Text.Trim () == "去除杂点")
+                                {
+                                    param = string.Format("{0} {1}", rb.Text.Trim(),numericUpDown_ClearN.Value .ToString ());
+                                }
+                                else 
+                                param = string.Format("{0}", rb.Text.Trim());
 
+                                break;
+                            }
+                        }
+                    }
                     break;
+                    
                 case "panel_Binary":
 
 
@@ -1147,6 +1126,97 @@ namespace VerifyCodes
             listView1.Items.Clear();
         }
 
+        private void btn_bin_getmid_Click(object sender, EventArgs e)
+        {
+            int gray = VerifyTools.GetDgGrayValue(prebmp);
+            txtBox_Bin_threshold.Text = gray .ToString ();
+            numericUpDown_ClearN.Value = gray;
+        }
+
+        private void 上移ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int selectedCount = listView1.SelectedItems.Count;
+            if (selectedCount != 1)
+            {
+                return;
+            }
+            int index = listView1.SelectedItems[0].Index;
+            if(index <= 0)
+            {
+                return;
+            }
+            ListViewItem lvi = listView1.Items[index ];
+            listView1.Items.RemoveAt(index );
+            listView1.Items.Insert(index -1,lvi );
+        }
+
+        private void 下移ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int selectedCount = listView1.SelectedItems.Count;
+            if (selectedCount != 1)
+            {
+                return;
+            }
+            int index = listView1.SelectedItems[0].Index;
+            if(index >=listView1.Items .Count - 1)
+            {
+                return;
+            }
+            ListViewItem lvi = listView1.Items[index];
+            listView1.Items.RemoveAt(index);
+            listView1.Items.Insert(index + 1, lvi);
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            VerifyTools.Serialize<TMBank>(tmb,@"D:\testtmb.cfg");
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if(File.Exists(@"D:\testtmb.cfg"))
+            {
+                tmb = new TMBank ();
+                listView1.Items.Clear();
+               TMBank  tmp_tmb = (TMBank)VerifyTools.DeSerialize<TMBank >(@"D:\testtmb.cfg");
+                if(tmp_tmb != null)
+                {
+                    txtBox_url.Text = tmp_tmb.dir;
+                    if (!(tmp_tmb.name == ""))
+                    {
+                        this.Text = tmp_tmb.name;
+                    }
+                    if(tmp_tmb.list_hd .Count > 0)
+                    {
+                        for (int i = 0; i < tmp_tmb.list_hd .Count ; i++)
+                        {
+                            ImgHd item = tmp_tmb.list_hd[i];
+                            ListViewItem lvi = new ListViewItem();
+                            lvi.Tag = item.tag;
+                            lvi.SubItems.Add(item.method);
+                            lvi.SubItems.Add(item.param);
+                            lvi.Checked = true;
+                            listView1.Items.Add(lvi);
+                        }
+                        //foreach (ImgHd  item in tmb.list_hd )
+                        //{
+                            
+                        //}               
+                    }
+                    tmb = tmp_tmb;
+                }
+            }
+        }
     }
     public enum enumMethods
     {
