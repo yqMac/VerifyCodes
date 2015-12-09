@@ -92,6 +92,8 @@
             this.rB__Binary_自动阀值 = new System.Windows.Forms.RadioButton();
             this.label8 = new System.Windows.Forms.Label();
             this.panel_ngt = new System.Windows.Forms.Panel();
+            this.numericUpDown_ClearN = new System.Windows.Forms.NumericUpDown();
+            this.button5 = new System.Windows.Forms.Button();
             this.rB_ngt_cNoise = new System.Windows.Forms.RadioButton();
             this.rB_ngt_close = new System.Windows.Forms.RadioButton();
             this.rB_ngt_open = new System.Windows.Forms.RadioButton();
@@ -157,8 +159,7 @@
             this.checkBox_splitAuto = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.numericUpDown_ClearN = new System.Windows.Forms.NumericUpDown();
+            this.btn_testVfyA = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picBox_src)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picBox_show)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -168,6 +169,7 @@
             this.panel_Binary.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.panel_ngt.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_ClearN)).BeginInit();
             this.panel_filter.SuspendLayout();
             this.panel_resize.SuspendLayout();
             this.panel_divPixel.SuspendLayout();
@@ -178,7 +180,6 @@
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox_small)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_ClearN)).BeginInit();
             this.SuspendLayout();
             // 
             // txtBox_url
@@ -842,6 +843,34 @@
             this.panel_ngt.Size = new System.Drawing.Size(201, 129);
             this.panel_ngt.TabIndex = 33;
             // 
+            // numericUpDown_ClearN
+            // 
+            this.numericUpDown_ClearN.Location = new System.Drawing.Point(87, 99);
+            this.numericUpDown_ClearN.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDown_ClearN.Minimum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDown_ClearN.Name = "numericUpDown_ClearN";
+            this.numericUpDown_ClearN.Size = new System.Drawing.Size(36, 21);
+            this.numericUpDown_ClearN.TabIndex = 18;
+            this.numericUpDown_ClearN.ValueChanged += new System.EventHandler(this.config_Changed);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(135, 99);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(47, 23);
+            this.button5.TabIndex = 17;
+            this.button5.Text = "取优";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.btn_bin_getmid_Click);
+            // 
             // rB_ngt_cNoise
             // 
             this.rB_ngt_cNoise.AutoSize = true;
@@ -1483,6 +1512,7 @@
             this.txtBox_MT.Name = "txtBox_MT";
             this.txtBox_MT.Size = new System.Drawing.Size(100, 21);
             this.txtBox_MT.TabIndex = 49;
+            this.txtBox_MT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBox_MT_KeyDown);
             // 
             // btn_clearEdge
             // 
@@ -1500,13 +1530,17 @@
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
+            this.listView_MT.FullRowSelect = true;
             this.listView_MT.GridLines = true;
             this.listView_MT.Location = new System.Drawing.Point(12, 336);
+            this.listView_MT.MultiSelect = false;
             this.listView_MT.Name = "listView_MT";
             this.listView_MT.Size = new System.Drawing.Size(330, 152);
+            this.listView_MT.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView_MT.TabIndex = 44;
             this.listView_MT.UseCompatibleStateImageBehavior = false;
             this.listView_MT.View = System.Windows.Forms.View.Details;
+            this.listView_MT.SelectedIndexChanged += new System.EventHandler(this.listView_MT_SelectedIndexChanged);
             // 
             // columnHeader1
             // 
@@ -1523,12 +1557,13 @@
             // 
             // btn_reset
             // 
-            this.btn_reset.Location = new System.Drawing.Point(499, 312);
+            this.btn_reset.Location = new System.Drawing.Point(495, 286);
             this.btn_reset.Name = "btn_reset";
             this.btn_reset.Size = new System.Drawing.Size(75, 23);
             this.btn_reset.TabIndex = 50;
             this.btn_reset.Text = "重新载入";
             this.btn_reset.UseVisualStyleBackColor = true;
+            this.btn_reset.Click += new System.EventHandler(this.btn_reset_Click);
             // 
             // checkBox_splitHand
             // 
@@ -1552,7 +1587,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(376, 366);
+            this.button1.Location = new System.Drawing.Point(360, 327);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 54;
@@ -1562,7 +1597,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(376, 411);
+            this.button4.Location = new System.Drawing.Point(360, 356);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 55;
@@ -1570,39 +1605,22 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // button5
+            // btn_testVfyA
             // 
-            this.button5.Location = new System.Drawing.Point(135, 99);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(47, 23);
-            this.button5.TabIndex = 17;
-            this.button5.Text = "取优";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.btn_bin_getmid_Click);
-            // 
-            // numericUpDown_ClearN
-            // 
-            this.numericUpDown_ClearN.Location = new System.Drawing.Point(87, 99);
-            this.numericUpDown_ClearN.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericUpDown_ClearN.Minimum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDown_ClearN.Name = "numericUpDown_ClearN";
-            this.numericUpDown_ClearN.Size = new System.Drawing.Size(36, 21);
-            this.numericUpDown_ClearN.TabIndex = 18;
-            this.numericUpDown_ClearN.ValueChanged += new System.EventHandler(this.config_Changed);
+            this.btn_testVfyA.Location = new System.Drawing.Point(360, 385);
+            this.btn_testVfyA.Name = "btn_testVfyA";
+            this.btn_testVfyA.Size = new System.Drawing.Size(75, 23);
+            this.btn_testVfyA.TabIndex = 56;
+            this.btn_testVfyA.Text = "测试整体识别";
+            this.btn_testVfyA.UseVisualStyleBackColor = true;
+            this.btn_testVfyA.Click += new System.EventHandler(this.btn_testVfyA_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(810, 493);
+            this.Controls.Add(this.btn_testVfyA);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.checkBox_splitHand);
@@ -1635,6 +1653,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.panel_ngt.ResumeLayout(false);
             this.panel_ngt.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_ClearN)).EndInit();
             this.panel_filter.ResumeLayout(false);
             this.panel_filter.PerformLayout();
             this.panel_resize.ResumeLayout(false);
@@ -1651,7 +1670,6 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox_small)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_ClearN)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1789,6 +1807,7 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.NumericUpDown numericUpDown_ClearN;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btn_testVfyA;
     }
 }
 

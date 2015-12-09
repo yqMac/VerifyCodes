@@ -2836,7 +2836,7 @@ namespace VerifyCodes
     class TM
     {
         public string context;
-        public string[] attributes;
+        public double [] attributes;
         public string tag;
         public Bitmap bmp;
     }

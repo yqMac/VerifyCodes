@@ -446,9 +446,11 @@ namespace VerifyCodes
             int y = e.Y / mul;
             if (e.Button == MouseButtons.Right)
             {
-                if (rects != null && rects.Length > 0 && rects[0].Width < prebmp.Width)
+                if (workbmp==null &&rects != null && rects.Length > 0 && rects[0].Width < prebmp.Width)
                 {
+                    
                     workbmp = (Bitmap)prebmp.Clone();
+
                     for (int i = 0; i < rects.Length; i++)
                     {
                         if (x >= rects[i].X && y >= rects[i].Y && x <= (rects[i].X + rects[i].Width) && y <= (rects[i].Y + rects[i].Height))
@@ -486,17 +488,32 @@ namespace VerifyCodes
 
         private void picBox_show_MouseMove(object sender, MouseEventArgs e)
         {
-            int x = e.X / mul;
-            int y = e.Y / mul;
-            if (drawhand && x != drawhandstart.X && y != drawhandstart.Y)
+            if (e.Button == MouseButtons.Left)
             {
-                Rectangle[] rectstmp = new Rectangle[] { new Rectangle(drawhandstart.X, drawhandstart.Y, x - drawhandstart.X + 1, y - drawhandstart.Y + 1) };
-                showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250, true, rectstmp);
-
+                int x = e.X / mul;
+                int y = e.Y / mul;
+                if (drawhand && x != drawhandstart.X && y != drawhandstart.Y)
+                {
+                    Rectangle[] rectstmp = new Rectangle[] { new Rectangle(drawhandstart.X, drawhandstart.Y, x - drawhandstart.X + 1, y - drawhandstart.Y + 1) };
+                    showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250, true, rectstmp);
+                    picBox_show.Image = showbmp;
+                }
             }
         }
 
+        private void btn_reset_Click(object sender, EventArgs e)
+        {
+            if (workbmp != null)
+            {
+                prebmp = (Bitmap)workbmp.Clone();
+                workbmp.Dispose();
+                workbmp = null;
+                mul = -1;
+                showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250);
+                picBox_show.Image = showbmp;
+            }
 
+        }
         /// <summary>
         /// 右键添加菜单添加指定项
         /// </summary>
@@ -890,6 +907,7 @@ namespace VerifyCodes
                     string str_tag = lvi.Tag.ToString();
                     string[] pa = str_params.Split(' ').Where((o) => { return !string.IsNullOrEmpty(o); }).ToArray();
                     methods((int)Enum.Parse(typeof(enumMethods), method), pa);
+                    if(!isloadmtfile )
                     tmb.list_hd.Add(new ImgHd (method ,str_params ,str_tag  ));
                 }
             }
@@ -1174,20 +1192,43 @@ namespace VerifyCodes
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            this.listView_MT.ListViewItemSorter = new  VerifyCodes.ListViewColumnSorter();
+            this.listView_MT.ColumnClick += new ColumnClickEventHandler(VerifyCodes.ListViewHelper.ListView_ColumnClick );
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            tmb.list_tm.Clear();
+            for (int i = 0; i < listView_MT .Items .Count ; i++)
+            {
+                string cont = listView_MT.Items[i].SubItems[1].Text;
+                string[] str_d = listView_MT.Items[i].SubItems[2].Text.Split(' ').Where<string >((o) => { return !string.IsNullOrEmpty(o); }).ToArray();
+                double[] dou_attr = new double[str_d.Length ];
+
+                for (int j = 0; j < str_d .Length ; j++)
+                {
+                    dou_attr[j] = double.Parse(str_d [j]);
+                }
+                TM tmptm = new TM();
+                tmptm.attributes = dou_attr;
+                tmptm.bmp = (Bitmap )listView_MT.Items[i].Tag;
+                tmptm.context = cont;
+                tmb.list_tm.Add(tmptm );
+                //str_d.Where<string>((o)=> { return true; });
+            }
+
             VerifyTools.Serialize<TMBank>(tmb,@"D:\testtmb.cfg");
         }
 
+
+        public bool isloadmtfile = false;
         private void button4_Click(object sender, EventArgs e)
         {
             if(File.Exists(@"D:\testtmb.cfg"))
             {
                 tmb = new TMBank ();
                 listView1.Items.Clear();
+                isloadmtfile = true;
                TMBank  tmp_tmb = (TMBank)VerifyTools.DeSerialize<TMBank >(@"D:\testtmb.cfg");
                 if(tmp_tmb != null)
                 {
@@ -1213,8 +1254,98 @@ namespace VerifyCodes
                             
                         //}               
                     }
+                    if(tmp_tmb .list_tm .Count > 0)
+                    {
+                        for (int i = 0; i < tmp_tmb .list_tm.Count ; i++)
+                        {
+                            TM tmptm = tmp_tmb.list_tm[i];
+                            ListViewItem lvi = new ListViewItem();
+                            lvi.Text = listView_MT.Items.Count.ToString();
+                            lvi.SubItems.Add(tmptm.context );
+                            string s = "";
+                            foreach (double item in tmptm .attributes )
+                            {
+                                s += item.ToString() + " ";
+                            }
+                            lvi.SubItems.Add(s);
+                            lvi.Tag = tmptm.bmp .Clone ();
+                            listView_MT.Items.Add(lvi);
+
+                        }
+                    }
                     tmb = tmp_tmb;
                 }
+                isloadmtfile = false;
+            }
+        }
+
+        private void txtBox_MT_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode ==Keys.Enter && prebmp !=null && txtBox_MT .Text !="")
+            {
+                ListViewItem lvi = new ListViewItem();
+                lvi.Text = listView_MT.Items.Count.ToString();
+                lvi.SubItems.Add(txtBox_MT.Text .Trim ());
+                string s = "";
+                foreach (double  item in VerifyTools .HuMoment (prebmp ))
+                {
+                    s += item.ToString() + " ";
+                }
+                lvi.SubItems.Add(s);
+                lvi.Tag = prebmp.Clone();
+                listView_MT.Items.Add(lvi );
+                //    TM tmptm = new TM();
+                //    tmptm.bmp = (Bitmap)prebmp.Clone();
+                //    tmptm.context = txtBox_MT.Text.Trim();
+                //    tmptm.attributes = VerifyTools.HuMoment(tmptm .bmp );
+                //
+            }
+        }
+
+        private void btn_testVfyA_Click(object sender, EventArgs e)
+        {
+            double[] preatt = VerifyTools.HuMoment(prebmp );
+            double atrr=0;
+            string cont="";
+            string sss = "";
+            for (int i = 0; i < listView_MT.Items .Count ; i++)
+            {
+                string[] str_d = listView_MT.Items[i].SubItems[2].Text.Split(' ').Where<string>((o) => { return !string.IsNullOrEmpty(o); }).ToArray();
+                double[] dou_attr = new double[str_d.Length];
+
+                for (int j = 0; j < str_d.Length; j++)
+                {
+                    dou_attr[j] = double.Parse(str_d[j]);
+                }
+
+                double tmpatt = 0;
+                string tmpcont = "";
+                tmpatt = VerifyTools.getDbR(preatt, dou_attr);
+                tmpcont = listView_MT.Items[i].SubItems[1].Text;
+                sss += tmpcont + " " + tmpatt.ToString() + "\n";
+                if (i == 0 || atrr < tmpatt)
+                {
+                    atrr = tmpatt;
+                    cont = tmpcont;
+                    //sss +=tmpcont +" "+tmpatt .ToString ()+"\n";
+                }
+            }
+            MessageBox.Show(cont );
+            MessageBox.Show(sss );
+        }
+
+        private void listView_MT_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(workbmp ==null && prebmp !=null )
+            {
+                workbmp = (Bitmap)prebmp.Clone();
+            }
+            if (listView_MT.SelectedItems.Count > 0)
+            {
+                prebmp = (Bitmap)listView_MT.SelectedItems[0].Tag;
+                mul = -1;
+                showbmp = VerifyTools.getBig(prebmp, ref mul, 560, 250);
+                picBox_show.Image = showbmp;
             }
         }
     }
